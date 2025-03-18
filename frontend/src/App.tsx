@@ -26,7 +26,7 @@ function App() {
         </p>
       </div>
       <p className="text-6xl">
-        Click on the Vite and React logos to learn more
+        Click on tasdkjfasdjfklhe Vite and React logos to learn more
       </p>
     </>
   );
