@@ -32,6 +32,5 @@ EXPOSE 8080
 EXPOSE 5005
 
 
-ENTRYPOINT [ "java", "-jar", "app.jar" ]
 # Start the application with remote debugging enabled
-# ENTRYPOINT ["java", "-Xdebug", "-Xrunjdwp:server=y,transport=dt_socket,address=5005,suspend=n", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Xdebug", "-Xrunjdwp:server=y,transport=dt_socket,address=5005,suspend=n", "-jar", "app.jar"]
