@@ -6,3 +6,6 @@ Repository for FIT3161 and FIT3162 Computer Science Project for group S1_CS_11
 2. Download docker desktop. Then open it.
 3. Set up a .env file, and put that file into the root. Create values for DATABASE_NAME, DATABASE_USERNAME, DATABASE_PASSWORD
 4. run `docker-compose up --build`. This should start up everything
+
+If you want the cool terminal thing, make sure to install bun, and then run `bun start` from the root.
+If you want to use intellij debug mode, make sure to connect the debug to localhost:5050, as that port exposes the bug server
