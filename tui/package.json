@@ -1,0 +1,17 @@
+{
+  "name": "tui",
+  "module": "index.ts",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "dockerode": "^4.0.4",
+    "ink": "4",
+    "react": "18",
+    "react-dom": "18"
+  }
+}

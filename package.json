@@ -1,0 +1,7 @@
+{
+  "name": "avian-annotator",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "bun run tui/App.js"
+  }
+}
