@@ -2,7 +2,7 @@
   "name": "avian-annotator",
   "version": "1.0.0",
   "scripts": {
-    "start": "bun run tui/App.js",
+    "start": "bun install --cwd tui && bun run tui/App.js",
     "build": "docker-compose build"
   }
 }
