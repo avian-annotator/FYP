@@ -31,7 +31,6 @@ services:
       SPRING_REDIS_HOST: redis
       SPRING_REDIS_PORT: 6379
       SPRING_PROFILES_ACTIVE: local
-    command: ["mvn", "spring-boot:run"]
     ports:
       - "8080:8080"
       - "5005:5005"
