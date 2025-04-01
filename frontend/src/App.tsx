@@ -2,6 +2,11 @@ import { useState } from "react";
 import "./App.css";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
+import { createLazyFileRoute } from "@tanstack/react-router";
+
+export const Route = createLazyFileRoute('/')({
+  component: App,
+})
 
 function App() {
   const [count, setCount] = useState(0);

@@ -10,7 +10,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-     - postgres-db_data:/var/lib/postgresql/data  
+      - postgres-db_data:/var/lib/postgresql/data
   redis:
     image: redis:latest
     ports:
@@ -45,11 +45,7 @@ services:
       - "5173:5173"
     restart: unless-stopped
     environment:
-      - BUN_DEV_SERVER_HOST=0.0.0.0 
-    command: ["bun", "run", "dev", "--host", "0.0.0.0"]
+      - BUN_DEV_SERVER_HOST=0.0.0.0
 
 volumes:
-   postgres-db_data:
-
-
-   
+  postgres-db_data:
