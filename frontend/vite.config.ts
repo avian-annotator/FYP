@@ -10,5 +10,6 @@ export default defineConfig({
     watch: {
       usePolling: true, // Because windows with wsl is an arsehole
     },
+    host: true,
   },
 })
