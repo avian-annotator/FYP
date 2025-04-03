@@ -13,6 +13,7 @@ services:
       - postgres-db_data:/var/lib/postgresql/data
   redis:
     image: redis:latest
+    container_name: redis
     ports:
       - "6379:6379"
     depends_on:
@@ -30,7 +31,6 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${DATABASE_PASSWORD}
       SPRING_REDIS_HOST: redis
       SPRING_REDIS_PORT: 6379
-      SPRING_PROFILES_ACTIVE: local
     ports:
       - "8080:8080"
       - "5005:5005"

@@ -15,7 +15,7 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity.authorizeHttpRequests(registry->{
+        return httpSecurity.authorizeHttpRequests(registry -> {
             registry.requestMatchers("/api/register_user/**").hasAnyAuthority(Role.ADMIN);
             registry.requestMatchers("/api/**").hasAnyAuthority(Role.USER);
             registry.anyRequest().authenticated();
