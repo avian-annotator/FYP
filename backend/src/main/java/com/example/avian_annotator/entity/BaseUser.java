@@ -6,7 +6,7 @@ import lombok.Data;
 @Entity
 @Table(name = "users")
 @Data
-public class User {
+public class BaseUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,10 +21,4 @@ public class User {
     @Column()
     private String role;
 
-    @PrePersist
-    protected void onCreate(){
-        if (this.role == null){
-            this.role = "ROLE_USER";
-        }
-    }
 }

@@ -1,8 +1,10 @@
 package com.example.avian_annotator.repository;
 
-import com.example.avian_annotator.entity.User;
+import com.example.avian_annotator.entity.BaseUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+import java.util.Optional;
 
+public interface UserRepository extends JpaRepository<BaseUser, Long> {
+    Optional<BaseUser> findByUsername(String username);
 }
