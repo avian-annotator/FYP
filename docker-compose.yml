@@ -31,6 +31,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${DATABASE_PASSWORD}
       SPRING_REDIS_HOST: redis
       SPRING_REDIS_PORT: 6379
+      FRONTEND_URL: ${FRONTEND_URL}
     ports:
       - "8080:8080"
       - "5005:5005"
@@ -45,7 +46,7 @@ services:
       - "5173:5173"
     restart: unless-stopped
     environment:
-      - BUN_DEV_SERVER_HOST=0.0.0.0
+      BACKEND_URL: ${BACKEND_URL}
 
 volumes:
   postgres-db_data:

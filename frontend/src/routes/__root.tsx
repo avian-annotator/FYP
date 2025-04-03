@@ -1,16 +1,19 @@
-import { createRootRoute, Link, Outlet } from '@tanstack/react-router'
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
+import { createRootRoute, createRoute, Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-import Login from '../auth/Login'
+
+const queryClient = new QueryClient()
 
 export const Route = createRootRoute({
   component: () => (
     <>
-      <div className="p-2 flex gap-2">
-        <Login />
-      </div>
-      <hr />
-      <Outlet />
-      <TanStackRouterDevtools />
+      <QueryClientProvider client={queryClient}>
+        <div>
+          Probably some sort of menu bar for logging in, logging out + nav links
+        </div>
+        <Outlet />
+        <TanStackRouterDevtools />
+      </QueryClientProvider>
     </>
   ),
 })
