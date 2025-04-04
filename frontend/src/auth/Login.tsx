@@ -1,16 +1,19 @@
-import { useState } from 'react'
+import { useState } from 'react';
+import { useAuth } from './AuthProvider';
+import { useLogin } from './useLoginMutation';
 
-/**
- * Feel free to change this - this is just a placeholder for the login form to get something working
- */
 const Login = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const { setUser } = useAuth(); // Get login function
+  const { mutate: login, data, error, isPending } = useLogin(setUser);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    console.log({ username, password })
-  }
+    event.preventDefault();
+    login({ username, password });
+    console.log("RUNS")
+
+  };
 
   return (
     <form className="grid grid-cols-2" onSubmit={handleSubmit}>
@@ -24,7 +27,11 @@ const Login = () => {
       </div>
       <input type="submit" value="Login" className="col-span-2" />
     </form>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
+
+function useLoginMutation(setUser: (user: string | null) => void): { mutate: any; data: any; error: any; isPending: any; } {
+  throw new Error('Function not implemented.');
+}

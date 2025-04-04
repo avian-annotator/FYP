@@ -32,11 +32,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, Environment environment) throws Exception {
         return httpSecurity
                 .authorizeHttpRequests(registry -> {
+                    registry.requestMatchers("/login").permitAll();
                     registry.requestMatchers("/api/register_user/**").hasAnyAuthority(Role.ADMIN);
                     registry.requestMatchers("/api/**").hasAnyAuthority(Role.USER);
                     registry.anyRequest().authenticated();
-                }).formLogin(httpSecurityFormLoginConfigurer -> {
-                    httpSecurityFormLoginConfigurer.loginPage(environment.getProperty("FRONTEND_URL", "*") + "/login");
                 })
                 .build();
     }
@@ -46,7 +45,8 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(environment.getProperty("FRONTEND_URL", "*")));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
-
+        configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization"));
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
