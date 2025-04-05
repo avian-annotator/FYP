@@ -1,7 +1,6 @@
 package com.example.avian_annotator.config;
 
 import com.example.avian_annotator.service.CustomDetailsService;
-import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -59,23 +58,15 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/api/logout")
                         .logoutSuccessHandler((request, response, authentication) -> {
-                            HttpSession session = request.getSession(false);
-                            if (session == null) {
-                                response.setStatus(401);
-                                response.setContentType("application/json");
-                                response.getWriter().write("{\"error\":\"Not authorised\"}");
-                            } else {
-                                // Invalidate the session and send success message
-                                session.invalidate();
-                                response.setStatus(200);
-                                response.setContentType("application/json");
-                                response.getWriter().write("{\"status\":\"logged out\"}");
-                            }
-                        })
-                )
+                            response.setStatus(200);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"status\":\"logged out\"}");
+                        }))
                 .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint((request, response, authException) -> {
-
+                            response.setStatus(401);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"error\":\"Not authorised\"}");
                         }))
                 .build();
     }
