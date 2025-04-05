@@ -1,16 +1,16 @@
-import { useState } from 'react'
+import { useState } from 'react';
+import { useLogin } from './useLogin';
 
-/**
- * Feel free to change this - this is just a placeholder for the login form to get something working
- */
 const Login = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const mutation = useLogin();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    console.log({ username, password })
-  }
+    event.preventDefault();
+    mutation.mutate({ username, password });
+  };
 
   return (
     <form className="grid grid-cols-2" onSubmit={handleSubmit}>
@@ -23,8 +23,21 @@ const Login = () => {
         <input type="password" id="fpassword" onChange={(e) => setPassword(e.target.value)} />
       </div>
       <input type="submit" value="Login" className="col-span-2" />
-    </form>
-  )
-}
+      {
+        mutation.isPending && <p>Logging in...</p>
+      }
+      {
+        mutation.isError && <p className="text-red-500">{mutation.error.message}</p>
+      }
+      {
+        mutation.data && mutation.isSuccess && <p className="text-green-500">Login successful!</p>
+      }
 
-export default Login
+      {
+        mutation.data && !mutation.isSuccess && <p className="text-red-500">Login failed!</p>
+      }
+    </form>
+  );
+};
+
+export default Login;

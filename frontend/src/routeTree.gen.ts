@@ -11,18 +11,12 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as ProtectedImport } from './routes/protected'
 import { Route as LoginImport } from './routes/login'
-import { Route as HomeImport } from './routes/home'
+import { Route as AppImport } from './routes/app'
 import { Route as IndexImport } from './routes/index'
+import { Route as AppIndexImport } from './routes/app/index'
 
 // Create/Update Routes
-
-const ProtectedRoute = ProtectedImport.update({
-  id: '/protected',
-  path: '/protected',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const LoginRoute = LoginImport.update({
   id: '/login',
@@ -30,9 +24,9 @@ const LoginRoute = LoginImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const HomeRoute = HomeImport.update({
-  id: '/home',
-  path: '/home',
+const AppRoute = AppImport.update({
+  id: '/app',
+  path: '/app',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -40,6 +34,12 @@ const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
+} as any)
+
+const AppIndexRoute = AppIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -53,11 +53,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/home': {
-      id: '/home'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof HomeImport
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppImport
       parentRoute: typeof rootRoute
     }
     '/login': {
@@ -67,61 +67,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
-    '/protected': {
-      id: '/protected'
-      path: '/protected'
-      fullPath: '/protected'
-      preLoaderRoute: typeof ProtectedImport
-      parentRoute: typeof rootRoute
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexImport
+      parentRoute: typeof AppImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface AppRouteChildren {
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/home': typeof HomeRoute
+  '/app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
-  '/protected': typeof ProtectedRoute
+  '/app/': typeof AppIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/home': typeof HomeRoute
   '/login': typeof LoginRoute
-  '/protected': typeof ProtectedRoute
+  '/app': typeof AppIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/home': typeof HomeRoute
+  '/app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
-  '/protected': typeof ProtectedRoute
+  '/app/': typeof AppIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/home' | '/login' | '/protected'
+  fullPaths: '/' | '/app' | '/login' | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/home' | '/login' | '/protected'
-  id: '__root__' | '/' | '/home' | '/login' | '/protected'
+  to: '/' | '/login' | '/app'
+  id: '__root__' | '/' | '/app' | '/login' | '/app/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  HomeRoute: typeof HomeRoute
+  AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
-  ProtectedRoute: typeof ProtectedRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  HomeRoute: HomeRoute,
+  AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
-  ProtectedRoute: ProtectedRoute,
 }
 
 export const routeTree = rootRoute
@@ -135,22 +142,25 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/home",
-        "/login",
-        "/protected"
+        "/app",
+        "/login"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/home": {
-      "filePath": "home.tsx"
+    "/app": {
+      "filePath": "app.tsx",
+      "children": [
+        "/app/"
+      ]
     },
     "/login": {
       "filePath": "login.tsx"
     },
-    "/protected": {
-      "filePath": "protected.tsx"
+    "/app/": {
+      "filePath": "app/index.tsx",
+      "parent": "/app"
     }
   }
 }

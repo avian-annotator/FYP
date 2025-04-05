@@ -1,19 +1,38 @@
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
-import { createRootRoute, createRoute, Outlet } from '@tanstack/react-router'
+import { createRootRouteWithContext, Link, Navigate, Outlet, redirect } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
+import { AuthContextType, useAuth, useLogout } from '../auth'
 
-const queryClient = new QueryClient()
+interface RouterContext {
+  auth: AuthContextType | undefined
+}
 
-export const Route = createRootRoute({
-  component: () => (
-    <>
-      <QueryClientProvider client={queryClient}>
+
+export const Route = createRootRouteWithContext<RouterContext>()({
+
+  component: () => {
+    const { isAuthenticated } = useAuth()
+    const mutation = useLogout()
+
+    console.log('isAuthenticated', isAuthenticated)
+
+    return (
+      <>
         <div>
           Probably some sort of menu bar for logging in, logging out + nav links
+          {
+            isAuthenticated ? (
+              <button onClick={() => mutation.mutate()}>Log out</button>
+            ) : (
+              <Link to="/login">Log in</Link>
+            )
+          }
         </div>
         <Outlet />
         <TanStackRouterDevtools />
-      </QueryClientProvider>
-    </>
-  ),
+      </>
+
+    );
+  },
 })
+

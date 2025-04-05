@@ -47,6 +47,7 @@ services:
     restart: unless-stopped
     environment:
       BACKEND_URL: ${BACKEND_URL}
+      VITE_BACKEND_URL: ${BACKEND_URL}
 
 volumes:
   postgres-db_data:
