@@ -1,6 +1,5 @@
 package com.example.avian_annotator.config;
 
-import com.example.avian_annotator.enums.Role;
 import com.example.avian_annotator.service.CustomDetailsService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
@@ -30,13 +30,44 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, Environment environment) throws Exception {
+        System.out.println("RUNS");
         return httpSecurity
+                .csrf((csrf) -> csrf // TEMP for dev/testing TODO: do properly for deployment
+                        .ignoringRequestMatchers("/api/*")
+                )
                 .authorizeHttpRequests(registry -> {
-                    registry.requestMatchers("/login").permitAll();
-                    registry.requestMatchers("/api/register_user/**").hasAnyAuthority(Role.ADMIN);
-                    registry.requestMatchers("/api/**").hasAnyAuthority(Role.USER);
                     registry.anyRequest().authenticated();
                 })
+                .sessionManagement(session -> session
+                        .maximumSessions(1)
+                        .expiredUrl("/api/login?expired"))
+                .formLogin(form -> form
+                        .loginProcessingUrl("/api/login")
+                        .loginPage(environment.getProperty("FRONTEND_URL", "*") + "/login")
+                        .successHandler((request, response, authentication) -> {
+                            response.setStatus(200);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"status\":\"success\"}");
+                        })
+                        .failureHandler((request, response, exception) -> {
+                            response.setStatus(401);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"error\":\"Invalid credentials\"}");
+                        })
+                        .permitAll())
+                .logout(logout -> logout
+                        .logoutUrl("/api/logout")
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            response.setStatus(200);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"status\":\"logged out\"}");
+                        }))
+                .exceptionHandling(exceptions -> exceptions
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(401);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"error\":\"Not authorised\"}");
+                        }))
                 .build();
     }
 
@@ -70,4 +101,8 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
+    }
 }

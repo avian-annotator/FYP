@@ -1,21 +1,23 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useMemo, useEffect } from 'react';
+import { useCurrentUser } from './useCurrentUser';
 
 export interface AuthContextType {
   user: string | null;
-  setUser: (user: string | null) => void;
   isAuthenticated: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<string | null>(null);
-  const [isAuthenticated] = useState<boolean>(false); // This should be set based on your authentication logic
 
+  // There is most definitely a better way of doing this instead of calling it every single time. I just CBS for now
+  const { user, isAuthenticated } = useCurrentUser();
+
+  const value = { user, isAuthenticated };
   return (
-    <AuthContext.Provider value={{ user, setUser, isAuthenticated }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
@@ -26,6 +28,7 @@ export const useAuth = (): AuthContextType => {
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
+
   return context;
 };
 

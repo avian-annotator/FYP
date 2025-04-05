@@ -1,18 +1,15 @@
 import { useState } from 'react';
-import { useAuth } from './AuthProvider';
-import { useLogin } from './useLoginMutation';
+import { useLogin } from './useLogin';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { setUser } = useAuth(); // Get login function
-  const { mutate: login, data, error, isPending } = useLogin(setUser);
+
+  const mutation = useLogin();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    login({ username, password });
-    console.log("RUNS")
-
+    mutation.mutate({ username, password });
   };
 
   return (
@@ -26,12 +23,21 @@ const Login = () => {
         <input type="password" id="fpassword" onChange={(e) => setPassword(e.target.value)} />
       </div>
       <input type="submit" value="Login" className="col-span-2" />
+      {
+        mutation.isPending && <p>Logging in...</p>
+      }
+      {
+        mutation.isError && <p className="text-red-500">{mutation.error.message}</p>
+      }
+      {
+        mutation.data && mutation.isSuccess && <p className="text-green-500">Login successful!</p>
+      }
+
+      {
+        mutation.data && !mutation.isSuccess && <p className="text-red-500">Login failed!</p>
+      }
     </form>
   );
 };
 
 export default Login;
-
-function useLoginMutation(setUser: (user: string | null) => void): { mutate: any; data: any; error: any; isPending: any; } {
-  throw new Error('Function not implemented.');
-}

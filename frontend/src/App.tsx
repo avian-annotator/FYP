@@ -1,9 +1,10 @@
 
-import { RouterProvider } from '@tanstack/react-router'
+import { createRootRouteWithContext, RouterProvider } from '@tanstack/react-router'
 
 // Import the generated route tree
 import { AuthProvider, useAuth } from './auth'
 import { router } from './router'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 
 
@@ -13,11 +14,17 @@ function InnerApp() {
 }
 
 
+const queryClient = new QueryClient()
+
+
 const App = () => {
   return (
-    <AuthProvider>
-      <InnerApp />
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <InnerApp />
+      </AuthProvider>
+    </QueryClientProvider>
+
   )
 }
 
