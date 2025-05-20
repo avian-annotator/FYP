@@ -1,6 +1,6 @@
-package com.example.avian_annotator.repository;
+package com.fyp.avian_annotator.repository;
 
-import com.example.avian_annotator.entity.BaseUser;
+import com.fyp.avian_annotator.entity.BaseUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

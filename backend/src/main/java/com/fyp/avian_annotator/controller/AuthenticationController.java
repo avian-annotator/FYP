@@ -1,6 +1,6 @@
-package com.example.avian_annotator.controller;
+package com.fyp.avian_annotator.controller;
 
-import com.example.avian_annotator.service.CustomDetailsService;
+import com.fyp.avian_annotator.service.CustomDetailsService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

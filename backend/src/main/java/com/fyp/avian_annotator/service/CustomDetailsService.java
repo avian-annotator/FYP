@@ -1,8 +1,8 @@
-package com.example.avian_annotator.service;
+package com.fyp.avian_annotator.service;
 
 
-import com.example.avian_annotator.entity.BaseUser;
-import com.example.avian_annotator.repository.UserRepository;
+import com.fyp.avian_annotator.entity.BaseUser;
+import com.fyp.avian_annotator.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

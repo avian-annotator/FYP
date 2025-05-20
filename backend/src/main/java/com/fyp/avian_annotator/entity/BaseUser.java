@@ -1,4 +1,4 @@
-package com.example.avian_annotator.entity;
+package com.fyp.avian_annotator.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

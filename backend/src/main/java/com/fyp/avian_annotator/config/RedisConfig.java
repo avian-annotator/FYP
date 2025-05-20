@@ -1,4 +1,4 @@
-package com.example.avian_annotator.config;
+package com.fyp.avian_annotator.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,15 +10,15 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 @Configuration
 public class RedisConfig {
 
-  @Value("${spring.redis.host}")
-  private String redisHost;
+    @Value("${spring.redis.host}")
+    private String redisHost;
 
-  @Value("${spring.redis.port}")
-  private int redisPort;
+    @Value("${spring.redis.port}")
+    private int redisPort;
 
-  @Bean
-  public RedisConnectionFactory redisConnectionFactory() {
-    RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(redisHost, redisPort);
-    return new LettuceConnectionFactory(config);
-  }
+    @Bean
+    public RedisConnectionFactory redisConnectionFactory() {
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(redisHost, redisPort);
+        return new LettuceConnectionFactory(config);
+    }
 }

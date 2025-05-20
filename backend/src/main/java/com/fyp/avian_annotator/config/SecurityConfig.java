@@ -1,6 +1,6 @@
-package com.example.avian_annotator.config;
+package com.fyp.avian_annotator.config;
 
-import com.example.avian_annotator.service.CustomDetailsService;
+import com.fyp.avian_annotator.service.CustomDetailsService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;

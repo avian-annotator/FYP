@@ -1,4 +1,4 @@
-package com.example.avian_annotator.controller;
+package com.fyp.avian_annotator.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.web.servlet.error.ErrorController;
