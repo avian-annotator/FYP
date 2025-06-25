@@ -2,6 +2,8 @@ package com.fyp.avian_annotator.dal.entity;
 
 import jakarta.persistence.*;
 
+import java.time.OffsetDateTime;
+
 @Entity
 @Table(name = "app_user")
 public class User {
@@ -14,8 +16,10 @@ public class User {
     private String username;
 
     @Column(nullable = false)
-    private String password;
+    private String password_hash;
 
     private String role;
+
+    private OffsetDateTime created_at;
 
 }
