@@ -1,12 +1,10 @@
-package com.fyp.avian_annotator.entity;
+package com.fyp.avian_annotator.dal.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
 
 @Entity
-@Table(name = "users")
-@Data
-public class BaseUser {
+@Table(name = "app_user")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +16,6 @@ public class BaseUser {
     @Column(nullable = false)
     private String password;
 
-    @Column()
     private String role;
 
 }

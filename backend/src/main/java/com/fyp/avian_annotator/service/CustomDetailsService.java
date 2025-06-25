@@ -1,10 +1,9 @@
 package com.fyp.avian_annotator.service;
 
 
-import com.fyp.avian_annotator.entity.BaseUser;
-import com.fyp.avian_annotator.repository.UserRepository;
+import com.fyp.avian_annotator.UserRepository;
+import com.fyp.avian_annotator.dal.entity.User;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,10 +19,10 @@ public class CustomDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<BaseUser> user = userRepository.findByUsername(username);
+        Optional<User> user = userRepository.findByUsername(username);
         if (user.isPresent()) {
             var userObj = user.get();
-            return User.builder()
+            return org.springframework.security.core.userdetails.User.builder()
                     .username(userObj.getUsername())
                     .password(userObj.getPassword())
                     .roles(userObj.getRole()).build();
