@@ -11,7 +11,7 @@ public class Image {
 
     @ManyToOne
     @JoinColumn(name = "workspace_id")
-    private WorkspaceUser workspace;
+    private Workspace workspace;
 
     private String filename;
 
