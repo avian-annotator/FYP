@@ -14,8 +14,7 @@ public class WorkspaceUserId implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof WorkspaceUserId)) return false;
-        WorkspaceUserId that = (WorkspaceUserId) o;
+        if (!(o instanceof WorkspaceUserId that)) return false;
         return Objects.equals(workspace, that.workspace) &&
                 Objects.equals(user, that.user);
     }
