@@ -24,7 +24,7 @@ public class CustomDetailsService implements UserDetailsService {
             var userObj = user.get();
             return org.springframework.security.core.userdetails.User.builder()
                     .username(userObj.getUsername())
-                    .password(userObj.getPassword())
+                    .password(userObj.getPasswordHash())
                     .roles(userObj.getRole()).build();
         } else {
             throw new UsernameNotFoundException(username);
