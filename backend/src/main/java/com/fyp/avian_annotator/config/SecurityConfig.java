@@ -35,9 +35,11 @@ public class SecurityConfig {
                 .csrf((csrf) -> csrf // TEMP for dev/testing TODO: do properly for deployment
                         .ignoringRequestMatchers("/api/*")
                 )
-                .authorizeHttpRequests(registry -> {
-                    registry.anyRequest().authenticated();
-                })
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
+                        .permitAll()
+                        .anyRequest().authenticated()
+                )
                 .sessionManagement(session -> session
                         .maximumSessions(1)
                         .expiredUrl("/api/login?expired"))
@@ -68,6 +70,7 @@ public class SecurityConfig {
                             response.setContentType("application/json");
                             response.getWriter().write("{\"error\":\"Not authorised\"}");
                         }))
+
                 .build();
     }
 

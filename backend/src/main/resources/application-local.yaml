@@ -1,19 +1,4 @@
 spring:
-  application:
-    name: avian-annotator
-
-  datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
-    driver-class-name: org.postgresql.Driver
-
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      naming:
-        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-
   redis:
     host: ${SPRING_REDIS_HOST}
     port: ${SPRING_REDIS_PORT}
@@ -24,7 +9,11 @@ spring:
 logging:
   level:
     org:
-      springframework: INFO
       springframework.security: TRACE
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} - %level - %msg%n"
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+

@@ -1,6 +1,6 @@
 package com.fyp.avian_annotator.controller;
 
-import com.fyp.avian_annotator.service.CustomDetailsService;
+import com.fyp.avian_annotator.dto.response.CurrentUserResponseDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -9,28 +9,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @RequestMapping("/api/auth")
 @RestController
 @AllArgsConstructor
 public class AuthenticationController {
 
-    private CustomDetailsService customDetailsService;
-
     @GetMapping("/current_user")
-    public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<CurrentUserResponseDTO> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {
-            return ResponseEntity.ok(Map.of("authenticated", false));
+            return ResponseEntity.ok(new CurrentUserResponseDTO(false, null));
         }
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("authenticated", true);
-        response.put("user", userDetails.getUsername());
-
-        return ResponseEntity.ok(response);
-
+        return ResponseEntity.ok(new CurrentUserResponseDTO(true, userDetails.getUsername()));
     }
 
 }
