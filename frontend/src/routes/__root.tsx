@@ -14,8 +14,6 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     const { isAuthenticated } = useAuth()
     const mutation = useLogout()
 
-    console.log('isAuthenticated', isAuthenticated)
-
     return (
       <>
         <div>

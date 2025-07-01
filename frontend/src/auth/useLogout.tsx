@@ -28,7 +28,7 @@ export const useLogout = () => {
     },
     onSuccess: () => {
       // Invalidate the currentUser query to refetch the user's authentication state
-      queryClient.invalidateQueries(['currentUser']);
+      queryClient.invalidateQueries({ queryKey: ['getCurrentUser'] });
     },
   });
 };

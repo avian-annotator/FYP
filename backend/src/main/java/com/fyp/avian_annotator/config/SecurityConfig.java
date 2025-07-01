@@ -30,7 +30,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, Environment environment) throws Exception {
-        System.out.println("RUNS");
         return httpSecurity
                 .csrf((csrf) -> csrf // TEMP for dev/testing TODO: do properly for deployment
                         .ignoringRequestMatchers("/api/*")
@@ -75,7 +74,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    UrlBasedCorsConfigurationSource corsConfigurationSource(Environment environment) {
+    public UrlBasedCorsConfigurationSource corsConfigurationSource(Environment environment) {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(environment.getProperty("FRONTEND_URL", "*")));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST"));

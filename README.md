@@ -17,3 +17,6 @@ Every time you make a change to the backend, you need to run `docker-compose up 
 Every time you add a package to the frontend, you need to run `docker-compose down`, delete the volume associated with the frontend, and then run `docker-compose up --build`. I need to fix this, I'll get to it :D.
 
 It is important that your db schema is up to date. We could use a migration tool to do that for us. Will look into it if I have the time. Nothing wrong with learning some SQL :D.
+
+Generating api hooks - 
+1. Run `./generate-types.bash` in bash (git bash or wsl on windows)/zsh

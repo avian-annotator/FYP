@@ -1,10 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import React, { createContext, useContext, useState, ReactNode, useMemo, useEffect } from 'react';
-import { useCurrentUser } from './useCurrentUser';
+import React, { createContext, useContext, ReactNode } from 'react';
+import { useGetCurrentUser } from '../../generated'
 
 export interface AuthContextType {
-  user: string | null;
+  user: string | undefined;
   isAuthenticated: boolean;
 }
 
@@ -12,10 +10,13 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
-  // There is most definitely a better way of doing this instead of calling it every single time. I just CBS for now
-  const { user, isAuthenticated } = useCurrentUser();
+  const { data, isLoading, isError } = useGetCurrentUser({ withCredentials: true });
+  let isAuthenticated = false;
+  if (!isError && !isLoading) {
+    isAuthenticated = data?.authenticated ?? false;
+  }
 
-  const value = { user, isAuthenticated };
+  const value = { user: data?.user, isAuthenticated };
   return (
     <AuthContext.Provider value={value}>
       {children}
