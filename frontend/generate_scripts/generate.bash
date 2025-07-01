@@ -11,3 +11,7 @@ fi
 cd generated
 docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli generate -i /local/openapi.json -g typescript-axios -o /local/out
 cd ..
+
+cd generate_scripts
+bun generate-use-query-hooks.ts
+cd ..

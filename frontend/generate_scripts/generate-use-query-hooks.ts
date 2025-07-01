@@ -17,7 +17,6 @@ useQueryHooksFile.addImportDeclaration({
 })
 
 useQueryHooksFile.addImportDeclaration({
-  defaultImport: "axios",
   namedImports: ["AxiosResponse", "RawAxiosRequestConfig"],
   moduleSpecifier: "axios"
 });

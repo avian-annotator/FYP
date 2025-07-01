@@ -12,3 +12,7 @@ try {
 Set-Location generated
 docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli generate -i /local/openapi.json -g typescript-axios -o /local/out
 Set-Location ..
+
+Set-Location generate_scripts
+bun generate-use-query-hooks.ts
+Set-Location ..
