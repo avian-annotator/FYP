@@ -10,7 +10,7 @@ const project = new Project({
   },
 })
 
-const generatedApisFile = project.addSourceFileAtPath("../generated/out/api.ts")
+const generatedApisFile = project.addSourceFileAtPath("../generated/axios/api.ts")
 const useQueryHooksFile = project.createSourceFile("../generated/use-query-hooks.ts", ``, { overwrite: true })
 useQueryHooksFile.addStatements(`
 // This is an auto-generated file. Do not edit manually, instead run the generate.bash`)
@@ -26,7 +26,7 @@ useQueryHooksFile.addImportDeclaration({
 
 useQueryHooksFile.addImportDeclaration({
   namedImports: ["Configuration"],
-  moduleSpecifier: `../generated/out/configuration.ts`
+  moduleSpecifier: `../generated/axios/configuration.ts`
 })
 
 const generatedHookNames: string[] = []
@@ -37,7 +37,7 @@ const apiFactoryFunctions = generatedApisFile.getVariableDeclarations()
 for (const apiFactory of apiFactoryFunctions) {
   useQueryHooksFile.addImportDeclaration({
     namedImports: [apiFactory.getName()],
-    moduleSpecifier: `../generated/out/${apiFactory.getSourceFile().getBaseNameWithoutExtension()}.ts`
+    moduleSpecifier: `../generated/axios/${apiFactory.getSourceFile().getBaseNameWithoutExtension()}.ts`
   })
   const api = apiFactory.getVariableStatement()
     ?.getDeclarationList()
@@ -67,7 +67,7 @@ for (const apiFactory of apiFactoryFunctions) {
   if (!isPrimitive) {
     useQueryHooksFile.addImportDeclaration({
       namedImports: [returnInterface.getText()],
-      moduleSpecifier: `../generated/out/${api.getSourceFile().getBaseNameWithoutExtension()}.ts`
+      moduleSpecifier: `../generated/axios/${api.getSourceFile().getBaseNameWithoutExtension()}.ts`
     })
   }
 
@@ -120,7 +120,7 @@ indexFile.addExportDeclaration({
 });
 
 indexFile.addExportDeclaration({
-  moduleSpecifier: "./out/api.ts",
+  moduleSpecifier: "./axios/api.ts",
   isTypeOnly: true,
 })
 await project.save();

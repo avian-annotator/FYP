@@ -1,5 +1,5 @@
 try {
-    Invoke-RestMethod -Uri http://localhost:8080/v3/api-docs -OutFile generated\openapi.json -ErrorAction Stop
+    Invoke-RestMethod -Uri http://localhost:8080/v3/api-docs -ErrorAction Stop | Out-Null
 } catch {
     Write-Host "localhost:8080 is not running or /v3/api-docs is unavailable."
     exit 1
@@ -17,7 +17,7 @@ try {
 }
 
 Set-Location generated
-docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli generate -i /local/openapi.json -g typescript-axios -o /local/out
+docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli generate -i /local/openapi.json -g typescript-axios -o /local/axios
 Set-Location ..
 
 Set-Location generate_scripts
