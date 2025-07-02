@@ -7,6 +7,7 @@ common.ts
 configuration.ts
 docs/AuthenticationControllerApi.md
 docs/CurrentUserResponseDTO.md
+docs/CustomErrorControllerApi.md
 docs/GreetingControllerApi.md
 git_push.sh
 index.ts

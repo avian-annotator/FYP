@@ -1,4 +1,4 @@
-import { useGetCurrentUser, useHello } from "./use-query-hooks";
+import { useGetCurrentUser, useHandleError, useHello } from "./use-query-hooks";
 
-export { useGetCurrentUser, useHello };
+export { useGetCurrentUser, useHandleError, useHello };
 export type * from "./out/api.ts";

@@ -1,4 +1,9 @@
 #!/bin/bash
+if ! curl -sSf http://localhost:8080/v3/api-docs -o generated/openapi.json; then
+  echo "localhost:8080 is not running or /v3/api-docs is unavailable."
+  exit 1
+fi
+
 rm -rf generated
 mkdir generated
 

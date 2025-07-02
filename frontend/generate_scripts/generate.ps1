@@ -1,3 +1,10 @@
+try {
+    Invoke-RestMethod -Uri http://localhost:8080/v3/api-docs -OutFile generated\openapi.json -ErrorAction Stop
+} catch {
+    Write-Host "localhost:8080 is not running or /v3/api-docs is unavailable."
+    exit 1
+}
+
 Remove-Item -Recurse -Force generated -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Path generated
 
