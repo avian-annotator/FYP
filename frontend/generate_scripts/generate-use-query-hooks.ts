@@ -1,4 +1,7 @@
-import { Project, ReturnStatement } from "ts-morph";
+import { Project } from "ts-morph";
+
+// TODO: include post request using useMutation hooks
+// NOTE: auth hooks are NOT generated here, specifically the login and logout hooks, as they are not part of the OpenAPI spec (plus aditional concerns).
 
 const project = new Project({
   manipulationSettings: {
@@ -12,7 +15,7 @@ const useQueryHooksFile = project.createSourceFile("../generated/use-query-hooks
 useQueryHooksFile.addStatements(`
 // This is an auto-generated file. Do not edit manually, instead run the generate.bash`)
 useQueryHooksFile.addImportDeclaration({
-  namedImports: ["useQuery"],
+  namedImports: ["useQuery", "UseQueryOptions"],
   moduleSpecifier: `@tanstack/react-query`
 })
 
@@ -71,27 +74,37 @@ for (const apiFactory of apiFactoryFunctions) {
   useQueryHooksFile.addFunction({
     name: hookName,
     isExported: true,
+    typeParameters: [
+      {
+        name: "TData = " + returnInterface.getText(),
+      },
+    ],
     parameters: [
       {
         name: "options",
         type: "RawAxiosRequestConfig",
-        hasQuestionToken: true
-      }
+        hasQuestionToken: true,
+      },
+      {
+        name: "queryOptions",
+        type: `Omit<UseQueryOptions<${returnInterface.getText()}, unknown, TData>, 'queryKey' | 'queryFn'>`,
+        hasQuestionToken: true,
+      },
     ],
-    returnType: `{data: ${returnInterface.getText()} | undefined, isLoading: boolean, isError: boolean}`,
+    returnType: `UseQueryResult<TData>`,
     statements: `
-const { data, isLoading, isError } = useQuery({
+return useQuery({
   queryKey: ['${apiName}', options?.params, options?.headers],
   queryFn: async () => {
     const api = ${apiFactory.getName()}(new Configuration({ basePath: \`\${import.meta.env.VITE_BACKEND_URL}\` }));
     const res: AxiosResponse<${returnInterface.getText()}> = await api.${apiName}({...options, withCredentials: true});
     return res.data;
   },
+  ...queryOptions
 });
-return { data, isLoading, isError };
-    `
+  `,
   })
-}
+};
 
 const indexFile = project.createSourceFile("../generated/index.ts", ``, { overwrite: true })
 
