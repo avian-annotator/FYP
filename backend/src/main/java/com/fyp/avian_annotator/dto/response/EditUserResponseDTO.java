@@ -1,15 +1,21 @@
 package com.fyp.avian_annotator.dto.response;
 
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class CurrentUserResponseDTO {
+public class EditUserResponseDTO {
 
-    private boolean authenticated;
+    @NotEmpty
+    private Long id;
 
     @NotNull
-    private String user;
+    private String username;
+
+    @NotEmpty
+    private String role;
 }
+

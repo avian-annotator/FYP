@@ -1,14 +1,27 @@
 package com.fyp.avian_annotator.dal.entity;
 
+import com.fyp.avian_annotator.utils.UserRole;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.OffsetDateTime;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "app_user")
 @Getter
-public class User {
+@Setter
+@Builder
+@AllArgsConstructor
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +33,26 @@ public class User {
     @Column(nullable = false)
     private String passwordHash;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    @Column(nullable = false, length = 20)
+    private UserRole role = UserRole.USER;
 
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
     private OffsetDateTime createdAt;
 
+    protected User() {
+        // Required by JPA with the Builder pattern
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+    }
+
+    @Override
+    public String getPassword() {
+        return this.passwordHash;
+    }
 }

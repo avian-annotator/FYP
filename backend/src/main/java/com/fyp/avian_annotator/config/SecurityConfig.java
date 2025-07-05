@@ -6,8 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,6 +24,7 @@ import java.util.Arrays;
 
 @AllArgsConstructor
 @EnableWebSecurity
+@EnableMethodSecurity
 @Slf4j
 @Configuration
 public class SecurityConfig {
@@ -32,11 +35,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, Environment environment) throws Exception {
         return httpSecurity
                 .csrf((csrf) -> csrf // TEMP for dev/testing TODO: do properly for deployment
-                        .ignoringRequestMatchers("/api/*")
+                        .ignoringRequestMatchers("/api/**")
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
-                        .permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/error").permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
@@ -54,6 +59,7 @@ public class SecurityConfig {
                             response.setStatus(401);
                             response.setContentType("application/json");
                             response.getWriter().write("{\"error\":\"Invalid credentials\"}");
+                            log.error(String.valueOf(exception));
                         })
                         .permitAll())
                 .logout(logout -> logout
@@ -68,8 +74,14 @@ public class SecurityConfig {
                             response.setStatus(401);
                             response.setContentType("application/json");
                             response.getWriter().write("{\"error\":\"Not authorised\"}");
+                            log.error(String.valueOf(authException));
+                        })
+                        .accessDeniedHandler((request, response, ex) -> {
+                            response.setStatus(403);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"error\":\"Not authorised\"}");
+                            log.info(String.valueOf(ex));
                         }))
-
                 .build();
     }
 
@@ -77,7 +89,7 @@ public class SecurityConfig {
     public UrlBasedCorsConfigurationSource corsConfigurationSource(Environment environment) {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(environment.getProperty("FRONTEND_URL", "*")));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE", "PUT", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -107,4 +119,6 @@ public class SecurityConfig {
     public HttpSessionEventPublisher httpSessionEventPublisher() {
         return new HttpSessionEventPublisher();
     }
+
+
 }

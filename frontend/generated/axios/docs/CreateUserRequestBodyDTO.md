@@ -1,21 +1,21 @@
-# CurrentUserResponseDTO
+# CreateUserRequestBodyDTO
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**authenticated** | **boolean** |  | [optional] [default to undefined]
-**user** | **string** |  | [default to undefined]
+**username** | **string** |  | [default to undefined]
+**password** | **string** |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { CurrentUserResponseDTO } from './api';
+import { CreateUserRequestBodyDTO } from './api';
 
-const instance: CurrentUserResponseDTO = {
-    authenticated,
-    user,
+const instance: CreateUserRequestBodyDTO = {
+    username,
+    password,
 };
 ```
 

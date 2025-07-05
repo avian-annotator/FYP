@@ -1,21 +1,23 @@
-# CurrentUserResponseDTO
+# EditUserResponseDTO
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**authenticated** | **boolean** |  | [optional] [default to undefined]
-**user** | **string** |  | [default to undefined]
+**id** | **number** |  | [default to undefined]
+**username** | **string** |  | [default to undefined]
+**role** | **string** |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { CurrentUserResponseDTO } from './api';
+import { EditUserResponseDTO } from './api';
 
-const instance: CurrentUserResponseDTO = {
-    authenticated,
-    user,
+const instance: EditUserResponseDTO = {
+    id,
+    username,
+    role,
 };
 ```
 

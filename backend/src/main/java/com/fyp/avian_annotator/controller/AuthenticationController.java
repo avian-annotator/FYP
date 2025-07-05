@@ -1,7 +1,6 @@
 package com.fyp.avian_annotator.controller;
 
 import com.fyp.avian_annotator.dto.response.CurrentUserResponseDTO;
-import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/api/auth")
 @RestController
-@AllArgsConstructor
 public class AuthenticationController {
 
     @GetMapping("/current_user")

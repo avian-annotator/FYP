@@ -1,9 +1,9 @@
 package com.fyp.avian_annotator.service;
 
 
-import com.fyp.avian_annotator.UserRepository;
 import com.fyp.avian_annotator.dal.entity.User;
-import lombok.AllArgsConstructor;
+import com.fyp.avian_annotator.dal.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class CustomDetailsService implements UserDetailsService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -25,7 +25,7 @@ public class CustomDetailsService implements UserDetailsService {
             return org.springframework.security.core.userdetails.User.builder()
                     .username(userObj.getUsername())
                     .password(userObj.getPasswordHash())
-                    .roles(userObj.getRole()).build();
+                    .roles(String.valueOf(userObj.getRole())).build();
         } else {
             throw new UsernameNotFoundException(username);
         }

@@ -5,9 +5,12 @@ api.ts
 base.ts
 common.ts
 configuration.ts
+docs/AdminControllerApi.md
 docs/AuthenticationControllerApi.md
+docs/CreateUserRequestBodyDTO.md
+docs/CreateUserResponseDTO.md
 docs/CurrentUserResponseDTO.md
-docs/CustomErrorControllerApi.md
-docs/GreetingControllerApi.md
+docs/EditUserRequestBodyDTO.md
+docs/EditUserResponseDTO.md
 git_push.sh
 index.ts

@@ -1,4 +1,4 @@
-package com.fyp.avian_annotator;
+package com.fyp.avian_annotator.dal.repository;
 
 import com.fyp.avian_annotator.dal.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;

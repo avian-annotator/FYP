@@ -21,5 +21,5 @@ docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli generate -
 Set-Location ..
 
 Set-Location generate_scripts
-bun generate-use-query-hooks.ts
+bun generate-api-hooks.ts
 Set-Location ..
