@@ -13,10 +13,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const { data, isLoading, isError } = useGetCurrentUser({ withCredentials: true });
   let isAuthenticated = false;
   if (!isError && !isLoading) {
-    isAuthenticated = data?.authenticated ?? false;
+    isAuthenticated = data?.data.user !== undefined && data?.data.user !== null;
   }
 
-  const value = { user: data?.user, isAuthenticated };
+
+  const value = { user: data?.data.user, isAuthenticated };
   return (
     <AuthContext.Provider value={value}>
       {children}

@@ -22,7 +22,7 @@ useQueryHooksFile.addImportDeclaration({
 })
 
 useQueryHooksFile.addImportDeclaration({
-  namedImports: ["RawAxiosRequestConfig"],
+  namedImports: ["RawAxiosRequestConfig", " AxiosResponse"],
   moduleSpecifier: "axios"
 });
 
@@ -31,10 +31,7 @@ useQueryHooksFile.addImportDeclaration({
   moduleSpecifier: `../generated/axios/configuration.ts`
 })
 
-useQueryHooksFile.addImportDeclaration({
-  namedImports: ["WithStatusType"],
-  moduleSpecifier: `../generate_scripts/api-types.ts`
-})
+
 
 const generatedHookNames: string[] = []
 const importedTypes = new Set<string>()
@@ -141,17 +138,17 @@ for (const apiFactory of apiFactoryFunctions) {
           },
           {
             name: "mutationOptions",
-            type: `Omit<UseMutationOptions< WithStatusType<${typeArgs}>, Error, unknown>, 'mutationFn'>`,
+            type: `Omit<UseMutationOptions< AxiosResponse<${typeArgs}>, Error, unknown>, 'mutationFn'>`,
             hasQuestionToken: true,
           },
         ],
-        returnType: `UseMutationResult<WithStatusType<${typeArgs}>, Error>`,
+        returnType: `UseMutationResult<AxiosResponse<${typeArgs}>, Error>`,
         statements: `
-return useMutation<WithStatusType<${typeArgs}>, Error, unknown>({
+return useMutation<AxiosResponse<${typeArgs}>, Error, unknown>({
   mutationFn: async () => {
     const api = ${apiFactory.getName()}(new Configuration({ basePath: \`\${import.meta.env.VITE_BACKEND_URL}\` }));
     const res = await api.${endpointMethodName}(${extraHookParameters.map(p => p.name).join(', ')}${extraHookParameters.length > 0 ? ', ' : ''}{...options, withCredentials: true});
-    return {${typeArgs != "void" ? "...res.data, " : "data: undefined, "}status: res.status};
+    return res;
   },
   ...mutationOptions
 });
@@ -171,18 +168,18 @@ return useMutation<WithStatusType<${typeArgs}>, Error, unknown>({
           },
           {
             name: "queryOptions",
-            type: `Omit<UseQueryOptions<${typeArgs}, Error, WithStatusType<${typeArgs}>>, 'queryKey' | 'queryFn'>`,
+            type: `Omit<UseQueryOptions<AxiosResponse<${typeArgs}>, Error, AxiosResponse<${typeArgs}>>, 'queryKey' | 'queryFn'>`,
             hasQuestionToken: true,
           },
         ],
-        returnType: `UseQueryResult<WithStatusType<${typeArgs}>, Error>`,
+        returnType: `UseQueryResult<AxiosResponse<${typeArgs}>, Error>`,
         statements: `
-return useQuery<${typeArgs}, Error, WithStatusType<${typeArgs}>>({
+return useQuery<AxiosResponse<${typeArgs}>, Error, AxiosResponse<${typeArgs}>>({
   queryKey: ['${extraHookParameters.map(p => p.name).join(', ')}', options?.params, options?.headers],
   queryFn: async () => {
     const api = ${apiFactory.getName()}(new Configuration({ basePath: \`\${import.meta.env.VITE_BACKEND_URL}\` }));
     const res = await api.${endpointMethodName}(${extraHookParameters.map(p => p.name).join(', ')}${extraHookParameters.length > 0 ? ', ' : ''}{...options, withCredentials: true});
-    return {...res.data, status: res.status};
+    return res;
   },
   ...queryOptions
 });
@@ -208,12 +205,6 @@ indexFile.addImportDeclaration({
 // Export all hooks
 indexFile.addExportDeclaration({
   namedExports: generatedHookNames
-})
-
-indexFile.addExportDeclaration({
-  namedExports: ["WithStatusType"],
-  isTypeOnly: true,
-  moduleSpecifier: "../generate_scripts/api-types.ts"
 })
 
 indexFile.addExportDeclaration({
