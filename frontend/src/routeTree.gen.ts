@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/login'
+import { Route as CanvasImport } from './routes/canvas'
 import { Route as AppImport } from './routes/app'
 import { Route as IndexImport } from './routes/index'
 import { Route as AppIndexImport } from './routes/app/index'
@@ -21,6 +22,12 @@ import { Route as AppIndexImport } from './routes/app/index'
 const LoginRoute = LoginImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const CanvasRoute = CanvasImport.update({
+  id: '/canvas',
+  path: '/canvas',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -60,6 +67,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppImport
       parentRoute: typeof rootRoute
     }
+    '/canvas': {
+      id: '/canvas'
+      path: '/canvas'
+      fullPath: '/canvas'
+      preLoaderRoute: typeof CanvasImport
+      parentRoute: typeof rootRoute
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -92,12 +106,14 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/canvas': typeof CanvasRoute
   '/login': typeof LoginRoute
   '/app/': typeof AppIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/canvas': typeof CanvasRoute
   '/login': typeof LoginRoute
   '/app': typeof AppIndexRoute
 }
@@ -106,28 +122,31 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/canvas': typeof CanvasRoute
   '/login': typeof LoginRoute
   '/app/': typeof AppIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app' | '/login' | '/app/'
+  fullPaths: '/' | '/app' | '/canvas' | '/login' | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/app'
-  id: '__root__' | '/' | '/app' | '/login' | '/app/'
+  to: '/' | '/canvas' | '/login' | '/app'
+  id: '__root__' | '/' | '/app' | '/canvas' | '/login' | '/app/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  CanvasRoute: typeof CanvasRoute
   LoginRoute: typeof LoginRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  CanvasRoute: CanvasRoute,
   LoginRoute: LoginRoute,
 }
 
@@ -143,6 +162,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/app",
+        "/canvas",
         "/login"
       ]
     },
@@ -154,6 +174,9 @@ export const routeTree = rootRoute
       "children": [
         "/app/"
       ]
+    },
+    "/canvas": {
+      "filePath": "canvas.tsx"
     },
     "/login": {
       "filePath": "login.tsx"
