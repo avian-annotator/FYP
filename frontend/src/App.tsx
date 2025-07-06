@@ -1,5 +1,5 @@
 
-import { createRootRouteWithContext, RouterProvider } from '@tanstack/react-router'
+import { RouterProvider } from '@tanstack/react-router'
 
 // Import the generated route tree
 import { AuthProvider, useAuth } from './auth'

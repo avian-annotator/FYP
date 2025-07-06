@@ -1,4 +1,4 @@
-import { QueryKey, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 interface LoginResponse {
@@ -8,7 +8,7 @@ interface LoginResponse {
 }
 
 // TODO: CSRF!!!!!!!!
-export const useLogin = () => {
+export const useLogin = (location?: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ username, password }: { username: string; password: string }): Promise<LoginResponse> => {
@@ -34,6 +34,8 @@ export const useLogin = () => {
     onSuccess: () => {
       // Invalidate the currentUser query to refetch the user's authentication state
       queryClient.invalidateQueries({ queryKey: ['getCurrentUser'] });
+      if (location) { window.location.href = location }
+    
     },
   });
 };

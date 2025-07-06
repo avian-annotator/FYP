@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { useLogin } from './useLogin';
 
-const Login = () => {
+const Login = ({ location }: { location?: string }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
-  const mutation = useLogin();
+  const mutation = useLogin(location);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

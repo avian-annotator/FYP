@@ -7,7 +7,8 @@ export const Route = createFileRoute('/app')({
 
 function RouteComponent() {
   const auth = useAuth()
-
+  auth.refreshUser()
+  console.log("SDFSD")
   return <>
     {
       auth.isAuthenticated ? <Outlet /> : <Login />
