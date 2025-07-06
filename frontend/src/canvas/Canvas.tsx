@@ -21,14 +21,7 @@ const Canvas = () => {
       onMouseDown={activeTool.handleMouseDown}
       onMouseMove={activeTool.handleMouseMove}
       onMouseUp={activeTool.handleMouseUp}
-      //className="relative w-screen h-screen bg-[#f0f0f0] select-none" uncomment when tailwind works
-      style={{
-        position: "relative",
-        width: "100vw",
-        height: "100vh",
-        backgroundColor: "#f0f0f0",
-        userSelect: "none",
-      }}
+      className="relative w-screen h-screen bg-[#f0f0f0] select-none"
     >
       <div style={activeTool.objectRep()} />
     </div>
