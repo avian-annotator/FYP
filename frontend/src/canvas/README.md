@@ -1,0 +1,1 @@
+This folder contains the code for the frontend canvas users will interface with to load, annotate and save their data
