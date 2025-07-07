@@ -6,7 +6,8 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **authenticated** | **boolean** |  | [optional] [default to undefined]
-**user** | **string** |  | [default to undefined]
+**user** | **string** |  | [optional] [default to undefined]
+**role** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
@@ -16,6 +17,7 @@ import { CurrentUserResponseDTO } from './api';
 const instance: CurrentUserResponseDTO = {
     authenticated,
     user,
+    role,
 };
 ```
 

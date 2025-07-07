@@ -1,4 +1,3 @@
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import { createRootRouteWithContext, Link, Navigate, Outlet, redirect } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { AuthContextType, useAuth, useLogout } from '../auth'
@@ -6,7 +5,6 @@ import { AuthContextType, useAuth, useLogout } from '../auth'
 interface RouterContext {
   auth: AuthContextType | undefined
 }
-
 
 export const Route = createRootRouteWithContext<RouterContext>()({
 

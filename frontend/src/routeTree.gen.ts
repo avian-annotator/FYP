@@ -11,13 +11,29 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as WorkspacesImport } from './routes/workspaces'
+import { Route as MeImport } from './routes/me'
 import { Route as LoginImport } from './routes/login'
 import { Route as CanvasImport } from './routes/canvas'
-import { Route as AppImport } from './routes/app'
+import { Route as AdminImport } from './routes/admin'
 import { Route as IndexImport } from './routes/index'
-import { Route as AppIndexImport } from './routes/app/index'
+import { Route as WorkspacesIndexImport } from './routes/workspaces/index'
+import { Route as MeIndexImport } from './routes/me/index'
+import { Route as AdminIndexImport } from './routes/admin/index'
 
 // Create/Update Routes
+
+const WorkspacesRoute = WorkspacesImport.update({
+  id: '/workspaces',
+  path: '/workspaces',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const MeRoute = MeImport.update({
+  id: '/me',
+  path: '/me',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const LoginRoute = LoginImport.update({
   id: '/login',
@@ -31,9 +47,9 @@ const CanvasRoute = CanvasImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AppRoute = AppImport.update({
-  id: '/app',
-  path: '/app',
+const AdminRoute = AdminImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -43,10 +59,22 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AppIndexRoute = AppIndexImport.update({
+const WorkspacesIndexRoute = WorkspacesIndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AppRoute,
+  getParentRoute: () => WorkspacesRoute,
+} as any)
+
+const MeIndexRoute = MeIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MeRoute,
+} as any)
+
+const AdminIndexRoute = AdminIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -60,11 +88,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/app': {
-      id: '/app'
-      path: '/app'
-      fullPath: '/app'
-      preLoaderRoute: typeof AppImport
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminImport
       parentRoute: typeof rootRoute
     }
     '/canvas': {
@@ -81,73 +109,156 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
-    '/app/': {
-      id: '/app/'
+    '/me': {
+      id: '/me'
+      path: '/me'
+      fullPath: '/me'
+      preLoaderRoute: typeof MeImport
+      parentRoute: typeof rootRoute
+    }
+    '/workspaces': {
+      id: '/workspaces'
+      path: '/workspaces'
+      fullPath: '/workspaces'
+      preLoaderRoute: typeof WorkspacesImport
+      parentRoute: typeof rootRoute
+    }
+    '/admin/': {
+      id: '/admin/'
       path: '/'
-      fullPath: '/app/'
-      preLoaderRoute: typeof AppIndexImport
-      parentRoute: typeof AppImport
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexImport
+      parentRoute: typeof AdminImport
+    }
+    '/me/': {
+      id: '/me/'
+      path: '/'
+      fullPath: '/me/'
+      preLoaderRoute: typeof MeIndexImport
+      parentRoute: typeof MeImport
+    }
+    '/workspaces/': {
+      id: '/workspaces/'
+      path: '/'
+      fullPath: '/workspaces/'
+      preLoaderRoute: typeof WorkspacesIndexImport
+      parentRoute: typeof WorkspacesImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface AppRouteChildren {
-  AppIndexRoute: typeof AppIndexRoute
+interface AdminRouteChildren {
+  AdminIndexRoute: typeof AdminIndexRoute
 }
 
-const AppRouteChildren: AppRouteChildren = {
-  AppIndexRoute: AppIndexRoute,
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminIndexRoute: AdminIndexRoute,
 }
 
-const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface MeRouteChildren {
+  MeIndexRoute: typeof MeIndexRoute
+}
+
+const MeRouteChildren: MeRouteChildren = {
+  MeIndexRoute: MeIndexRoute,
+}
+
+const MeRouteWithChildren = MeRoute._addFileChildren(MeRouteChildren)
+
+interface WorkspacesRouteChildren {
+  WorkspacesIndexRoute: typeof WorkspacesIndexRoute
+}
+
+const WorkspacesRouteChildren: WorkspacesRouteChildren = {
+  WorkspacesIndexRoute: WorkspacesIndexRoute,
+}
+
+const WorkspacesRouteWithChildren = WorkspacesRoute._addFileChildren(
+  WorkspacesRouteChildren,
+)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/app': typeof AppRouteWithChildren
+  '/admin': typeof AdminRouteWithChildren
   '/canvas': typeof CanvasRoute
   '/login': typeof LoginRoute
-  '/app/': typeof AppIndexRoute
+  '/me': typeof MeRouteWithChildren
+  '/workspaces': typeof WorkspacesRouteWithChildren
+  '/admin/': typeof AdminIndexRoute
+  '/me/': typeof MeIndexRoute
+  '/workspaces/': typeof WorkspacesIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/canvas': typeof CanvasRoute
   '/login': typeof LoginRoute
-  '/app': typeof AppIndexRoute
+  '/admin': typeof AdminIndexRoute
+  '/me': typeof MeIndexRoute
+  '/workspaces': typeof WorkspacesIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/app': typeof AppRouteWithChildren
+  '/admin': typeof AdminRouteWithChildren
   '/canvas': typeof CanvasRoute
   '/login': typeof LoginRoute
-  '/app/': typeof AppIndexRoute
+  '/me': typeof MeRouteWithChildren
+  '/workspaces': typeof WorkspacesRouteWithChildren
+  '/admin/': typeof AdminIndexRoute
+  '/me/': typeof MeIndexRoute
+  '/workspaces/': typeof WorkspacesIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app' | '/canvas' | '/login' | '/app/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/canvas'
+    | '/login'
+    | '/me'
+    | '/workspaces'
+    | '/admin/'
+    | '/me/'
+    | '/workspaces/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/canvas' | '/login' | '/app'
-  id: '__root__' | '/' | '/app' | '/canvas' | '/login' | '/app/'
+  to: '/' | '/canvas' | '/login' | '/admin' | '/me' | '/workspaces'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/canvas'
+    | '/login'
+    | '/me'
+    | '/workspaces'
+    | '/admin/'
+    | '/me/'
+    | '/workspaces/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AppRoute: typeof AppRouteWithChildren
+  AdminRoute: typeof AdminRouteWithChildren
   CanvasRoute: typeof CanvasRoute
   LoginRoute: typeof LoginRoute
+  MeRoute: typeof MeRouteWithChildren
+  WorkspacesRoute: typeof WorkspacesRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AppRoute: AppRouteWithChildren,
+  AdminRoute: AdminRouteWithChildren,
   CanvasRoute: CanvasRoute,
   LoginRoute: LoginRoute,
+  MeRoute: MeRouteWithChildren,
+  WorkspacesRoute: WorkspacesRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -161,18 +272,20 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/app",
+        "/admin",
         "/canvas",
-        "/login"
+        "/login",
+        "/me",
+        "/workspaces"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/app": {
-      "filePath": "app.tsx",
+    "/admin": {
+      "filePath": "admin.tsx",
       "children": [
-        "/app/"
+        "/admin/"
       ]
     },
     "/canvas": {
@@ -181,9 +294,29 @@ export const routeTree = rootRoute
     "/login": {
       "filePath": "login.tsx"
     },
-    "/app/": {
-      "filePath": "app/index.tsx",
-      "parent": "/app"
+    "/me": {
+      "filePath": "me.tsx",
+      "children": [
+        "/me/"
+      ]
+    },
+    "/workspaces": {
+      "filePath": "workspaces.tsx",
+      "children": [
+        "/workspaces/"
+      ]
+    },
+    "/admin/": {
+      "filePath": "admin/index.tsx",
+      "parent": "/admin"
+    },
+    "/me/": {
+      "filePath": "me/index.tsx",
+      "parent": "/me"
+    },
+    "/workspaces/": {
+      "filePath": "workspaces/index.tsx",
+      "parent": "/workspaces"
     }
   }
 }

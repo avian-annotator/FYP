@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { useLogin } from './useLogin';
+import { useLogin } from './AuthProvider';
 
 const Login = ({ location }: { location?: string }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const mutation = useLogin(location);
+  const mutation = useLogin({ location });
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

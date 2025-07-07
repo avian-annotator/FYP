@@ -1,0 +1,1 @@
+// If needed, can define a logout component here

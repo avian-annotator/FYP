@@ -13,9 +13,7 @@ function InnerApp() {
   return <RouterProvider router={router} context={{ auth }} />
 }
 
-
 const queryClient = new QueryClient()
-
 
 const App = () => {
   return (

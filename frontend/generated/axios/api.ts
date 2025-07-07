@@ -90,7 +90,13 @@ export interface CurrentUserResponseDTO {
      * @type {string}
      * @memberof CurrentUserResponseDTO
      */
-    'user': string;
+    'user'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CurrentUserResponseDTO
+     */
+    'role'?: string;
 }
 /**
  * 
