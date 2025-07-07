@@ -10,7 +10,6 @@ export const Route = createFileRoute('/admin')({
 // The endpoints are protected by the backend
 function RouteComponent() {
   const auth = useAuth()
-  console.log(auth.status)
   return <>
     {
       auth.isAuthenticated && auth.userDetails?.role == "ROLE_ADMIN" ? <Outlet /> : <Login />

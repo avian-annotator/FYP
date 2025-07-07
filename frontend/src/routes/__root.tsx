@@ -1,12 +1,10 @@
-import { createRootRouteWithContext, Link, Navigate, Outlet, redirect } from '@tanstack/react-router'
+import { createRootRoute, createRootRouteWithContext, Link, Navigate, Outlet, redirect } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-import { AuthContextType, useAuth, useLogout } from '../auth'
+import { useAuth, useLogout } from '../auth'
 
-interface RouterContext {
-  auth: AuthContextType | undefined
-}
 
-export const Route = createRootRouteWithContext<RouterContext>()({
+
+export const Route = createRootRoute({
 
   component: () => {
     const { isAuthenticated } = useAuth()

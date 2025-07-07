@@ -175,7 +175,7 @@ return useMutation<AxiosResponse<${typeArgs}>, Error, unknown>({
         returnType: `UseQueryResult<AxiosResponse<${typeArgs}>, Error>`,
         statements: `
 return useQuery<AxiosResponse<${typeArgs}>, Error, AxiosResponse<${typeArgs}>>({
-  queryKey: ['${extraHookParameters.map(p => p.name).join(', ')}', options?.params, options?.headers],
+  queryKey: ['${hookName}' ${extraHookParameters.length > 0 ? ', options?.params, options?.headers' : ''}],
   queryFn: async () => {
     const api = ${apiFactory.getName()}(new Configuration({ basePath: \`\${import.meta.env.VITE_BACKEND_URL}\` }));
     const res = await api.${endpointMethodName}(${extraHookParameters.map(p => p.name).join(', ')}${extraHookParameters.length > 0 ? ', ' : ''}{...options, withCredentials: true});

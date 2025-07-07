@@ -50,7 +50,7 @@ export function useEditUser(id: number, editUserRequestBodyDTO: EditUserRequestB
 export function useGetAllUsers(options?: RawAxiosRequestConfig, queryOptions?: Omit<UseQueryOptions<AxiosResponse<CreateUserResponseDTO[]>, Error, AxiosResponse<CreateUserResponseDTO[]>>, 'queryKey' | 'queryFn'>): UseQueryResult<AxiosResponse<CreateUserResponseDTO[]>, Error> {
 
   return useQuery<AxiosResponse<CreateUserResponseDTO[]>, Error, AxiosResponse<CreateUserResponseDTO[]>>({
-    queryKey: ['', options?.params, options?.headers],
+    queryKey: ['useGetAllUsers' ],
     queryFn: async () => {
       const api = AdminControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
       const res = await api.getAllUsers({...options, withCredentials: true});
@@ -64,7 +64,7 @@ export function useGetAllUsers(options?: RawAxiosRequestConfig, queryOptions?: O
 export function useGetCurrentUser(options?: RawAxiosRequestConfig, queryOptions?: Omit<UseQueryOptions<AxiosResponse<CurrentUserResponseDTO>, Error, AxiosResponse<CurrentUserResponseDTO>>, 'queryKey' | 'queryFn'>): UseQueryResult<AxiosResponse<CurrentUserResponseDTO>, Error> {
 
   return useQuery<AxiosResponse<CurrentUserResponseDTO>, Error, AxiosResponse<CurrentUserResponseDTO>>({
-    queryKey: ['', options?.params, options?.headers],
+    queryKey: ['useGetCurrentUser' ],
     queryFn: async () => {
       const api = AuthenticationControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
       const res = await api.getCurrentUser({...options, withCredentials: true});

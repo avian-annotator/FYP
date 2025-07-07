@@ -100,9 +100,8 @@ export const useLogin = ({ location }: useLoginProps) => {
     },
     onSuccess: () => {
       // Invalidate the currentUser query to refetch the user's authentication state
-      queryClient.invalidateQueries({ queryKey: ['getCurrentUser'] });
+      queryClient.invalidateQueries({ queryKey: ['useGetCurrentUser'] });
       if (location) { window.location.href = location }
-
       context?.setIsAuthenticated(true)
     },
   });
