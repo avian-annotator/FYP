@@ -19,6 +19,7 @@ import { Route as AdminImport } from './routes/admin'
 import { Route as IndexImport } from './routes/index'
 import { Route as WorkspacesIndexImport } from './routes/workspaces/index'
 import { Route as MeIndexImport } from './routes/me/index'
+import { Route as LoginIndexImport } from './routes/login/index'
 import { Route as AdminIndexImport } from './routes/admin/index'
 
 // Create/Update Routes
@@ -69,6 +70,12 @@ const MeIndexRoute = MeIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => MeRoute,
+} as any)
+
+const LoginIndexRoute = LoginIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LoginRoute,
 } as any)
 
 const AdminIndexRoute = AdminIndexImport.update({
@@ -130,6 +137,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexImport
       parentRoute: typeof AdminImport
     }
+    '/login/': {
+      id: '/login/'
+      path: '/'
+      fullPath: '/login/'
+      preLoaderRoute: typeof LoginIndexImport
+      parentRoute: typeof LoginImport
+    }
     '/me/': {
       id: '/me/'
       path: '/'
@@ -159,6 +173,16 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface LoginRouteChildren {
+  LoginIndexRoute: typeof LoginIndexRoute
+}
+
+const LoginRouteChildren: LoginRouteChildren = {
+  LoginIndexRoute: LoginIndexRoute,
+}
+
+const LoginRouteWithChildren = LoginRoute._addFileChildren(LoginRouteChildren)
+
 interface MeRouteChildren {
   MeIndexRoute: typeof MeIndexRoute
 }
@@ -185,10 +209,11 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/canvas': typeof CanvasRoute
-  '/login': typeof LoginRoute
+  '/login': typeof LoginRouteWithChildren
   '/me': typeof MeRouteWithChildren
   '/workspaces': typeof WorkspacesRouteWithChildren
   '/admin/': typeof AdminIndexRoute
+  '/login/': typeof LoginIndexRoute
   '/me/': typeof MeIndexRoute
   '/workspaces/': typeof WorkspacesIndexRoute
 }
@@ -196,8 +221,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/canvas': typeof CanvasRoute
-  '/login': typeof LoginRoute
   '/admin': typeof AdminIndexRoute
+  '/login': typeof LoginIndexRoute
   '/me': typeof MeIndexRoute
   '/workspaces': typeof WorkspacesIndexRoute
 }
@@ -207,10 +232,11 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/canvas': typeof CanvasRoute
-  '/login': typeof LoginRoute
+  '/login': typeof LoginRouteWithChildren
   '/me': typeof MeRouteWithChildren
   '/workspaces': typeof WorkspacesRouteWithChildren
   '/admin/': typeof AdminIndexRoute
+  '/login/': typeof LoginIndexRoute
   '/me/': typeof MeIndexRoute
   '/workspaces/': typeof WorkspacesIndexRoute
 }
@@ -225,10 +251,11 @@ export interface FileRouteTypes {
     | '/me'
     | '/workspaces'
     | '/admin/'
+    | '/login/'
     | '/me/'
     | '/workspaces/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/canvas' | '/login' | '/admin' | '/me' | '/workspaces'
+  to: '/' | '/canvas' | '/admin' | '/login' | '/me' | '/workspaces'
   id:
     | '__root__'
     | '/'
@@ -238,6 +265,7 @@ export interface FileRouteTypes {
     | '/me'
     | '/workspaces'
     | '/admin/'
+    | '/login/'
     | '/me/'
     | '/workspaces/'
   fileRoutesById: FileRoutesById
@@ -247,7 +275,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   CanvasRoute: typeof CanvasRoute
-  LoginRoute: typeof LoginRoute
+  LoginRoute: typeof LoginRouteWithChildren
   MeRoute: typeof MeRouteWithChildren
   WorkspacesRoute: typeof WorkspacesRouteWithChildren
 }
@@ -256,7 +284,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   CanvasRoute: CanvasRoute,
-  LoginRoute: LoginRoute,
+  LoginRoute: LoginRouteWithChildren,
   MeRoute: MeRouteWithChildren,
   WorkspacesRoute: WorkspacesRouteWithChildren,
 }
@@ -292,7 +320,10 @@ export const routeTree = rootRoute
       "filePath": "canvas.tsx"
     },
     "/login": {
-      "filePath": "login.tsx"
+      "filePath": "login.tsx",
+      "children": [
+        "/login/"
+      ]
     },
     "/me": {
       "filePath": "me.tsx",
@@ -309,6 +340,10 @@ export const routeTree = rootRoute
     "/admin/": {
       "filePath": "admin/index.tsx",
       "parent": "/admin"
+    },
+    "/login/": {
+      "filePath": "login/index.tsx",
+      "parent": "/login"
     },
     "/me/": {
       "filePath": "me/index.tsx",
