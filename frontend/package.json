@@ -4,9 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "local": "vite",
+    "frontend": "bun msw init public --save && vite --mode frontend",
     "mock": "bun msw init public --save && vite --mode mock",
-    "build": "tsc -b && vite build",
+    "development": "tsc -b && vite build --mode development",
+    "production": "tsc -b && vite build --mode production",
     "lint": "eslint .",
     "preview": "vite preview"
   },

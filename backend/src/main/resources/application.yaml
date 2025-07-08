@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local
+    active: ${MODE}
   application:
     name: avian-annotator
 
