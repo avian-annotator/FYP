@@ -15,14 +15,13 @@ const rootElement = document.getElementById('root')!;
     await worker.start({ onUnhandledRequest: 'bypass' });
   }
 
-  // Note that development is the same as local mode
+  // Note that development is the default, which is a VITE term, and for us, it is the same as local mode.
   if (import.meta.env.MODE === 'development') {
     console.log(`Running in local mode`);
   } else {
     console.log(`Running in ${import.meta.env.MODE} mode`);
-
-
   }
+
   if (!rootElement.innerHTML) {
     const root = ReactDOM.createRoot(rootElement);
     root.render(
