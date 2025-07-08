@@ -13,7 +13,7 @@ If you want the cool terminal thing, make sure to install bun, and then run `bun
 
 If you are frontend, you can mock backend api requests. See frontend/mocks/handlers.ts and define your mock apis there. Navigate to frontend, and then run `bun run mock`
 
-If you want to use intellij debug mode, make sure to connect the debug to localhost:5005, as that port exposes the bug server. To do this, go to Run/Debug configurations for the main java file, and then select Remote JVM debug.
+If you want to use intellij debug mode, make sure to connect the debug to localhost:5005, as that port exposes the bug server. To do this, go to Run/Debug configurations for the main java file, and then select Remote JVM debug. You also need to define a .env.mock file in the /src/frontend folder, defining the variable `VITE_BACKEND_URL=http://localhost:8080`
 
 Every time you make a change to the backend, you need to run `docker-compose -f docker-compose.local.yml up --build` as you need to recompile the backend. 
 Every time you add a package to the frontend, you need to run `docker-compose down`, delete the volume associated with the frontend, and then run `docker-compose -f docker-compose.local.yml up --build`. I need to fix this, I'll get to it :D. 
