@@ -2,6 +2,9 @@ import { Project, SyntaxKind } from "ts-morph";
 
 // NOTE: auth hooks are NOT generated here, specifically the login and logout hooks, as they are not part of the OpenAPI spec (plus aditional concerns).
 
+//TODO: Fix response DTO to be recursive, as it currently only works for the first level of type arguments.
+//TODO: Fix type gen to include query params
+
 const project = new Project({
   manipulationSettings: {
     // @ts-ignore - this is correct, but ts is being an idiot

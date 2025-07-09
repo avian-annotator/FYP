@@ -1,5 +1,6 @@
-import { http } from 'msw';
+import { delay, http } from 'msw';
 
+// @ts-ignore
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 export const handlers = [
@@ -16,7 +17,8 @@ export const handlers = [
   no-ops in terms of authentication state.
   ----------------------------------------------------------------------
   */
-  http.post(`${backendUrl}/api/login`, () => {
+  http.post(`${backendUrl}/api/login`, async () => {
+    await delay(2000)
     return new Response(
       JSON.stringify({ status: 'success' }),
       {
@@ -26,7 +28,8 @@ export const handlers = [
     );
   }),
 
-  http.post(`${backendUrl}/api/logout`, () => {
+  http.post(`${backendUrl}/api/logout`, async () => {
+    await delay(2000)
     return new Response(
       JSON.stringify({ status: 'logged out' }),
       {
@@ -38,7 +41,8 @@ export const handlers = [
 
   //----------------------------------------------------------------------
 
-  http.get(`${backendUrl}/api/auth/current_user`, () => {
+  http.get<never, never, any>(`${backendUrl}/api/auth/current_user`, async () => {
+    await delay(2000)
     return new Response(
       JSON.stringify({
         authenticated: true,
