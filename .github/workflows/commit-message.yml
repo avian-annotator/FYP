@@ -1,4 +1,4 @@
-name: Lint
+name: Commit-Message
 
 on: 
   push:
@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  lint:
+  Commit-Message:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,8 +23,7 @@ jobs:
 
       - name: Install dependencies
         run: bun install
-        working-directory: frontend
 
-      - name: Run frontend linter
-        run: eslint src
-        working-directory: frontend
+      - name: Lint last commit message
+        run: |
+          bun x commitlint --from ${{ github.event.pull_request.base.sha }} --to HEAD

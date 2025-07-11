@@ -1,5 +1,4 @@
 services:
-
   postgres:
     image: postgres
     container_name: postgres-db

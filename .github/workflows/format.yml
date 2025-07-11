@@ -1,4 +1,4 @@
-name: Lint
+name: Format
 
 on: 
   push:
@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  lint:
+  format:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,6 +25,6 @@ jobs:
         run: bun install
         working-directory: frontend
 
-      - name: Run frontend linter
-        run: eslint src
+      - name: Run frontend format check
+        run: bun x prettier --check "src/**/*.{ts,tsx}"
         working-directory: frontend
