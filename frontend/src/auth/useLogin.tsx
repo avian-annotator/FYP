@@ -4,6 +4,8 @@ import { use } from 'react'
 import axios from 'axios'
 import { AuthContext } from './authContext'
 
+const backendUrl = (import.meta.env.VITE_BACKEND_URL as string) || 'http://localhost:8080'
+
 // TODO: CSRF!!!!!!!!
 export const useLogin = ({ location }: useLoginProps) => {
   const queryClient = useQueryClient()
@@ -19,7 +21,7 @@ export const useLogin = ({ location }: useLoginProps) => {
       formData.append('password', password)
 
       const response = await axios.post<LoginResponse>(
-        `${import.meta.env.VITE_BACKEND_URL}/api/login`,
+        `${backendUrl}/api/login`,
         formData.toString(), // Send as form data
         {
           headers: {

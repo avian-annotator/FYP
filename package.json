@@ -3,6 +3,17 @@
   "version": "1.0.0",
   "scripts": {
     "start": "bun install --cwd tui && bun run tui/App.js",
-    "build": "docker-compose build"
+    "build": "docker-compose build",
+    "prepare": "husky install"
+  },
+  "private": true,
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@types/bun": "latest",
+    "husky": "^8.0.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
   }
 }

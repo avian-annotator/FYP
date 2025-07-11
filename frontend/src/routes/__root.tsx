@@ -11,11 +11,13 @@ export const Route = createRootRoute({
       <>
         <div className="flex flex-row gap-x-2 ">
           Probably some sort of menu bar for logging in, logging out + nav links
-          {isAuthenticated ? (
+          { isAuthenticated ? (
             <button
               type="button"
               className="px-4 py-2 bg-blue-500 text-white rounded"
-              onClick={() => mutation.mutate()}
+              onClick={ (): void => {
+                mutation.mutate()
+              } }
             >
               Log out
             </button>
@@ -23,7 +25,7 @@ export const Route = createRootRoute({
             <Link className="px-4 py-2 bg-blue-500 text-white rounded" to="/login">
               Log in
             </Link>
-          )}
+          ) }
         </div>
         <Outlet />
         <TanStackRouterDevtools />

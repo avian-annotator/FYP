@@ -7,5 +7,5 @@ export const Route = createFileRoute('/me')({
 
 function RouteComponent() {
   const auth = useAuth()
-  return <>{auth.isAuthenticated ? <Outlet /> : <Login />}</>
+  return <>{ auth.isAuthenticated ? <Outlet /> : <Login /> }</>
 }

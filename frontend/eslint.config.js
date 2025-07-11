@@ -6,11 +6,12 @@ import tseslint from 'typescript-eslint'
 import prettier from 'eslint-config-prettier'
 import reactX from 'eslint-plugin-react-x'
 import reactDom from 'eslint-plugin-react-dom'
+import react from 'eslint-plugin-react'
 
 export default tseslint.config(
   { ignores: ['dist'] },
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommendedTypeChecked, prettier],
+    extends: [js.configs.recommended, ...tseslint.configs.strictTypeChecked, prettier],
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2020,
@@ -25,6 +26,7 @@ export default tseslint.config(
       'react-refresh': reactRefresh,
       'react-x': reactX,
       'react-dom': reactDom,
+      'react': react
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
@@ -35,7 +37,8 @@ export default tseslint.config(
       ...reactX.configs['recommended-typescript'].rules,
       ...reactDom.configs.recommended.rules,
       "no-console": ["error"],
-      "no-warning-comments": ["warn", { "terms": ["todo", "fixme"], "location": "start" }]
+      "no-warning-comments": ["warn", { "terms": ["todo", "fixme"], "location": "start" }],
+      "react/jsx-curly-spacing": ["error", { "when": "always", "children": true }]
     },
   },
 )

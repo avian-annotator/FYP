@@ -6,6 +6,8 @@ interface LogoutResponse {
   error?: string
 }
 
+const backendUrl = (import.meta.env.VITE_BACKEND_URL as string) || 'http://localhost:8080'
+
 // TODO: CSRF!!!!!!!!
 export const useLogout = () => {
   const queryClient = useQueryClient()
@@ -13,7 +15,7 @@ export const useLogout = () => {
   return useMutation({
     mutationFn: async (): Promise<LogoutResponse> => {
       const response = await axios.post<LogoutResponse>(
-        `${import.meta.env.VITE_BACKEND_URL}/api/logout`,
+        `${backendUrl}/api/logout`,
         {},
         {
           headers: {

@@ -11,6 +11,6 @@ export const Route = createFileRoute('/admin')({
 function RouteComponent() {
   const auth = useAuth()
   return (
-    <>{auth.isAuthenticated && auth.userDetails?.role == 'ROLE_ADMIN' ? <Outlet /> : <Login />}</>
+    <>{ auth.isAuthenticated && auth.userDetails?.role == 'ROLE_ADMIN' ? <Outlet /> : <Login /> }</>
   )
 }

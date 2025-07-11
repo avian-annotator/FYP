@@ -6,14 +6,16 @@ import { setupServer } from 'msw/node'
 
 const backendUrl = process.env.VITE_BACKEND_URL
 
+const baseUrl = backendUrl ?? 'http://localhost:8080'
+
 export const handlers = [
-  http.post(`${backendUrl}/api/login`, () => {
+  http.post(`${baseUrl}/api/login`, () => {
     return HttpResponse.json({
       status: 'success',
     })
   }),
 
-  http.get(`${backendUrl}/api/auth/current_user`, () => {
+  http.get(`${baseUrl}/api/auth/current_user`, () => {
     return HttpResponse.json({
       status: 'success',
     })
@@ -22,9 +24,15 @@ export const handlers = [
 
 const server = setupServer(...handlers)
 
-beforeAll(() => server.listen())
-afterEach(() => server.resetHandlers())
-afterAll(() => server.close())
+beforeAll((): void => {
+  server.listen()
+})
+afterEach((): void => {
+  server.resetHandlers()
+})
+afterAll((): void => {
+  server.close()
+})
 
 test('useLogin', () => {
   expect(2 + 2).toBe(4)
