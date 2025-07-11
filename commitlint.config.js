@@ -11,6 +11,7 @@ module.exports = {
     'type-case': [2, 'always', 'lower-case'],
     'subject-case': [2, 'always', ['sentence-case', 'lower-case']],
     'subject-full-stop': [2, 'never', '.'],
-    'header-min-length': [2, 'always', 10]
+    'header-min-length': [2, 'always', 10],
+    'subject-verb-imperative': [2, 'always']
   }
 }
