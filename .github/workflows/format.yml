@@ -6,7 +6,6 @@ on:
       - main
   pull_request:
 
-
 jobs:
   format:
     runs-on: ubuntu-latest
@@ -27,3 +26,21 @@ jobs:
       - name: Run frontend format check
         run: bun x prettier --check "src/**/*.{ts,tsx}"
         working-directory: frontend
+
+  notify:
+    needs: format
+    if: failure()
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Comment on PR
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.payload.pull_request.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "⚠️ Formatting check failed. Please enable autoformatting in your IDE or run `bun run format` from the `/frontend` directory."
+            })
