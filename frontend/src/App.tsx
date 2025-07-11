@@ -1,12 +1,10 @@
-
 import { RouterProvider } from '@tanstack/react-router'
 
 // Import the generated route tree
-import { AuthProvider, useAuth } from './auth'
+import { AuthProvider } from './auth'
 import { router } from './router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-
-
+import { useAuth } from './auth/useAuth'
 
 function InnerApp() {
   const auth = useAuth()
@@ -22,7 +20,6 @@ const App = () => {
         <InnerApp />
       </AuthProvider>
     </QueryClientProvider>
-
   )
 }
 

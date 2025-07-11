@@ -1,42 +1,44 @@
-import { useState } from 'react';
-import { useLogin } from './AuthProvider';
+import { useState } from 'react'
+import { useLogin } from './useLogin'
 
 const Login = ({ location }: { location?: string }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const mutation = useLogin({ location });
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const mutation = useLogin({ location })
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    mutation.mutate({ username, password });
-  };
+    event.preventDefault()
+    mutation.mutate({ username, password })
+  }
 
   return (
     <form className="flex flex-col" onSubmit={handleSubmit}>
       <div className="flex flex-row">
         <label htmlFor="username">Username: </label>
-        <input className="border-1 rounded" type="text" id="username" onChange={(e) => setUsername(e.target.value)} />
+        <input
+          className="border-1 rounded"
+          type="text"
+          id="username"
+          onChange={e => setUsername(e.target.value)}
+        />
       </div>
       <div className="flex flex-row">
-        <label htmlFor="password">Password:  </label>
-        <input className="border-1 rounded" type="password" id="fpassword" onChange={(e) => setPassword(e.target.value)} />
+        <label htmlFor="password">Password: </label>
+        <input
+          className="border-1 rounded"
+          type="password"
+          id="fpassword"
+          onChange={e => setPassword(e.target.value)}
+        />
       </div>
       <input className="px-4 py-2 bg-blue-500 text-white rounded" type="submit" value="Login" />
-      {
-        mutation.isPending && <p>Logging in...</p>
-      }
-      {
-        mutation.isError && <p className="text-red-500">{mutation.error.message}</p>
-      }
-      {
-        mutation.data && mutation.isSuccess && <p className="text-green-500">Login successful!</p>
-      }
+      {mutation.isPending && <p>Logging in...</p>}
+      {mutation.isError && <p className="text-red-500">{mutation.error.message}</p>}
+      {mutation.data && mutation.isSuccess && <p className="text-green-500">Login successful!</p>}
 
-      {
-        mutation.data && !mutation.isSuccess && <p className="text-red-500">Login failed!</p>
-      }
+      {mutation.data && !mutation.isSuccess && <p className="text-red-500">Login failed!</p>}
     </form>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

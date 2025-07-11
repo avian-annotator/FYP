@@ -1,4 +1,5 @@
-// @ts-ignore
+/* eslint-disable */
+// @ts-nocheck
 import { http, HttpResponse } from 'msw'
 
 // @ts-ignore

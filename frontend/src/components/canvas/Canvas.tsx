@@ -1,19 +1,19 @@
-import { useRef } from 'react';
-import BBTool from './BBTool';
+import { useRef } from 'react'
+import BBTool from './BBTool'
 
 export interface iCanvasTool {
-  handleMouseMove: (e: React.MouseEvent) => void,
-  handleMouseDown: (e: React.MouseEvent) => void,
-  handleMouseUp: (e: React.MouseEvent) => void,
-  objectRep: ()=>React.CSSProperties,
+  handleMouseMove: (e: React.MouseEvent) => void
+  handleMouseDown: (e: React.MouseEvent) => void
+  handleMouseUp: (e: React.MouseEvent) => void
+  objectRep: () => React.CSSProperties
 }
 
 const Canvas = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null)
   // add tool switcher
   const activeTool = BBTool({
     containerRef: containerRef,
-  });
+  })
 
   return (
     <div
@@ -25,7 +25,7 @@ const Canvas = () => {
     >
       <div style={activeTool.objectRep()} />
     </div>
-  );
-};
+  )
+}
 
-export default Canvas;
+export default Canvas

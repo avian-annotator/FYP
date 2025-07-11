@@ -201,9 +201,7 @@ const WorkspacesRouteChildren: WorkspacesRouteChildren = {
   WorkspacesIndexRoute: WorkspacesIndexRoute,
 }
 
-const WorkspacesRouteWithChildren = WorkspacesRoute._addFileChildren(
-  WorkspacesRouteChildren,
-)
+const WorkspacesRouteWithChildren = WorkspacesRoute._addFileChildren(WorkspacesRouteChildren)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute

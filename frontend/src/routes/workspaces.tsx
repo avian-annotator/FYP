@@ -7,9 +7,5 @@ export const Route = createFileRoute('/workspaces')({
 
 function RouteComponent() {
   const auth = useAuth()
-  return <>
-    {
-      auth.isAuthenticated ? <Outlet /> : <Login />
-    }
-  </>
+  return <>{auth.isAuthenticated ? <Outlet /> : <Login />}</>
 }

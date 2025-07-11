@@ -1,6 +1,7 @@
+/* eslint-disable */
+// @ts-nocheck
 import { delay, http } from 'msw';
 
-// @ts-ignore
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 export const handlers = [

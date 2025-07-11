@@ -1,35 +1,35 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import axios from 'axios'
 
 interface LogoutResponse {
-  success?: string;
-  error?: string;
+  success?: string
+  error?: string
 }
 
 // TODO: CSRF!!!!!!!!
 export const useLogout = () => {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (): Promise<LogoutResponse> => {
-      const response = await axios.post(
+      const response = await axios.post<LogoutResponse>(
         `${import.meta.env.VITE_BACKEND_URL}/api/logout`,
         {},
         {
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded", // This is important
+            'Content-Type': 'application/x-www-form-urlencoded', // This is important
           },
           withCredentials: true,
-          responseType: "json",
-        }
-      );
+          responseType: 'json',
+        },
+      )
 
-      return response.data;
+      return response.data
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       // Invalidate the currentUser query to refetch the user's authentication state
-      queryClient.invalidateQueries({ queryKey: ['getCurrentUser'] });
-      window.location.href = '/';
+      await queryClient.invalidateQueries({ queryKey: ['getCurrentUser'] })
+      window.location.href = '/'
     },
-  });
-};
+  })
+}

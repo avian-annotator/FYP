@@ -9,7 +9,8 @@
     "mock": "bun msw init public --save && vite --mode mock",
     "development": "tsc -b && vite build --mode development",
     "production": "tsc -b && vite build --mode production",
-    "lint": "eslint .",
+    "lint": "eslint src --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -17,7 +18,10 @@
     "@tanstack/react-query": "^5.71.5",
     "@tanstack/react-router": "^1.114.29",
     "axios": "^1.8.4",
+    "eslint-plugin-react-dom": "^1.52.2",
+    "eslint-plugin-react-x": "^1.52.2",
     "path": "^0.12.7",
+    "prettier": "^3.6.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwindcss": "^4.0.14",
@@ -32,6 +36,7 @@
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9.21.0",
+    "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
