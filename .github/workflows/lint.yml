@@ -26,5 +26,5 @@ jobs:
         working-directory: frontend
 
       - name: Run frontend linter
-        run: eslint src
+        run: bun x eslint src
         working-directory: frontend

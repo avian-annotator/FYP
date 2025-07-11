@@ -8,14 +8,13 @@ import { useAuth } from './auth/useAuth'
 
 function InnerApp() {
   const auth = useAuth()
-  return <RouterProvider router={ router } context={ { auth } } />
+  return <RouterProvider router={router} context={{ auth }} />
 }
 
 const queryClient = new QueryClient()
-
 const App = () => {
   return (
-    <QueryClientProvider client={ queryClient }>
+    <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <InnerApp />
       </AuthProvider>

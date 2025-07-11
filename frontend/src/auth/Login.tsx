@@ -12,16 +12,16 @@ const Login = ({ location }: { location?: string }) => {
   }
 
   return (
-    <form className="flex flex-col" onSubmit={ handleSubmit }>
+    <form className="flex flex-col" onSubmit={handleSubmit}>
       <div className="flex flex-row">
         <label htmlFor="username">Username: </label>
         <input
           className="border-1 rounded"
           type="text"
           id="username"
-          onChange={ e => {
+          onChange={e => {
             setUsername(e.target.value)
-          } }
+          }}
         />
       </div>
       <div className="flex flex-row">
@@ -30,14 +30,14 @@ const Login = ({ location }: { location?: string }) => {
           className="border-1 rounded"
           type="password"
           id="fpassword"
-          onChange={ e => {
+          onChange={e => {
             setPassword(e.target.value)
-          } }
+          }}
         />
       </div>
       <input className="px-4 py-2 bg-blue-500 text-white rounded" type="submit" value="Login" />
-      { mutation.isPending && <p>Logging in...</p> }
-      { mutation.isError && <p className="text-red-500">{ mutation.error.message }</p> }
+      {mutation.isPending && <p>Logging in...</p>}
+      {mutation.isError && <p className="text-red-500">{mutation.error.message}</p>}
     </form>
   )
 }

@@ -46,5 +46,5 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     [data, isAuthenticated, setIsAuthenticated],
   )
 
-  return <AuthContext value={ value }>{ children }</AuthContext>
+  return <AuthContext value={value}>{children}</AuthContext>
 }

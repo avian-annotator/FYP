@@ -38,7 +38,6 @@ export default tseslint.config(
       ...reactDom.configs.recommended.rules,
       "no-console": ["error"],
       "no-warning-comments": ["warn", { "terms": ["todo", "fixme"], "location": "start" }],
-      "react/jsx-curly-spacing": ["error", { "when": "always", "children": true }]
     },
   },
 )

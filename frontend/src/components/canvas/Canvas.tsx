@@ -17,13 +17,13 @@ const Canvas = () => {
 
   return (
     <div
-      ref={ containerRef }
-      onMouseDown={ activeTool.handleMouseDown }
-      onMouseMove={ activeTool.handleMouseMove }
-      onMouseUp={ activeTool.handleMouseUp }
+      ref={containerRef}
+      onMouseDown={activeTool.handleMouseDown}
+      onMouseMove={activeTool.handleMouseMove}
+      onMouseUp={activeTool.handleMouseUp}
       className="relative w-screen h-screen bg-[#f0f0f0] select-none"
     >
-      <div style={ activeTool.objectRep() } />
+      <div style={activeTool.objectRep()} />
     </div>
   )
 }
