@@ -6,6 +6,10 @@
     "build": "docker-compose build",
     "prepare": "husky install"
   },
+  "workspaces": [
+    "tui",
+    "frontend"
+  ],
   "private": true,
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",

@@ -9,7 +9,7 @@ Repository for FIT3161 and FIT3162 Computer Science Project for group S1_CS_11
 5. Connect pgAdmin4 to your postgres db. Create a database as whatever you set DATABSE_NAME to.
 6. Copy and paste setup.sql and execute it. This file sets the default admin username and password to be admin and admin respectively.
 
-If you want the cool terminal thing, make sure to install bun, and then run `bun start` from the root. This needs to be fixed with the stuff that I've added since.
+If you want the cool terminal thing, make sure to install bun, running `bun install` and then run `bun start` from the root. This needs to be fixed with the stuff that I've added since.
 
 There are currently 5 different environments, some yet to be properly configured.
 1. local. This is where you have EVERYTHING running on your machine
