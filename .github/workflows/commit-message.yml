@@ -24,21 +24,3 @@ jobs:
 
       - name: Lint commit messages
         run: bun x commitlint --from="${{ github.event.pull_request.base.sha }}" --to=HEAD
-
-  notify:
-    needs: lint
-    if: failure()
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Comment on PR
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.payload.pull_request.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: "Please use conventional commits.\nRun `bun x commitlint --from=HEAD~N --to=HEAD` to see the error."
-            })
