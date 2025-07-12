@@ -7,25 +7,20 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-/**
- * Handles the exceptions.
- * TODO: add better response bodies, especially for the autogen
- */
+/** Handles the exceptions. TODO: add better response bodies, especially for the autogen */
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleValidationException(MethodArgumentNotValidException e) {
-        log.error(e.getMessage());
-        return ResponseEntity.badRequest().build();
-    }
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<?> handleValidationException(MethodArgumentNotValidException e) {
+    log.error(e.getMessage());
+    return ResponseEntity.badRequest().build();
+  }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<?> handleUserNotFoundException(UserNotFoundException e) {
-        log.error(e.getMessage());
-        return ResponseEntity.badRequest().build();
-    }
-
-
+  @ExceptionHandler(UserNotFoundException.class)
+  public ResponseEntity<?> handleUserNotFoundException(UserNotFoundException e) {
+    log.error(e.getMessage());
+    return ResponseEntity.badRequest().build();
+  }
 }

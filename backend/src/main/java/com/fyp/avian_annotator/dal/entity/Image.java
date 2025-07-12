@@ -6,19 +6,14 @@ import jakarta.persistence.*;
 @Table(name = "image")
 public class Image {
 
-    @Id
-    private String url;
+  @Id private String url;
 
-    @ManyToOne
-    @JoinColumn(name = "workspace_id")
-    private Workspace workspace;
+  @ManyToOne
+  @JoinColumn(name = "workspace_id")
+  private Workspace workspace;
 
-    private String filename;
+  private String filename;
 
-    /**
-     * TODO: add custom definition instead of String once we figure our JSON coco
-     */
-    private String annotations;
-
-
+  /** TODO: add custom definition instead of String once we figure our JSON coco */
+  private String annotations;
 }

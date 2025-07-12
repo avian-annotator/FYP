@@ -7,9 +7,9 @@ import lombok.Data;
 @AllArgsConstructor
 public class CurrentUserResponseDTO {
 
-    private boolean authenticated;
+  private boolean authenticated;
 
-    private String user;
+  private String user;
 
-    private String role;
+  private String role;
 }

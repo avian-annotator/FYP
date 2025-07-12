@@ -6,12 +6,11 @@ import jakarta.persistence.*;
 @Table(name = "workspace")
 public class Workspace {
 
-    @Id
-    private Long id;
+  @Id private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
-    private User owner;
+  @ManyToOne
+  @JoinColumn(name = "owner_id")
+  private User owner;
 
-    private String name;
+  private String name;
 }

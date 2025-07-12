@@ -8,64 +8,67 @@ import com.fyp.avian_annotator.dto.response.CreateUserResponseDTO;
 import com.fyp.avian_annotator.dto.response.EditUserResponseDTO;
 import com.fyp.avian_annotator.service.AdminService;
 import jakarta.validation.Valid;
+import java.net.URI;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
-import java.util.List;
 
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
 @RestController
 public class AdminController {
 
-    private final AdminService adminService;
+  private final AdminService adminService;
 
-    private final ObjectMapper mapper;
+  private final ObjectMapper mapper;
 
-    @PostMapping("/users")
-    public ResponseEntity<CreateUserResponseDTO> createNewUser(@RequestBody @Valid CreateUserRequestBodyDTO request) {
+  @PostMapping("/users")
+  public ResponseEntity<CreateUserResponseDTO> createNewUser(
+      @RequestBody @Valid CreateUserRequestBodyDTO request) {
 
-        User createdUser = adminService.createUser(request.getUsername(), request.getPassword());
+    User createdUser = adminService.createUser(request.getUsername(), request.getPassword());
 
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(createdUser.getId())
-                .toUri();
+    URI location =
+        ServletUriComponentsBuilder.fromCurrentRequest()
+            .path("/{id}")
+            .buildAndExpand(createdUser.getId())
+            .toUri();
 
-        CreateUserResponseDTO responseDTO = mapper.convertValue(createdUser, CreateUserResponseDTO.class);
+    CreateUserResponseDTO responseDTO =
+        mapper.convertValue(createdUser, CreateUserResponseDTO.class);
 
-        return ResponseEntity.created(location).body(responseDTO);
-    }
+    return ResponseEntity.created(location).body(responseDTO);
+  }
 
-    @GetMapping("/users")
-    public ResponseEntity<List<CreateUserResponseDTO>> getAllUsers() {
+  @GetMapping("/users")
+  public ResponseEntity<List<CreateUserResponseDTO>> getAllUsers() {
 
-        List<User> users = adminService.getAllUsers();
+    List<User> users = adminService.getAllUsers();
 
-        return ResponseEntity.ok(users.stream()
-                .map(user -> mapper.convertValue(user, CreateUserResponseDTO.class))
-                .toList()
-        );
-    }
+    return ResponseEntity.ok(
+        users.stream()
+            .map(user -> mapper.convertValue(user, CreateUserResponseDTO.class))
+            .toList());
+  }
 
-    @PatchMapping("/users/{id}")
-    public ResponseEntity<EditUserResponseDTO> editUser(@PathVariable Long id, @RequestBody @Valid EditUserRequestBodyDTO request) {
+  @PatchMapping("/users/{id}")
+  public ResponseEntity<EditUserResponseDTO> editUser(
+      @PathVariable Long id, @RequestBody @Valid EditUserRequestBodyDTO request) {
 
-        User editedUser = adminService.editUser(id, request.getUsername(), request.getPassword(), request.getRole());
+    User editedUser =
+        adminService.editUser(id, request.getUsername(), request.getPassword(), request.getRole());
 
-        EditUserResponseDTO responseDTO = mapper.convertValue(editedUser, EditUserResponseDTO.class);
+    EditUserResponseDTO responseDTO = mapper.convertValue(editedUser, EditUserResponseDTO.class);
 
-        return ResponseEntity.ok(responseDTO);
-    }
+    return ResponseEntity.ok(responseDTO);
+  }
 
-    @DeleteMapping("/users/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        adminService.deleteUser(id);
+  @DeleteMapping("/users/{id}")
+  public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    adminService.deleteUser(id);
 
-        return ResponseEntity.noContent().build();
-    }
+    return ResponseEntity.noContent().build();
+  }
 }

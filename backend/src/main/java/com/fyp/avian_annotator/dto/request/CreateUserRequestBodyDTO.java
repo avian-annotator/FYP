@@ -6,9 +6,7 @@ import lombok.Data;
 @Data
 public class CreateUserRequestBodyDTO {
 
-    @NotEmpty
-    private String username;
+  @NotEmpty private String username;
 
-    @NotEmpty
-    private String password;
+  @NotEmpty private String password;
 }

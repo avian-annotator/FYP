@@ -9,13 +9,9 @@ import lombok.Data;
 @AllArgsConstructor
 public class EditUserResponseDTO {
 
-    @NotEmpty
-    private Long id;
+  @NotEmpty private Long id;
 
-    @NotNull
-    private String username;
+  @NotNull private String username;
 
-    @NotEmpty
-    private String role;
+  @NotEmpty private String role;
 }
-

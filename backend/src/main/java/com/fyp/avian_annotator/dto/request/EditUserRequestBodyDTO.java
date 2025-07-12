@@ -7,9 +7,9 @@ import lombok.Data;
 @Data
 public class EditUserRequestBodyDTO {
 
-    private String username;
+  private String username;
 
-    private String password;
+  private String password;
 
-    private String role;
+  private String role;
 }
