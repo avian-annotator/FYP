@@ -19,7 +19,17 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Install dependencies
+      - name: Install OpenJDK 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Format Java code with google-java-format
+        run: java -jar tools/google-java-format-1.22.0-all-deps.jar --dry-run --set-exit-if-changed $(find . -name '*.java')
+        working-directory: backend
+
+      - name: Install frontend dependencies
         run: bun install
         working-directory: frontend
 

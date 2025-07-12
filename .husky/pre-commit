@@ -3,3 +3,6 @@
 
 cd frontend
 bun x lint-staged 
+cd ..
+cd backend
+bun x lint-staged
