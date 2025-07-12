@@ -5,7 +5,7 @@
     "start": "bun install --cwd tui && bun run tui/App.js",
     "build": "docker-compose build",
     "prepare": "husky install",
-    "install": "bun install && mvn install -DskipTests"
+    "setup": "bun install && mvn install -DskipTests"
   },
   "workspaces": [
     "tui",
