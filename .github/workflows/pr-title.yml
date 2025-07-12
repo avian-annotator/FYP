@@ -2,12 +2,12 @@ name: "Lint PR Title"
 
 on:
   pull_request:
+    branches:
+        - main
     types:
       - opened
       - edited
       - reopened
-    branches:
-      - main
 
 jobs:
   lint-title:
