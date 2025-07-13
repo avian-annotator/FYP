@@ -28,9 +28,13 @@ jobs:
       - name: Set up Java 21 with Maven cache
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
-          java-version: 21
+          distribution: 'temurin'
+          java-version: '21'
           cache: maven
+      
+      - name: Download Maven dependencies
+        run: mvn dependency:go-offline
+        working-directory: backend
 
       - name: Check Java formatting with google-java-format
         run: java -jar tools/google-java-format-1.22.0-all-deps.jar \
