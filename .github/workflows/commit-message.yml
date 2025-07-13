@@ -1,7 +1,9 @@
 name: Commit-Message
 
-on: 
+on:
   pull_request:
+    branches:
+      - main
 
 jobs:
   lint:

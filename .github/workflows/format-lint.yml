@@ -1,0 +1,50 @@
+name: Format & Lint
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+        - opened
+        - synchronize
+        - reopened
+
+
+jobs:
+  format:
+    name: Format & Lint Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Set up Java 21 with Maven cache
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+
+      - name: Check Java formatting with google-java-format
+        run: java -jar tools/google-java-format-1.22.0-all-deps.jar \
+          --dry-run --set-exit-if-changed $(find . -name '*.java')
+        working-directory: backend
+
+      - name: Install frontend dependencies
+        run: bun install
+        working-directory: frontend
+
+      - name: Check frontend formatting with Prettier
+        run: bun x prettier --check "src/**/*.{ts,tsx}"
+        working-directory: frontend
+
+      - name: Lint frontend code with ESLint
+        run: bun x eslint src
+        working-directory: frontend
