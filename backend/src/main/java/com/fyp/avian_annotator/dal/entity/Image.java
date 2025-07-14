@@ -8,9 +8,6 @@ public class Image {
 
   @Id private String url;
 
-
-
-
   @ManyToOne
   @JoinColumn(name = "workspace_id")
   private Workspace workspace;
