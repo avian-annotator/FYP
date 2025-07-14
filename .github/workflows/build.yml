@@ -3,24 +3,20 @@ name: Build
 on:
   pull_request:
     types:
-        - opened
-        - synchronize
-        - reopened
+      - opened
+      - synchronize
+      - reopened
     branches:
       - main
+
 jobs:
-  format:
-    name: Test & Build
+  backend:
+    name: Backend Build & Test
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
-
-      - name: Set up Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
 
       - name: Set up Java 21 with Maven cache
         uses: actions/setup-java@v4
@@ -28,13 +24,12 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: maven
-      
+
       - name: Download Maven dependencies
         run: mvn dependency:go-offline
         working-directory: backend
 
-      # These will need to be updated to include the development server values
-      - name: Check if building and tests are correct
+      - name: Run backend build and tests
         run: mvn verify
         working-directory: backend
         env:
@@ -49,11 +44,34 @@ jobs:
           SPRING_REDIS_HOST: redis
           SPRING_REDIS_PORT: 6379
 
+  frontend:
+    name: Frontend Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Cache bun dependencies (frontend)
+        uses: actions/cache@v3
+        with:
+          path: |
+            frontend/node_modules
+            frontend/bun.lockb
+          key: ${{ runner.os }}-bun-frontend-${{ hashFiles('frontend/**/bun.lockb') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-frontend-
+
       - name: Install frontend dependencies
         run: bun install
         working-directory: frontend
 
-      - name: Check if building and tests are correct
+      - name: Run frontend build and tests
         run: bun run build && bun test
         working-directory: frontend
         env:
