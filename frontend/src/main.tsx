@@ -12,10 +12,14 @@ if (!rootElement) {
 void (async () => {
   if (import.meta.env.MODE === 'frontend') {
     const { worker } = await import('../api_mocks/isolated_frontend/browser.ts')
+    // eslint-disable-next-line
+    console.log(`Running in ${import.meta.env.MODE} mode`)
     await worker.start()
   } else if (import.meta.env.MODE === 'mock') {
     const { worker } = await import('../api_mocks/local_with_mock/browser.ts')
     await worker.start({ onUnhandledRequest: 'bypass' })
+    // eslint-disable-next-line
+    console.log(`Running in ${import.meta.env.MODE} mode`)
   }
 
   // Note that development is the default, which is a VITE term, and for us, it is the same as local mode.
