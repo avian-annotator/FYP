@@ -135,6 +135,7 @@ for (const apiFactory of apiFactoryFunctions) {
     const hookName = `use${endpointMethodName[0].toUpperCase()}${endpointMethodName.slice(1)}`
     generatedHookNames.push(hookName)
 
+    
     if (isMutation(endpointMethodRequestMethod)) {
       useQueryHooksFile.addFunction({
         name: hookName,
