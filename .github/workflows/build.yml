@@ -1,0 +1,60 @@
+name: Build
+
+on:
+  pull_request:
+    types:
+        - opened
+        - synchronize
+        - reopened
+    branches:
+      - main
+jobs:
+  format:
+    name: Test & Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Set up Java 21 with Maven cache
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: maven
+      
+      - name: Download Maven dependencies
+        run: mvn dependency:go-offline
+        working-directory: backend
+
+      # These will need to be updated to include the development server values
+      - name: Check if building and tests are correct
+        run: mvn verify
+        working-directory: backend
+        env:
+          DATABASE_NAME: avian_db
+          DATABASE_USERNAME: user
+          DATABASE_PASSWORD: user
+          SPRING_PROFILES_ACTIVE: local
+          FRONTEND_URL: http://localhost:5173
+          SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/avian_db
+          SPRING_DATASOURCE_USERNAME: user
+          SPRING_DATASOURCE_PASSWORD: user
+          SPRING_REDIS_HOST: redis
+          SPRING_REDIS_PORT: 6379
+
+      - name: Install frontend dependencies
+        run: bun install
+        working-directory: frontend
+
+      - name: Check if building and tests are correct
+        run: bun run build && bun test
+        working-directory: frontend
+        env:
+          VITE_BACKEND_URL: http://localhost:8080

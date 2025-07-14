@@ -20,12 +20,18 @@ const useQueryHooksFile = project.createSourceFile("../generated/use-query-hooks
 useQueryHooksFile.addStatements(`
 // This is an auto-generated file. Do not edit manually, instead run the generate.bash`)
 useQueryHooksFile.addImportDeclaration({
-  namedImports: ["useQuery", "UseQueryOptions", "UseQueryResult", "useMutation", "UseMutationResult", "UseMutationOptions"],
+  namedImports: ["useQuery", "useMutation"],
   moduleSpecifier: `@tanstack/react-query`
 })
 
 useQueryHooksFile.addImportDeclaration({
+  namedImports: ["UseQueryOptions", "UseQueryResult", "UseMutationOptions", "UseMutationResult"],
+  isTypeOnly: true,
+  moduleSpecifier: `@tanstack/react-query`
+});
+useQueryHooksFile.addImportDeclaration({
   namedImports: ["RawAxiosRequestConfig", " AxiosResponse"],
+  isTypeOnly: true,
   moduleSpecifier: "axios"
 });
 
@@ -76,7 +82,7 @@ for (const apiFactory of apiFactoryFunctions) {
     .getFirstDescendantByKindOrThrow(SyntaxKind.ObjectLiteralExpression)
 
 
-  const isPrimitive = (typeName) => ["string", "number", "boolean", "unknown", "any", "void", "null", "undefined"]
+  const isPrimitive = (typeName: string) => ["string", "number", "boolean", "unknown", "any", "void", "null", "undefined"]
     .includes(typeName.toLowerCase());
 
   const isMutation = (methodName: string) => ["post", "put", "patch", "delete"].includes(methodName.toLowerCase());
@@ -116,7 +122,8 @@ for (const apiFactory of apiFactoryFunctions) {
       if (!isPrimitive(param.type)) {
         useQueryHooksFile.addImportDeclaration({
           namedImports: [param.type],
-          moduleSpecifier: `../generated/axios/api.ts`
+          moduleSpecifier: `../generated/axios/api.ts`,
+          isTypeOnly: true,
         })
       }
 
@@ -195,7 +202,8 @@ return useQuery<AxiosResponse<${typeArgs}>, Error, AxiosResponse<${typeArgs}>>({
 const indexFile = project.createSourceFile("../generated/index.ts", ``, { overwrite: true })
 useQueryHooksFile.addImportDeclaration({
   namedImports: Array.from(importedTypes.values()),
-  moduleSpecifier: "../generated/axios/api.ts"
+  moduleSpecifier: "../generated/axios/api.ts",
+  isTypeOnly: true,
 })
 
 // Add import for all hooks from the hooks file

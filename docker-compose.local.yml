@@ -3,13 +3,9 @@ services:
   postgres:
     image: postgres
     container_name: postgres-db
-    environment:
-      POSTGRES_DB: ${DATABASE_NAME}
-      POSTGRES_USER: ${DATABASE_USERNAME}
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     env_file:
-      - .env
-      - .env.local
+      - ./backend/.env
+      - ./backend/.env.local
     restart: always
     ports:
       - "5432:5432"
@@ -31,16 +27,8 @@ services:
       - postgres
       - redis
     env_file:
-      - .env
-      - .env.local
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${DATABASE_NAME}
-      SPRING_DATASOURCE_USERNAME: ${DATABASE_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${DATABASE_PASSWORD}
-      SPRING_REDIS_HOST: redis
-      SPRING_REDIS_PORT: 6379
-      FRONTEND_URL: ${FRONTEND_URL}
-      SPRING_PROFILES_ACTIVE: ${MODE}
+      - ./backend/.env
+      - ./backend/.env.local
     ports:
       - "8080:8080"
       - "5005:5005"
@@ -51,16 +39,14 @@ services:
       dockerfile: Dockerfile.local
     container_name: frontend_app
     env_file:
-      - .env
-      - .env.local
+      - ./frontend/.env
+      - ./frontend/.env.local
     volumes:
       - ./frontend:/app
       - /app/node_modules
     ports:
       - "5173:5173"
     restart: unless-stopped
-    environment:
-      VITE_BACKEND_URL: ${BACKEND_URL}
 
 volumes:
   postgres-db_data:

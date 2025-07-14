@@ -9,6 +9,7 @@
     "mock": "bun msw init public --save && vite --mode mock",
     "development": "tsc -b && vite build --mode development",
     "production": "tsc -b && vite build --mode production",
+    "build": "tsc -b && vite build",
     "lint": "eslint src --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "preview": "vite preview"

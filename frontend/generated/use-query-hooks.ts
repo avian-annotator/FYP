@@ -1,11 +1,12 @@
-import { useQuery, UseQueryOptions, UseQueryResult, useMutation, UseMutationResult, UseMutationOptions } from "@tanstack/react-query";
-import { RawAxiosRequestConfig,  AxiosResponse } from "axios";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import type { UseQueryOptions, UseQueryResult, UseMutationOptions, UseMutationResult } from "@tanstack/react-query";
+import type { RawAxiosRequestConfig,  AxiosResponse } from "axios";
 import { Configuration } from "../generated/axios/configuration.ts";
 import { AdminControllerApiFactory } from "../generated/axios/api.ts";
-import { CreateUserRequestBodyDTO } from "../generated/axios/api.ts";
-import { EditUserRequestBodyDTO } from "../generated/axios/api.ts";
+import type { CreateUserRequestBodyDTO } from "../generated/axios/api.ts";
+import type { EditUserRequestBodyDTO } from "../generated/axios/api.ts";
 import { AuthenticationControllerApiFactory } from "../generated/axios/api.ts";
-import { CreateUserResponseDTO, EditUserResponseDTO, CurrentUserResponseDTO } from "../generated/axios/api.ts";
+import type { CreateUserResponseDTO, EditUserResponseDTO, CurrentUserResponseDTO } from "../generated/axios/api.ts";
 
 // This is an auto-generated file. Do not edit manually, instead run the generate.bash
 export function useCreateNewUser(createUserRequestBodyDTO: CreateUserRequestBodyDTO, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<CreateUserResponseDTO>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<CreateUserResponseDTO>, Error> {
