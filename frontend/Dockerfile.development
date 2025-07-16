@@ -1,22 +1,41 @@
-# Step 1: Use a Node.js base image (Bun can be installed on top of it)
+# Production build Dockerfile for Bun + Node.js base
+
 FROM node:18 AS build
 
 # Install Bun
 RUN curl -fsSL https://bun.sh/install | bash
 
-# Add Bun to the PATH
+# Add Bun to PATH
 ENV PATH="/root/.bun/bin:${PATH}"
 
-# Set the working directory
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and bun.lockb to install dependencies
-COPY package.json bun.lock /app/
+# Copy dependencies files and install
+COPY package.json bun.lockb ./
+RUN bun install --frozen-lockfile
 
-# Install dependencies using Bun
-RUN bun install
+# Copy source files and build
+COPY . .
+RUN bun run build
+
+# Create minimal final image
+FROM node:18-slim AS final
+
+# Install Bun
+RUN curl -fsSL https://bun.sh/install | bash
+ENV PATH="/root/.bun/bin:${PATH}"
+
+WORKDIR /app
+
+# Copy built output and required files from build stage
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/package.json ./package.json
+COPY --from=build /app/bun.lockb ./bun.lockb
+
+# Install only production dependencies
+RUN bun install --production --frozen-lockfile
 
 EXPOSE 5173
 
-# Step 2: Run the Bun development server
-CMD ["bun","run", "development", "--host", "0.0.0.0"]
+CMD ["bun", "run", "serve"]
