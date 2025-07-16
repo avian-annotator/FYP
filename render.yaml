@@ -1,0 +1,49 @@
+services:
+  - name: postgres
+    type: pserv
+    envVars:
+      - fromDotEnv: ./backend/.env.development
+    dockerCommand: postgres
+    image: postgres
+    plan: starter
+    autoDeploy: false
+    healthCheckPath: /
+    ports:
+      - port: 5432
+    volumes:
+      - name: postgres-db-data
+        mountPath: /var/lib/postgresql/data
+
+  - name: backend
+    type: web
+    buildCommand: docker build -t backend_app ./backend
+    dockerfilePath: ./backend/Dockerfile
+    envVars:
+      - fromDotEnv: ./backend/.env.development
+
+    plan: starter
+    autoDeploy: false
+    dependsOn:
+      - postgres
+      - redis
+    ports:
+      - port: 8080
+      - port: 5005
+
+  - name: frontend
+    type: web
+    buildCommand: docker build -t frontend_app -f Dockerfile.development ./frontend
+    dockerfilePath: ./frontend/Dockerfile.development
+    envVars:
+      - fromDotEnv: ./frontend/.env.development
+    plan: starter
+    autoDeploy: false
+    volumes:
+      - path: ./frontend
+        mountPath: /app
+      - path: /app/node_modules
+    ports:
+      - port: 5173
+
+volumes:
+  - name: postgres-db-data
