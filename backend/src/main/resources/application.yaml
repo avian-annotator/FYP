@@ -20,6 +20,7 @@ server:
   servlet:
     session:
       timeout: 60m # Default timeout is 30 minutes
+  port: ${PORT:8080}
 
 springdoc:
   api-docs:
