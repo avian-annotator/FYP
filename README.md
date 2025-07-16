@@ -28,3 +28,7 @@ It is important that your db schema is up to date. We could use a migration tool
 
 Generating api hooks - 
 1. Run `./generate.bash` in bash (git bash or wsl on windows)/zsh after every change to the backend. Make sure the backend is running before doing that. This is vital to ensure that your api hooks work correctly.
+
+# Standards
+1. Conventional commits
+2. Rebase and merge or squash and merge
