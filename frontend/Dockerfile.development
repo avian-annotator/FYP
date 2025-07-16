@@ -38,4 +38,4 @@ RUN bun install --production --frozen-lockfile
 
 EXPOSE 5173
 
-CMD ["bun", "run", "serve"]
+CMD ["bun", "run", "development"]

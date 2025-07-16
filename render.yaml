@@ -1,49 +1,43 @@
-services:
-  - name: postgres
-    type: pserv
-    envVars:
-      - fromDotEnv: ./backend/.env.development
-    dockerCommand: postgres
-    image: postgres
-    plan: starter
-    autoDeploy: false
-    healthCheckPath: /
-    ports:
-      - port: 5432
-    volumes:
-      - name: postgres-db-data
-        mountPath: /var/lib/postgresql/data
+databases:
+  - name: avian-db
+    databaseName: avian_db
+    user: avian_user
+    plan: free
 
+services:
   - name: backend
     type: web
-    buildCommand: docker build -t backend_app ./backend
-    dockerfilePath: ./backend/Dockerfile
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: Dockerfile
     envVars:
-      - fromDotEnv: ./backend/.env.development
-
-    plan: starter
-    autoDeploy: false
-    dependsOn:
-      - postgres
-      - redis
-    ports:
-      - port: 8080
-      - port: 5005
+      - key: DATABASE_NAME
+        value: avian_db
+      - key: DATABASE_USERNAME
+        value: avian_user
+      - key: DATABASE_PASSWORD
+        sync: false
+      - key: SPRING_PROFILES_ACTIVE
+        value: development
+      - key: FRONTEND_URL
+        sync: false
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
+    plan: free
+    autoDeploy: true
 
   - name: frontend
     type: web
-    buildCommand: docker build -t frontend_app -f Dockerfile.development ./frontend
-    dockerfilePath: ./frontend/Dockerfile.development
+    runtime: docker
+    rootDir: frontend
+    dockerfilePath: Dockerfile.development
     envVars:
-      - fromDotEnv: ./frontend/.env.development
-    plan: starter
-    autoDeploy: false
-    volumes:
-      - path: ./frontend
-        mountPath: /app
-      - path: /app/node_modules
-    ports:
-      - port: 5173
+      - key: VITE_BACKEND_URL
+        sync: false
+    plan: free
+    autoDeploy: true
 
-volumes:
-  - name: postgres-db-data

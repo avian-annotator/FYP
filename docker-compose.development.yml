@@ -3,9 +3,6 @@ services:
   postgres:
     image: postgres
     container_name: postgres-db
-    env_file:
-      - ./backend/.env
-      - ./backend/.env.local
     restart: always
     ports:
       - "5432:5432"
@@ -27,8 +24,7 @@ services:
       - postgres
       - redis
     env_file:
-      - ./backend/.env
-      - ./backend/.env.local
+      - ./backend/.env.development
     ports:
       - "8080:8080"
       - "5005:5005"
@@ -39,8 +35,7 @@ services:
       dockerfile: Dockerfile.local
     container_name: frontend_app
     env_file:
-      - ./frontend/.env
-      - ./frontend/.env.local
+      - ./frontend/.env.development
     volumes:
       - ./frontend:/app
       - /app/node_modules
