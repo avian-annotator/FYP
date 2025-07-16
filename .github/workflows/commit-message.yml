@@ -3,7 +3,7 @@ name: Commit-Message
 on:
   pull_request:
     branches:
-      - main
+      - develop
 
 jobs:
   setup-and-lint:
