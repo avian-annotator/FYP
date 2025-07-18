@@ -14,8 +14,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   session:
-    store-type: none
-
+    store-type: jdbc # Use JDBC for session storage
 
 server:
   servlet:
