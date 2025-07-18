@@ -16,6 +16,7 @@ spring:
   session:
     store-type: none
 
+
 server:
   servlet:
     session:
