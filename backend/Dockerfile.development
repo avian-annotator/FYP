@@ -1,0 +1,25 @@
+# Build stage
+FROM maven:3.9.9-amazoncorretto-21 AS build
+
+WORKDIR /app
+
+# Copy POM and download dependencies
+COPY pom.xml .
+RUN mvn dependency:go-offline
+
+# Copy source and build
+COPY src ./src
+RUN mvn clean package -DskipTests
+
+# Run stage
+FROM amazoncorretto:21
+
+WORKDIR /app
+
+# Copy the built JAR (assumes only one JAR in target)
+COPY --from=build /app/target/*.jar app.jar
+
+# Use production settings — remove debug port and flags unless explicitly needed
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
