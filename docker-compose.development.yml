@@ -18,7 +18,8 @@ services:
     restart: unless-stopped
   backend:
     build:
-      context: ./backend
+      context: .
+      dockerfile: Dockerfile
     container_name: backend_app
     depends_on:
       - postgres
