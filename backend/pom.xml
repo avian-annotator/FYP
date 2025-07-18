@@ -81,6 +81,9 @@
         <dependency>
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-data-redis</artifactId>
+            <profiles>
+                <profile>local</profile>
+            </profiles>
         </dependency>
     </dependencies>
 
