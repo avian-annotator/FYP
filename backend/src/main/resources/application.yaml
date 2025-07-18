@@ -14,12 +14,12 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   session:
-    store-type: redis
+    store-type: ${SESSION_STORE_TYPE:jdbc} # Use JDBC by default, override with env var if needed
 
 server:
   servlet:
     session:
-      timeout: 60m # Default timeout is 30 minutes
+      timeout: 60m 
   port: ${PORT:8080}
 
 springdoc:
