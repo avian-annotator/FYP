@@ -7,7 +7,6 @@ const containers = [
   "frontend_app  |",
   "backend_app   |",
   "postgres-db   |",
-  "redis-1       |",
 ];
 
 const TerminalApp = () => {

@@ -41,8 +41,6 @@ jobs:
           SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/avian_db
           SPRING_DATASOURCE_USERNAME: user
           SPRING_DATASOURCE_PASSWORD: user
-          SPRING_REDIS_HOST: redis
-          SPRING_REDIS_PORT: 6379
 
   frontend:
     name: Frontend Build & Test
