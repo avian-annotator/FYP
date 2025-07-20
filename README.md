@@ -6,7 +6,7 @@ Repository for FIT3161 and FIT3162 Computer Science Project for group S1_CS_11
 2. Download docker desktop. Then open it.
 3. Set up the .env.local, .env.development.local, .env.mock.local, .env.production.local. This is not important, though could be if you want to override things lcoally
 4. run `bun run setup`. Install the deps if any of the commands fail.
-5. run `docker-compose up --build`. This should start up everything locally.
+5. run `docker-compose -f docker-compose.local.yml up --build`. This should start up everything locally.
 6. Connect pgAdmin4 to your postgres db. Create a database as whatever you set DATABSE_NAME to.
 7. Copy and paste setup.sql and execute it. This file sets the default admin username and password to be admin and admin respectively.
 

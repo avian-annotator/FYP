@@ -1,12 +1,11 @@
-import React, { useState, Dispatch, SetStateAction } from 'react'
-import { iCanvasTool, CanvasObject, Rect, Coord } from './Canvas'
+import React, { useState } from 'react'
+import { CanvasTool, CanvasToolProps } from '../Canvas'
+import { CanvasToolMarker, isCanvasToolMarker } from '../CanvasUtils'
+import BoundingBox from '../Objects/BoundingBox'
 
-interface iBBToolProps {
-  containerRef: React.RefObject<HTMLDivElement | null>
-  setCanvasObjects: Dispatch<SetStateAction<CanvasObject[]>>
-}
+const MARKER_ID = 1
 
-const BBTool = (props: iBBToolProps): iCanvasTool => {
+const BBTool = (props: CanvasToolProps): CanvasTool => {
   const containerRef = props.containerRef
 
   const [start, setStart] = useState<{ x: number; y: number } | null>(null)
@@ -16,13 +15,20 @@ const BBTool = (props: iBBToolProps): iCanvasTool => {
   const handleMouseDown = (e: React.MouseEvent) => {
     const rect = containerRef.current?.getBoundingClientRect()
     if (!rect) return
+    if (e.button !== 0) return
 
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
 
     setStart({ x, y })
-    setEnd(null)
+    setEnd({ x, y })
     setIsDragging(true)
+
+    const marker = {
+      markerId: MARKER_ID,
+    } as CanvasToolMarker
+
+    props.setCanvasObjects(prev => [...prev, marker])
   }
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -40,18 +46,15 @@ const BBTool = (props: iBBToolProps): iCanvasTool => {
   const handleMouseUp = () => {
     setIsDragging(false)
     if (!start || !end) return
-    props.setCanvasObjects(prev => [
-      ...prev,
-      {
-        id: prev.length,
-        start: start as Coord,
-        end: end as Coord,
-        colour: null,
-      } as Rect,
-    ])
+    // convert marker to BoundingBox
+    props.setCanvasObjects(prev => {
+      const i = prev.findIndex(v => isCanvasToolMarker(v) && v.markerId === MARKER_ID)
+      prev[i] = new BoundingBox(i, start, end, null)
+      return prev
+    })
   }
 
-  const getRectStyle = () => {
+  const getMarkerBB = () => {
     if (!start || !end) return { display: 'none' }
 
     const left = Math.min(start.x, end.x)
@@ -59,23 +62,29 @@ const BBTool = (props: iBBToolProps): iCanvasTool => {
     const width = Math.abs(end.x - start.x)
     const height = Math.abs(end.y - start.y)
 
-    return {
-      position: 'absolute' as const,
-      border: '2px dashed #007bff',
-      backgroundColor: 'rgba(0, 123, 255, 0.1)',
-      left,
-      top,
-      width,
-      height,
-      pointerEvents: 'none',
-    } as React.CSSProperties
+    return (
+      <div
+        key="BBMarker"
+        style={{
+          position: 'absolute' as const,
+          border: '2px dashed #007bff',
+          backgroundColor: 'rgba(0, 123, 255, 0.1)',
+          left,
+          top,
+          width,
+          height,
+          pointerEvents: 'none',
+        }}
+      />
+    )
   }
 
   return {
     handleMouseDown: handleMouseDown,
     handleMouseUp: handleMouseUp,
     handleMouseMove: handleMouseMove,
-    objectRep: getRectStyle,
-  } as iCanvasTool
+    markerElement: getMarkerBB,
+    markerId: MARKER_ID,
+  } as CanvasTool
 }
 export default BBTool

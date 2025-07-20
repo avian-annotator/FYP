@@ -6,6 +6,7 @@ export const Route = createFileRoute('/canvas')({
 })
 
 // TODO: this route needs to be removed and placed in its appropriate area
+// This is just a temp route, the canvas should be integrated with workspaces
 function RouteComponent() {
   return <Canvas />
 }
