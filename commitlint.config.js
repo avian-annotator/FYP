@@ -22,4 +22,14 @@ module.exports = {
     "subject-full-stop": [2, "never", "."],
     "header-min-length": [2, "always", 10],
   },
+  "header-match-pattern": [
+      2,
+      "always",
+      /^([a-z]+)\(AA-\d+\):\s.+$/ // e.g. feat(AA-123): message
+    ],
+    "header-match-error": [
+      2,
+      "always",
+      "Commit message header must include Jira ticket key in format AA-<number>, e.g. feat(AA-123): description"
+    ],
 };
