@@ -23,17 +23,4 @@ export default defineConfig({
     },
     host: true,
   },
-  build: {
-  rollupOptions: {
-    output: {
-      inlineDynamicImports: true,
-    },
-  },
-  lib: {
-    entry: 'src/worker.js',
-    formats: ['es'],
-  },
-  target: 'es2020',
-},
-
 })

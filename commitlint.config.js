@@ -21,15 +21,15 @@ module.exports = {
     "subject-case": [2, "always", ["sentence-case", "lower-case"]],
     "subject-full-stop": [2, "never", "."],
     "header-min-length": [2, "always", 10],
+    'jira-ticket-required': (parsed) => {
+    if (!parsed || !parsed.header) {
+      return [false, 'No commit header found'];
+    }
+    const jiraPattern = /\bAA-\d+\b/;
+    return jiraPattern.test(parsed.header)
+      ? [true]
+      : [false, 'Commit message must include Jira ticket in format AA-<number>'];
   },
-  "header-match-pattern": [
-      2,
-      "always",
-      /^([a-z]+)\(AA-\d+\):\s.+$/ // e.g. feat(AA-123): message
-    ],
-    "header-match-error": [
-      2,
-      "always",
-      "Commit message header must include Jira ticket key in format AA-<number>, e.g. feat(AA-123): description"
-    ],
+  },
+ 
 };
