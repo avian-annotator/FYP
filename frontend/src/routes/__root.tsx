@@ -8,8 +8,8 @@ export const Route = createRootRoute({
     const mutation = useLogout()
 
     return (
-      <div className='flex flex-col w-screen h-screen'>
-        <div className='h-6 w-full'>
+      <div className="flex flex-col w-screen h-screen">
+        <div className="h-6 w-full">
           Probably some sort of menu bar for logging in, logging out + nav links
           {isAuthenticated ? (
             <button
@@ -27,7 +27,7 @@ export const Route = createRootRoute({
             </Link>
           )}
         </div>
-        <div className='flex w-full h-full'>
+        <div className="flex w-full h-full">
           <Outlet />
         </div>
         <TanStackRouterDevtools />
