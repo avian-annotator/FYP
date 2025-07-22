@@ -21,15 +21,6 @@ module.exports = {
     "subject-case": [2, "always", ["sentence-case", "lower-case"]],
     "subject-full-stop": [2, "never", "."],
     "header-min-length": [2, "always", 10],
-    'jira-ticket-required': (parsed) => {
-    if (!parsed || !parsed.header) {
-      return [false, 'No commit header found'];
-    }
-    const jiraPattern = /\bAA-\d+\b/;
-    return jiraPattern.test(parsed.header)
-      ? [true]
-      : [false, 'Commit message must include Jira ticket in format AA-<number>'];
-  },
   },
  
 };
