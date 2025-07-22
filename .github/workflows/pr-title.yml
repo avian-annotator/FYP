@@ -18,3 +18,8 @@ jobs:
       - uses: amannn/action-semantic-pull-request@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          # Require PR title to include Jira ticket key pattern AA-<number>
+          title-regex: '^(feat|fix|chore|docs|style|refactor|perf|test|build|ci)\(AA-\d+\): .+'
+          fail-on-invalid-title: true
+          fail-on-missing-title: true
