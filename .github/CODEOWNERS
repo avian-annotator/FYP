@@ -1,12 +1,15 @@
-* @windneverstops
-
-# General ownership for all frontend files
+# Frontend: All files/subfolders under /frontend/
 /frontend/ @windneverstops @V01DBREAKER @seba0205
 
-# Backend ownership for all backend files
+# Backend: All files/subfolders under /backend/
 /backend/ @windneverstops @aallendarmawan @seba0205
 
-# Specific ownership for specialised directories
+# Specific component: Only files under /frontend/src/components/canvas/
 /frontend/src/components/canvas/ @V01DBREAKER
+
+# Config files
 /.github/ @windneverstops
 /.husky/ @windneverstops
+
+# Fallback: All other files (outside the above paths)
+* @windneverstops
