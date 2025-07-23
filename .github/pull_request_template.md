@@ -9,7 +9,7 @@ If it contains anything peculiar, you could explain it here.
 - [ ] I have tested the code
 - [ ] I have updated documentation if needed
 - [ ] Jira ticket has been linked
-- [ ] I have updated /.github/CODEOWNERS as appropriate
+- [ ] I have updated /.github/CODEOWNERS as appropriate (trial/testing)
 
 ## Optional Checklist
 [Loom Video Link]()
