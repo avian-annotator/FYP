@@ -1,18 +1,12 @@
-# These files go from most specific to least specific.
-
-# Specific ownership for specialised directories
-/frontend/src/components/canvas/** @V01DBREAKER
-/.github/**  @windneverstops
-/.husky/** @windneverstops
+* @windneverstops
 
 # General ownership for all frontend files
-/frontend/** @windneverstops @V01DBREAKER @seba0205
+/frontend/ @windneverstops @V01DBREAKER @seba0205
 
 # Backend ownership for all backend files
-/backend/** @windneverstops @aallendarmawan @seba0205
+/backend/ @windneverstops @aallendarmawan @seba0205
 
-# General ownership for all files in the repository
-/** @windneverstops
-
-
-
+# Specific ownership for specialised directories
+/frontend/src/components/canvas/ @V01DBREAKER
+/.github/ @windneverstops
+/.husky/ @windneverstops
