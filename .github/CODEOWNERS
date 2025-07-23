@@ -1,15 +1,15 @@
-# Frontend: All files/subfolders under /frontend/
-/frontend/ @windneverstops @V01DBREAKER @seba0205
+# Frontend: 
+ /frontend/** @windneverstops @V01DBREAKER @seba0205
 
-# Backend: All files/subfolders under /backend/
-/backend/ @windneverstops @aallendarmawan @seba0205
+# Backend:
+ /backend/** @windneverstops @aallendarmawan @seba0205
 
-# Specific component: Only files under /frontend/src/components/canvas/
-/frontend/src/components/canvas/ @V01DBREAKER
+# Specific, specialised component:
+ /frontend/src/components/canvas/** @V01DBREAKER
 
 # Config files
-/.github/ @windneverstops
-/.husky/ @windneverstops
+ /.github/** @windneverstops
+ /.husky/** @windneverstops
 
-# Fallback: All other files (outside the above paths)
-* @windneverstops
+# Fallback:
+ * @windneverstops
