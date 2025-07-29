@@ -4,7 +4,7 @@ Repository for FIT3161 and FIT3162 Computer Science Project for group S1_CS_11
 # Set up
 1. Download pgAdmin4 - this is the UI we will use to access/interact with the postgresDB, should we choose to do so manually. Postgres is a distribution based of SQL, and all the distributions of SQL have their own slight nauances, and as such you'll need specific UIs like pgAdmin4 to configure the DB, access, etc. 
 2. Download docker desktop. Then open it.
-3. Set up the .env.local, .env.development.local, .env.mock.local, .env.production.local. This is not important, though could be if you want to override things lcoally
+3. Set up the .env.local, .env.development.local, .env.mock.local, .env.production.local. This is not important, though could be if you want to override things locally
 4. run `bun run setup`. Install the deps if any of the commands fail.
 5. run `docker-compose -f docker-compose.local.yml up --build`. This should start up everything locally.
 6. Connect pgAdmin4 to your postgres db. Create a database as whatever you set DATABSE_NAME to.
@@ -31,4 +31,5 @@ Generating api hooks -
 
 # Standards
 1. Conventional commits
-2. Rebase and merge or squash and merge
+2. Rebase and merge
+These standards are highlighted in the [contributor guidelines]([url](https://avian-annotator.atlassian.net/wiki/x/AgD6))
