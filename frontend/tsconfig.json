@@ -12,7 +12,6 @@
     "types": [
       "bun-types"
     ],
-    "module": "es2015",
     "moduleResolution": "bundler",
     "moduleDetection": "force"
   }
