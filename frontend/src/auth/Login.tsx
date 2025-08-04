@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useLogin } from './useLogin'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 const Login = ({ location }: { location?: string }) => {
   const [username, setUsername] = useState('')
@@ -14,13 +14,13 @@ const Login = ({ location }: { location?: string }) => {
   }
 
   return (
-    <Card className="w-full max-w-sm mx-auto mt-40 mb-60">
+    <Card className="w-full max-w-sm m-auto">
       <CardHeader>
         <CardTitle>Enter username and password to log in</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit}>
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-4">
             <div className="grid gap-2">
               <label htmlFor="username">Username: </label>
               <input
@@ -43,16 +43,16 @@ const Login = ({ location }: { location?: string }) => {
                 }}
               />
             </div>
+            <div className="grid gap-2">
+              <Button type="submit" className="p-2 mt-5">
+                Sign In
+                {mutation.isPending && <p>Logging in...</p>}
+                {mutation.isError && <p className="text-red-500">{mutation.error.message}</p>}
+              </Button>
+            </div>
           </div>
         </form>
       </CardContent>
-      <CardFooter className="flex-col gap-2">
-        <Button type="submit" className="w-full">
-          Login
-          {mutation.isPending && <p>Logging in...</p>}
-          {mutation.isError && <p className="text-red-500">{mutation.error.message}</p>}
-        </Button>
-      </CardFooter>
     </Card>
   )
 }
