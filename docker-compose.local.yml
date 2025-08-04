@@ -1,9 +1,12 @@
 services:
-  
   postgres:
     image: postgres
     container_name: postgres-db
     restart: always
+    environment:
+      POSTGRES_DB: avian_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: user
     ports:
       - "5432:5432"
     volumes:
