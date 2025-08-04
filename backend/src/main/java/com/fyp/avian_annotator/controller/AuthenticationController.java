@@ -1,6 +1,7 @@
 package com.fyp.avian_annotator.controller;
 
 import com.fyp.avian_annotator.dto.response.CurrentUserResponseDTO;
+import com.fyp.avian_annotator.utils.UserRole;
 import java.util.Objects;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,12 +23,15 @@ public class AuthenticationController {
     // We know that by the DB definition, that every user has 1 role. So this is safe for now.
     // Obviously, this will need to be changed if we change to scopes/authorities (which is
     // generally the
-    // recommended approach for larger, long term projects).
+    // recommended approach for larger, long term projects)
     return ResponseEntity.ok(
         new CurrentUserResponseDTO(
             true,
             userDetails.getUsername(),
-            Objects.requireNonNull(userDetails.getAuthorities().stream().findFirst().orElse(null))
-                .toString()));
+            UserRole.valueOf(
+                Objects.requireNonNull(
+                        userDetails.getAuthorities().stream().findFirst().orElse(null))
+                    .toString()
+                    .replaceFirst("^ROLE_", ""))));
   }
 }

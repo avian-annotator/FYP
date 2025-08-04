@@ -1,5 +1,6 @@
 package com.fyp.avian_annotator.dto.response;
 
+import com.fyp.avian_annotator.utils.UserRole;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
@@ -8,13 +9,13 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class CreateUserResponseDTO {
+public class UserResponseDTO {
 
-  @NotEmpty private Long id;
+  @NotNull private Long id;
 
-  @NotNull private String username;
+  @NotEmpty private String username;
 
-  @NotEmpty private String role;
+  @NotNull private UserRole role;
 
-  @NotEmpty private OffsetDateTime createdAt;
+  @NotNull private OffsetDateTime createdAt;
 }
