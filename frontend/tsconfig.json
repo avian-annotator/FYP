@@ -9,10 +9,12 @@
     }
   ],
   "compilerOptions": {
-    "types": [
-      "bun-types"
-    ],
+    "types": ["bun-types"],
     "moduleResolution": "bundler",
-    "moduleDetection": "force"
+    "moduleDetection": "force",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   }
 }
