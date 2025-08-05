@@ -7,10 +7,6 @@
     "prepare": "husky install",
     "setup": "bun install && cd backend && mvn install -DskipTests"
   },
-  "workspaces": [
-    "tui",
-    "frontend"
-  ],
   "private": true,
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",

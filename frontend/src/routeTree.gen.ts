@@ -8,160 +8,214 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-// Import Routes
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as WorkspacesRouteImport } from './routes/workspaces'
+import { Route as MeRouteImport } from './routes/me'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as CanvasRouteImport } from './routes/canvas'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as WorkspacesIndexRouteImport } from './routes/workspaces/index'
+import { Route as MeIndexRouteImport } from './routes/me/index'
+import { Route as LoginIndexRouteImport } from './routes/login/index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as WorkspacesImport } from './routes/workspaces'
-import { Route as MeImport } from './routes/me'
-import { Route as LoginImport } from './routes/login'
-import { Route as CanvasImport } from './routes/canvas'
-import { Route as AdminImport } from './routes/admin'
-import { Route as IndexImport } from './routes/index'
-import { Route as WorkspacesIndexImport } from './routes/workspaces/index'
-import { Route as MeIndexImport } from './routes/me/index'
-import { Route as LoginIndexImport } from './routes/login/index'
-import { Route as AdminIndexImport } from './routes/admin/index'
-
-// Create/Update Routes
-
-const WorkspacesRoute = WorkspacesImport.update({
+const WorkspacesRoute = WorkspacesRouteImport.update({
   id: '/workspaces',
   path: '/workspaces',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const MeRoute = MeImport.update({
+const MeRoute = MeRouteImport.update({
   id: '/me',
   path: '/me',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const LoginRoute = LoginImport.update({
+const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const CanvasRoute = CanvasImport.update({
+const CanvasRoute = CanvasRouteImport.update({
   id: '/canvas',
   path: '/canvas',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AdminRoute = AdminImport.update({
+const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const IndexRoute = IndexImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const WorkspacesIndexRoute = WorkspacesIndexImport.update({
+const WorkspacesIndexRoute = WorkspacesIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => WorkspacesRoute,
 } as any)
-
-const MeIndexRoute = MeIndexImport.update({
+const MeIndexRoute = MeIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => MeRoute,
 } as any)
-
-const LoginIndexRoute = LoginIndexImport.update({
+const LoginIndexRoute = LoginIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => LoginRoute,
 } as any)
-
-const AdminIndexRoute = AdminIndexImport.update({
+const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
 
-// Populate the FileRoutesByPath interface
+export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/canvas': typeof CanvasRoute
+  '/login': typeof LoginRouteWithChildren
+  '/me': typeof MeRouteWithChildren
+  '/workspaces': typeof WorkspacesRouteWithChildren
+  '/admin/': typeof AdminIndexRoute
+  '/login/': typeof LoginIndexRoute
+  '/me/': typeof MeIndexRoute
+  '/workspaces/': typeof WorkspacesIndexRoute
+}
+export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '/canvas': typeof CanvasRoute
+  '/admin': typeof AdminIndexRoute
+  '/login': typeof LoginIndexRoute
+  '/me': typeof MeIndexRoute
+  '/workspaces': typeof WorkspacesIndexRoute
+}
+export interface FileRoutesById {
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/canvas': typeof CanvasRoute
+  '/login': typeof LoginRouteWithChildren
+  '/me': typeof MeRouteWithChildren
+  '/workspaces': typeof WorkspacesRouteWithChildren
+  '/admin/': typeof AdminIndexRoute
+  '/login/': typeof LoginIndexRoute
+  '/me/': typeof MeIndexRoute
+  '/workspaces/': typeof WorkspacesIndexRoute
+}
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/canvas'
+    | '/login'
+    | '/me'
+    | '/workspaces'
+    | '/admin/'
+    | '/login/'
+    | '/me/'
+    | '/workspaces/'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/' | '/canvas' | '/admin' | '/login' | '/me' | '/workspaces'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/canvas'
+    | '/login'
+    | '/me'
+    | '/workspaces'
+    | '/admin/'
+    | '/login/'
+    | '/me/'
+    | '/workspaces/'
+  fileRoutesById: FileRoutesById
+}
+export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  CanvasRoute: typeof CanvasRoute
+  LoginRoute: typeof LoginRouteWithChildren
+  MeRoute: typeof MeRouteWithChildren
+  WorkspacesRoute: typeof WorkspacesRouteWithChildren
+}
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminImport
-      parentRoute: typeof rootRoute
-    }
-    '/canvas': {
-      id: '/canvas'
-      path: '/canvas'
-      fullPath: '/canvas'
-      preLoaderRoute: typeof CanvasImport
-      parentRoute: typeof rootRoute
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginImport
-      parentRoute: typeof rootRoute
+    '/workspaces': {
+      id: '/workspaces'
+      path: '/workspaces'
+      fullPath: '/workspaces'
+      preLoaderRoute: typeof WorkspacesRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/me': {
       id: '/me'
       path: '/me'
       fullPath: '/me'
-      preLoaderRoute: typeof MeImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof MeRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/workspaces': {
-      id: '/workspaces'
-      path: '/workspaces'
-      fullPath: '/workspaces'
-      preLoaderRoute: typeof WorkspacesImport
-      parentRoute: typeof rootRoute
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/admin/': {
-      id: '/admin/'
+    '/canvas': {
+      id: '/canvas'
+      path: '/canvas'
+      fullPath: '/canvas'
+      preLoaderRoute: typeof CanvasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
       path: '/'
-      fullPath: '/admin/'
-      preLoaderRoute: typeof AdminIndexImport
-      parentRoute: typeof AdminImport
-    }
-    '/login/': {
-      id: '/login/'
-      path: '/'
-      fullPath: '/login/'
-      preLoaderRoute: typeof LoginIndexImport
-      parentRoute: typeof LoginImport
-    }
-    '/me/': {
-      id: '/me/'
-      path: '/'
-      fullPath: '/me/'
-      preLoaderRoute: typeof MeIndexImport
-      parentRoute: typeof MeImport
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/workspaces/': {
       id: '/workspaces/'
       path: '/'
       fullPath: '/workspaces/'
-      preLoaderRoute: typeof WorkspacesIndexImport
-      parentRoute: typeof WorkspacesImport
+      preLoaderRoute: typeof WorkspacesIndexRouteImport
+      parentRoute: typeof WorkspacesRoute
+    }
+    '/me/': {
+      id: '/me/'
+      path: '/'
+      fullPath: '/me/'
+      preLoaderRoute: typeof MeIndexRouteImport
+      parentRoute: typeof MeRoute
+    }
+    '/login/': {
+      id: '/login/'
+      path: '/'
+      fullPath: '/login/'
+      preLoaderRoute: typeof LoginIndexRouteImport
+      parentRoute: typeof LoginRoute
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
     }
   }
 }
-
-// Create and export the route tree
 
 interface AdminRouteChildren {
   AdminIndexRoute: typeof AdminIndexRoute
@@ -201,82 +255,9 @@ const WorkspacesRouteChildren: WorkspacesRouteChildren = {
   WorkspacesIndexRoute: WorkspacesIndexRoute,
 }
 
-const WorkspacesRouteWithChildren = WorkspacesRoute._addFileChildren(WorkspacesRouteChildren)
-
-export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
-  '/canvas': typeof CanvasRoute
-  '/login': typeof LoginRouteWithChildren
-  '/me': typeof MeRouteWithChildren
-  '/workspaces': typeof WorkspacesRouteWithChildren
-  '/admin/': typeof AdminIndexRoute
-  '/login/': typeof LoginIndexRoute
-  '/me/': typeof MeIndexRoute
-  '/workspaces/': typeof WorkspacesIndexRoute
-}
-
-export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/canvas': typeof CanvasRoute
-  '/admin': typeof AdminIndexRoute
-  '/login': typeof LoginIndexRoute
-  '/me': typeof MeIndexRoute
-  '/workspaces': typeof WorkspacesIndexRoute
-}
-
-export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
-  '/canvas': typeof CanvasRoute
-  '/login': typeof LoginRouteWithChildren
-  '/me': typeof MeRouteWithChildren
-  '/workspaces': typeof WorkspacesRouteWithChildren
-  '/admin/': typeof AdminIndexRoute
-  '/login/': typeof LoginIndexRoute
-  '/me/': typeof MeIndexRoute
-  '/workspaces/': typeof WorkspacesIndexRoute
-}
-
-export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/admin'
-    | '/canvas'
-    | '/login'
-    | '/me'
-    | '/workspaces'
-    | '/admin/'
-    | '/login/'
-    | '/me/'
-    | '/workspaces/'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/canvas' | '/admin' | '/login' | '/me' | '/workspaces'
-  id:
-    | '__root__'
-    | '/'
-    | '/admin'
-    | '/canvas'
-    | '/login'
-    | '/me'
-    | '/workspaces'
-    | '/admin/'
-    | '/login/'
-    | '/me/'
-    | '/workspaces/'
-  fileRoutesById: FileRoutesById
-}
-
-export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRouteWithChildren
-  CanvasRoute: typeof CanvasRoute
-  LoginRoute: typeof LoginRouteWithChildren
-  MeRoute: typeof MeRouteWithChildren
-  WorkspacesRoute: typeof WorkspacesRouteWithChildren
-}
+const WorkspacesRouteWithChildren = WorkspacesRoute._addFileChildren(
+  WorkspacesRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -286,71 +267,6 @@ const rootRouteChildren: RootRouteChildren = {
   MeRoute: MeRouteWithChildren,
   WorkspacesRoute: WorkspacesRouteWithChildren,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/",
-        "/admin",
-        "/canvas",
-        "/login",
-        "/me",
-        "/workspaces"
-      ]
-    },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/admin": {
-      "filePath": "admin.tsx",
-      "children": [
-        "/admin/"
-      ]
-    },
-    "/canvas": {
-      "filePath": "canvas.tsx"
-    },
-    "/login": {
-      "filePath": "login.tsx",
-      "children": [
-        "/login/"
-      ]
-    },
-    "/me": {
-      "filePath": "me.tsx",
-      "children": [
-        "/me/"
-      ]
-    },
-    "/workspaces": {
-      "filePath": "workspaces.tsx",
-      "children": [
-        "/workspaces/"
-      ]
-    },
-    "/admin/": {
-      "filePath": "admin/index.tsx",
-      "parent": "/admin"
-    },
-    "/login/": {
-      "filePath": "login/index.tsx",
-      "parent": "/login"
-    },
-    "/me/": {
-      "filePath": "me/index.tsx",
-      "parent": "/me"
-    },
-    "/workspaces/": {
-      "filePath": "workspaces/index.tsx",
-      "parent": "/workspaces"
-    }
-  }
-}
-ROUTE_MANIFEST_END */
