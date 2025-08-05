@@ -1,22 +1,14 @@
-# Step 1: Use a Node.js base image (Bun can be installed on top of it)
-FROM node:18 AS build
+FROM oven/bun:latest
 
-# Install Bun
-RUN curl -fsSL https://bun.sh/install | bash
-
-# Add Bun to the PATH
-ENV PATH="/root/.bun/bin:${PATH}"
-
-# Set the working directory
 WORKDIR /app
 
-# Copy package.json and bun.lockb to install dependencies
-COPY package.json bun.lock /app/
+# Copy only frontend's package.json and bun.lockb if present
+COPY package.json ./
 
-# Install dependencies using Bun
+# Copy the rest of the frontend workspace
+COPY . .
+
 RUN bun install
 
 EXPOSE 5173
-
-# Step 2: Run the Bun development server
 CMD ["bun", "run", "local", "--host", "0.0.0.0"]
