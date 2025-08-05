@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useLogin } from './useLogin'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 
 const Login = ({ location }: { location?: string }) => {
   const [username, setUsername] = useState('')
@@ -45,14 +46,20 @@ const Login = ({ location }: { location?: string }) => {
             </div>
             <div className="grid gap-2">
               <Button type="submit" className="p-2 mt-5">
-                Sign In
-                {mutation.isPending && <p>Logging in...</p>}
-                {mutation.isError && <p className="text-red-500">{mutation.error.message}</p>}
+                {mutation.isPending ? 'Logging in...' : 'Sign in'}
               </Button>
             </div>
           </div>
         </form>
       </CardContent>
+      {mutation.isError && (
+        <CardFooter>
+          <Alert variant="destructive">
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{mutation.error.message}</AlertDescription>
+          </Alert>
+        </CardFooter>
+      )}
     </Card>
   )
 }
