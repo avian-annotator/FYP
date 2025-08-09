@@ -3,3 +3,8 @@ export interface Workspace {
   name: string
   owner: string
 }
+
+export interface User {
+  id: string
+  name: string
+}
