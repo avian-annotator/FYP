@@ -1,44 +1,45 @@
-import { Dispatch, SetStateAction, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { JSX } from 'react/jsx-runtime'
-import { canvasObjects, isCanvasObject, isCanvasToolMarker } from './CanvasUtils'
-import BBTool from './Tools/BBTool'
+import Konva from 'konva'
+import { Stage, Layer } from 'react-konva'
+import BoundingBoxTool from './Tools/BoundingBoxTool'
 
 interface CanvasTool {
-  handleMouseMove: (e: React.MouseEvent) => void
-  handleMouseDown: (e: React.MouseEvent) => void
-  handleMouseUp: (e: React.MouseEvent) => void
-  markerElement: () => JSX.Element
-  markerId: number
+  handleMouseMove: (e: Konva.KonvaEventObject<MouseEvent>) => void
+  handleMouseDown: (e: Konva.KonvaEventObject<MouseEvent>) => void
+  handleMouseUp: (e: Konva.KonvaEventObject<MouseEvent>) => void
 }
 
 interface CanvasToolProps {
-  containerRef: React.RefObject<HTMLDivElement | null>
-  setCanvasObjects: Dispatch<SetStateAction<canvasObjects[]>>
+  stageRef: React.RefObject<Konva.Stage | null>
+  addToStage: (el: JSX.Element) => void
 }
 
 const Canvas = () => {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [activeObjects, setObjects] = useState<canvasObjects[]>([])
-  // add tool switcher
-  const activeTool = BBTool({
-    containerRef: containerRef,
-    setCanvasObjects: setObjects,
-  })
+  const stageRef = useRef<Konva.Stage>(null)
+  const [stageElements, setStageElements] = useState<JSX.Element[]>([])
 
+  const addToStage = (el: JSX.Element) => {
+    setStageElements(p => p.concat(el))
+  }
+
+  // add tool switcher
+  const activeTool = BoundingBoxTool({
+    stageRef: stageRef,
+    addToStage: addToStage,
+  })
   return (
-    <div
-      ref={containerRef}
-      onMouseDown={activeTool.handleMouseDown}
-      onMouseMove={activeTool.handleMouseMove}
-      onMouseUp={activeTool.handleMouseUp}
-      className="relative w-full h-full bg-[#f0f0f0] select-none"
-    >
-      {/* <div style={activeTool.objectRep()} /> Put a active tool representative here*/}
-      {activeObjects.map((el: canvasObjects) => {
-        if (el === null) return null
-        if (isCanvasToolMarker(el)) return activeTool.markerElement()
-        if (isCanvasObject(el)) return el.getCanvasObjectElement()
-      })}
+    <div className="relative w-dvw h-dvh bg-[#f0f0f0] select-none border-black border-[1rem]">
+      <Stage
+        ref={stageRef}
+        width={window.innerWidth}
+        height={window.innerHeight}
+        onMouseDown={activeTool.handleMouseDown}
+        onMouseMove={activeTool.handleMouseMove}
+        onMouseUp={activeTool.handleMouseUp}
+      >
+        <Layer>{stageElements}</Layer>
+      </Stage>
     </div>
   )
 }
