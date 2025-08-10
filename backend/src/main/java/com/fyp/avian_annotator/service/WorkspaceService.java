@@ -4,6 +4,7 @@ import com.fyp.avian_annotator.dal.entity.User;
 import com.fyp.avian_annotator.dal.entity.Workspace;
 import com.fyp.avian_annotator.dal.repository.UserRepository;
 import com.fyp.avian_annotator.dal.repository.WorkspaceRepository;
+import com.fyp.avian_annotator.exception.UserNotFoundException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class WorkspaceService {
       return newWorkspace;
     }
 
-    throw new RuntimeException("User not found: " + username);
+    throw new UserNotFoundException(username);
   }
 
   public void deleteWorkspace(String username, Long id) {

@@ -1,15 +1,15 @@
 package com.fyp.avian_annotator.dal.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "workspace")
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Workspace {
 
   @Id
@@ -21,6 +21,4 @@ public class Workspace {
   private User owner;
 
   private String name;
-
-  protected Workspace() {}
 }

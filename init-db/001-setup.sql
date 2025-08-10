@@ -16,7 +16,7 @@ ON CONFLICT (username) DO NOTHING;
 
 -- Create the workspace table
 CREATE TABLE IF NOT EXISTS workspace (
-    id BIGINT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     owner_id BIGINT,
     name VARCHAR(255),
     CONSTRAINT fk_workspace_owner FOREIGN KEY (owner_id) REFERENCES app_user(id)
