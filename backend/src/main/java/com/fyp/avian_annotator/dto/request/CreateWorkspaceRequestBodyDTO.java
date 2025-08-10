@@ -6,6 +6,5 @@ import lombok.Data;
 @Data
 public class CreateWorkspaceRequestBodyDTO {
 
-    @NotBlank
-    public String name;
+  @NotBlank public String name;
 }
