@@ -25,4 +25,13 @@ public class WorkspaceService {
 
     throw new RuntimeException("User not found: " + username);
   }
+
+  public void deleteWorkspace(String username, Long id) {
+    Optional<User> user = userRepository.findByUsername(username);
+    if (user.isPresent()) {
+      workspaceRepository
+          .findByIdAndOwnerUsername(id, username)
+          .ifPresent(workspaceRepository::delete);
+    }
+  }
 }

@@ -11,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RequestMapping("/api/workspaces")
@@ -39,5 +36,12 @@ public class WorkspaceController {
 
     WorkspaceResponseDTO responseDTO = mapper.convertValue(workspace, WorkspaceResponseDTO.class);
     return ResponseEntity.created(location).body(responseDTO);
+  }
+
+  @DeleteMapping("/{workspaceId}")
+  public ResponseEntity<Void> deleteWorkspace(
+      @AuthenticationPrincipal UserDetails userDetails, @PathVariable Long workspaceId) {
+    workspaceService.deleteWorkspace(userDetails.getUsername(), workspaceId);
+    return ResponseEntity.noContent().build();
   }
 }
