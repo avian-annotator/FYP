@@ -5,10 +5,7 @@ import jakarta.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Setter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User implements UserDetails {
 
   @Id
@@ -40,10 +38,6 @@ public class User implements UserDetails {
   @CreationTimestamp
   @Column(nullable = false, updatable = false)
   private OffsetDateTime createdAt;
-
-  protected User() {
-    // Required by JPA with the Builder pattern
-  }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

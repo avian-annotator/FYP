@@ -2,13 +2,19 @@ package com.fyp.avian_annotator.dal.entity;
 
 import java.io.Serializable;
 import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@NoArgsConstructor
+@Getter
+@Setter
+@AllArgsConstructor
 public class WorkspaceUserId implements Serializable {
 
   private Long workspace;
   private Long user;
-
-  public WorkspaceUserId() {}
 
   @Override
   public boolean equals(Object o) {

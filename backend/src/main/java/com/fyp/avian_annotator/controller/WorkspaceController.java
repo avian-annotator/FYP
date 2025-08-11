@@ -3,11 +3,14 @@ package com.fyp.avian_annotator.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fyp.avian_annotator.dal.entity.Workspace;
 import com.fyp.avian_annotator.dto.request.CreateWorkspaceRequestBodyDTO;
+import com.fyp.avian_annotator.dto.response.AccessibleWorkspaceResponseDTO;
 import com.fyp.avian_annotator.dto.response.WorkspaceResponseDTO;
 import com.fyp.avian_annotator.service.WorkspaceService;
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -46,5 +49,8 @@ public class WorkspaceController {
   }
 
   @GetMapping
-  public void getWorkspaces(@AuthenticationPrincipal UserDetails userDetails) {}
+  public Page<AccessibleWorkspaceResponseDTO> getWorkspaces(
+      @AuthenticationPrincipal UserDetails userDetails, Pageable pageable) {
+    return workspaceService.getWorkspace(userDetails.getUsername(), pageable);
+  }
 }

@@ -19,8 +19,8 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(UserNotFoundException.class)
-  public ResponseEntity<?> handleUserNotFoundException(UserNotFoundException e) {
+  public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException e) {
     log.error(e.getMessage());
-    return ResponseEntity.badRequest().build();
+    return ResponseEntity.badRequest().body(e.getMessage());
   }
 }
