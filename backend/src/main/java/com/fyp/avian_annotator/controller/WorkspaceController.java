@@ -44,4 +44,7 @@ public class WorkspaceController {
     workspaceService.deleteWorkspace(userDetails.getUsername(), workspaceId);
     return ResponseEntity.noContent().build();
   }
+
+  @GetMapping
+  public void getWorkspaces(@AuthenticationPrincipal UserDetails userDetails) {}
 }
