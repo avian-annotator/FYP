@@ -10,7 +10,7 @@ All URIs are relative to *http://localhost:8080*
 |[**getAllUsers**](#getallusers) | **GET** /api/admin/users | |
 
 # **createNewUser**
-> CreateUserResponseDTO createNewUser(createUserRequestBodyDTO)
+> UserResponseDTO createNewUser(createUserRequestBodyDTO)
 
 
 ### Example
@@ -41,7 +41,7 @@ const { status, data } = await apiInstance.createNewUser(
 
 ### Return type
 
-**CreateUserResponseDTO**
+**UserResponseDTO**
 
 ### Authorization
 
@@ -111,7 +111,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **editUser**
-> EditUserResponseDTO editUser(editUserRequestBodyDTO)
+> UserResponseDTO editUser(editUserRequestBodyDTO)
 
 
 ### Example
@@ -145,7 +145,7 @@ const { status, data } = await apiInstance.editUser(
 
 ### Return type
 
-**EditUserResponseDTO**
+**UserResponseDTO**
 
 ### Authorization
 
@@ -165,7 +165,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getAllUsers**
-> Array<CreateUserResponseDTO> getAllUsers()
+> Array<UserResponseDTO> getAllUsers()
 
 
 ### Example
@@ -188,7 +188,7 @@ This endpoint does not have any parameters.
 
 ### Return type
 
-**Array<CreateUserResponseDTO>**
+**Array<UserResponseDTO>**
 
 ### Authorization
 

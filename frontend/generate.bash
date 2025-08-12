@@ -8,7 +8,7 @@ case "$OSTYPE" in
   msys*|cygwin*|win32*)
     powershell.exe -ExecutionPolicy Bypass -File generate_scripts/generate.ps1
     ;;
-  darwin*)
+    darwin*|linux*)
     bash generate_scripts/generate.bash
     ;;
   *)

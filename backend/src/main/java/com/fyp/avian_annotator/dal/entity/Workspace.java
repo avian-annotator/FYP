@@ -1,6 +1,9 @@
 package com.fyp.avian_annotator.dal.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.*;
 
 @Entity
@@ -16,9 +19,14 @@ public class Workspace {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "owner_id")
   private User owner;
 
   private String name;
+
+  @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
+  @Builder.Default
+  @JsonIgnore
+  private List<WorkspaceUser> workspaceUsers = new ArrayList<>();
 }

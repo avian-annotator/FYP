@@ -5,8 +5,8 @@ import lombok.Data;
 
 @AllArgsConstructor
 @Data
-public class WorkspaceResponseDTO {
+public class AccessibleWorkspaceResponseDTO {
   private Long id;
-
   private String name;
+  private String ownerUsername;
 }

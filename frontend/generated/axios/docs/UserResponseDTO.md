@@ -1,21 +1,21 @@
-# CreateUserResponseDTO
+# UserResponseDTO
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **number** |  | [default to undefined]
-**username** | **string** |  | [default to undefined]
-**role** | **string** |  | [default to undefined]
-**createdAt** | **string** |  | [default to undefined]
+**id** | **number** |  | [optional] [default to undefined]
+**username** | **string** |  | [optional] [default to undefined]
+**role** | **string** |  | [optional] [default to undefined]
+**createdAt** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { CreateUserResponseDTO } from './api';
+import { UserResponseDTO } from './api';
 
-const instance: CreateUserResponseDTO = {
+const instance: UserResponseDTO = {
     id,
     username,
     role,
