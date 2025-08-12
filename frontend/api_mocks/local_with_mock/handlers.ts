@@ -34,7 +34,7 @@ export const handlers = [
     }
   }),
 
-  http.get('*/api/workspaces', ({ params }) => {
+  http.get('*/api/workspaces', ({}) => {
     try {
       console.log(`Mock: fetching workspaces`)
       console.log('Query data:', workspaces)
