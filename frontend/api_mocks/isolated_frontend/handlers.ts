@@ -6,6 +6,13 @@ import workspaces from './data/workspaces.json'
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL
 
+// Mock dataset
+const MOCK_IMAGES = Array.from({ length: 34 }, (_, i) => ({
+  id: String(i + 1),
+  name: `Image${i + 1}`,
+  url: `https://picsum.photos/seed/${i + 1}/300/200`,
+}))
+
 export const handlers = [
   /*
   ----------------------------------------------------------------------
@@ -62,13 +69,47 @@ export const handlers = [
     }
   }),
 
-  http.get('*/api/workspaces', ({ params }) => {
+  http.get('*/api/workspaces', () => {
     try {
       console.log(`Mock: fetching workspaces`)
       console.log('Query data:', workspaces)
       return HttpResponse.json(workspaces, { status: 200 })
     } catch (err) {
       console.error('Handler error:', err)
+      return HttpResponse.json({ error: 'Handler failed' }, { status: 500 })
+    }
+  }),
+
+  http.get('/api/workspaces/:workspaceId/images', ({ request }) => {
+    try {
+      console.log('Query data:', request)
+      const url = new URL(request.url)
+      const workspaceId = url.searchParams.get('workspaceId')
+
+      const page = url.searchParams.get('page')
+      const size = 8
+
+      const startIndex = page * size
+      const endIndex = startIndex + size
+
+      console.log(startIndex)
+      const content = MOCK_IMAGES.slice(startIndex, endIndex)
+
+      return HttpResponse.json(
+        {
+          content,
+          pageable: { pageNumber: page, pageSize: size },
+          last: endIndex >= MOCK_IMAGES.length,
+          totalPages: Math.ceil(MOCK_IMAGES.length / size),
+          totalElements: MOCK_IMAGES.length,
+          first: page === 0,
+          numberOfElements: content.length,
+          empty: content.length === 0,
+        },
+        { status: 200 },
+      )
+    } catch (err) {
+      console.error('Error in images handler:', err)
       return HttpResponse.json({ error: 'Handler failed' }, { status: 500 })
     }
   }),

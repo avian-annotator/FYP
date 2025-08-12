@@ -26,7 +26,7 @@ export default function WorkspaceCard({ workspace }: Props) {
         <Button
           variant="outline"
           onClick={() => {
-            void navigate({ to: `/workspaces/${workspace.id}/annotate` })
+            void navigate({ to: `/workspaces/${workspace.id}/` })
           }}
         >
           edit
