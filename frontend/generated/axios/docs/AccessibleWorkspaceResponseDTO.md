@@ -5,9 +5,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **number** |  | [optional] [default to undefined]
-**name** | **string** |  | [optional] [default to undefined]
-**ownerUsername** | **string** |  | [optional] [default to undefined]
+**id** | **number** |  | [default to undefined]
+**name** | **string** |  | [default to undefined]
+**ownerUsername** | **string** |  | [default to undefined]
 
 ## Example
 

@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**totalPages** | **number** |  | [optional] [default to undefined]
 **totalElements** | **number** |  | [optional] [default to undefined]
+**totalPages** | **number** |  | [optional] [default to undefined]
 **pageable** | [**PageableObject**](PageableObject.md) |  | [optional] [default to undefined]
 **first** | **boolean** |  | [optional] [default to undefined]
 **last** | **boolean** |  | [optional] [default to undefined]
@@ -23,8 +23,8 @@ Name | Type | Description | Notes
 import { PageAccessibleWorkspaceResponseDTO } from './api';
 
 const instance: PageAccessibleWorkspaceResponseDTO = {
-    totalPages,
     totalElements,
+    totalPages,
     pageable,
     first,
     last,

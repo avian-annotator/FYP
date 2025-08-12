@@ -34,19 +34,19 @@ export interface AccessibleWorkspaceResponseDTO {
      * @type {number}
      * @memberof AccessibleWorkspaceResponseDTO
      */
-    'id'?: number;
+    'id': number;
     /**
      * 
      * @type {string}
      * @memberof AccessibleWorkspaceResponseDTO
      */
-    'name'?: string;
+    'name': string;
     /**
      * 
      * @type {string}
      * @memberof AccessibleWorkspaceResponseDTO
      */
-    'ownerUsername'?: string;
+    'ownerUsername': string;
 }
 /**
  * 
@@ -97,13 +97,13 @@ export interface CurrentUserResponseDTO {
      * @type {string}
      * @memberof CurrentUserResponseDTO
      */
-    'user'?: string;
+    'user': string;
     /**
      * 
      * @type {string}
      * @memberof CurrentUserResponseDTO
      */
-    'role'?: CurrentUserResponseDTORoleEnum;
+    'role': CurrentUserResponseDTORoleEnum;
 }
 
 export const CurrentUserResponseDTORoleEnum = {
@@ -157,13 +157,13 @@ export interface PageAccessibleWorkspaceResponseDTO {
      * @type {number}
      * @memberof PageAccessibleWorkspaceResponseDTO
      */
-    'totalPages'?: number;
+    'totalElements'?: number;
     /**
      * 
      * @type {number}
      * @memberof PageAccessibleWorkspaceResponseDTO
      */
-    'totalElements'?: number;
+    'totalPages'?: number;
     /**
      * 
      * @type {PageableObject}
@@ -323,25 +323,25 @@ export interface UserResponseDTO {
      * @type {number}
      * @memberof UserResponseDTO
      */
-    'id'?: number;
+    'id': number;
     /**
      * 
      * @type {string}
      * @memberof UserResponseDTO
      */
-    'username'?: string;
+    'username': string;
     /**
      * 
      * @type {string}
      * @memberof UserResponseDTO
      */
-    'role'?: UserResponseDTORoleEnum;
+    'role': UserResponseDTORoleEnum;
     /**
      * 
      * @type {string}
      * @memberof UserResponseDTO
      */
-    'createdAt'?: string;
+    'createdAt': string;
 }
 
 export const UserResponseDTORoleEnum = {
@@ -362,13 +362,13 @@ export interface WorkspaceResponseDTO {
      * @type {number}
      * @memberof WorkspaceResponseDTO
      */
-    'id'?: number;
+    'id': number;
     /**
      * 
      * @type {string}
      * @memberof WorkspaceResponseDTO
      */
-    'name'?: string;
+    'name': string;
 }
 
 /**
