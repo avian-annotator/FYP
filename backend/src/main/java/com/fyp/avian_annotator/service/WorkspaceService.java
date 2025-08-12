@@ -10,5 +10,7 @@ public interface WorkspaceService {
 
   void deleteWorkspace(String username, Long id);
 
-  Page<AccessibleWorkspaceResponseDTO> getWorkspace(String username, Pageable pageable);
+  Page<AccessibleWorkspaceResponseDTO> getWorkspace(String sessionUserUsername, Pageable pageable);
+
+  Long addUserToWorkspace(String sessionUserUsername, Long workspaceId, String toAddUserUsername);
 }

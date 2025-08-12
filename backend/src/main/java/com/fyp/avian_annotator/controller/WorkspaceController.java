@@ -2,6 +2,7 @@ package com.fyp.avian_annotator.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fyp.avian_annotator.dal.entity.Workspace;
+import com.fyp.avian_annotator.dto.request.AddUserToWorkspaceRequestBodyDTO;
 import com.fyp.avian_annotator.dto.request.CreateWorkspaceRequestBodyDTO;
 import com.fyp.avian_annotator.dto.response.AccessibleWorkspaceResponseDTO;
 import com.fyp.avian_annotator.dto.response.WorkspaceResponseDTO;
@@ -28,9 +29,9 @@ public class WorkspaceController {
   @PostMapping()
   public ResponseEntity<WorkspaceResponseDTO> createWorkspace(
       @AuthenticationPrincipal UserDetails userDetails,
-      @RequestBody @Valid CreateWorkspaceRequestBodyDTO request) {
+      @RequestBody @Valid CreateWorkspaceRequestBodyDTO body) {
     Workspace workspace =
-        workspaceService.createUserWorkspace(userDetails.getUsername(), request.getName());
+        workspaceService.createUserWorkspace(userDetails.getUsername(), body.getName());
     URI location =
         ServletUriComponentsBuilder.fromCurrentRequest()
             .path("/{id}")
@@ -52,5 +53,24 @@ public class WorkspaceController {
   public Page<AccessibleWorkspaceResponseDTO> getWorkspaces(
       @AuthenticationPrincipal UserDetails userDetails, Pageable pageable) {
     return workspaceService.getWorkspace(userDetails.getUsername(), pageable);
+  }
+
+  @PostMapping("/{workspaceId}/users")
+  public ResponseEntity<Void> addUserToWorkspace(
+      @AuthenticationPrincipal UserDetails userDetails,
+      @PathVariable Long workspaceId,
+      @RequestBody @Valid AddUserToWorkspaceRequestBodyDTO body) {
+
+    Long toAddUserId =
+        workspaceService.addUserToWorkspace(
+            userDetails.getUsername(), workspaceId, body.getUsername());
+
+    URI location =
+        ServletUriComponentsBuilder.fromCurrentRequest()
+            .path("/{userId}")
+            .buildAndExpand(toAddUserId)
+            .toUri();
+
+    return ResponseEntity.created(location).build();
   }
 }
