@@ -16,9 +16,9 @@ public class User {
   private UserRole role;
 
   public void update(
-      String username, String passwordHash, PasswordEncoder passwordEncoder, String role) {
+      String username, String passwordHash, PasswordEncoder passwordEncoder, UserRole role) {
     this.username = username;
-    this.role = (role == null) ? null : UserRole.valueOf(role);
+    this.role = role;
     this.passwordHash = (passwordHash == null) ? null : passwordEncoder.encode(passwordHash);
   }
 

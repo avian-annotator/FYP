@@ -1,5 +1,6 @@
 package com.fyp.avian_annotator.dto.request;
 
+import com.fyp.avian_annotator.utils.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -11,5 +12,5 @@ public class EditUserRequestBodyDTO {
 
   private String password;
 
-  private String role;
+  private UserRole role;
 }

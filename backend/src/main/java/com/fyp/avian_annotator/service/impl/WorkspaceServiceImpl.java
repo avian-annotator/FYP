@@ -28,28 +28,21 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     Optional<User> user = userRepository.findByUsername(username);
     if (user.isPresent()) {
       Workspace newWorkspace = Workspace.builder().owner(user.get()).name(name).build();
-      workspaceRepository.save(newWorkspace);
+
       WorkspaceUser newWorkspaceUser = new WorkspaceUser(newWorkspace, user.get());
-      workspaceUserRepository.save(newWorkspaceUser);
+      newWorkspace.getWorkspaceUsers().add(newWorkspaceUser);
+      workspaceRepository.save(newWorkspace);
       return newWorkspace;
     }
-
     throw new UserNotFoundException(username);
   }
 
   @Transactional
   @Override
   public void deleteWorkspace(String username, Long id) {
-    Optional<User> user = userRepository.findByUsername(username);
-    if (user.isPresent()) {
-      workspaceRepository
-          .findByIdAndOwnerUsername(id, username)
-          .ifPresent(
-              workspace -> {
-                workspaceUserRepository.deleteByWorkspace(workspace);
-                workspaceRepository.delete(workspace);
-              });
-    }
+    workspaceRepository
+        .findByIdAndOwnerUsername(id, username)
+        .ifPresent(workspaceRepository::delete);
   }
 
   @Override

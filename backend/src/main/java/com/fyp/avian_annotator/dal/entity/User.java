@@ -1,8 +1,10 @@
 package com.fyp.avian_annotator.dal.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fyp.avian_annotator.utils.UserRole;
 import jakarta.persistence.*;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import lombok.*;
@@ -38,6 +40,11 @@ public class User implements UserDetails {
   @CreationTimestamp
   @Column(nullable = false, updatable = false)
   private OffsetDateTime createdAt;
+
+  @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+  @Builder.Default
+  @JsonIgnore
+  private List<Workspace> workspacesOwned = new ArrayList<>();
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

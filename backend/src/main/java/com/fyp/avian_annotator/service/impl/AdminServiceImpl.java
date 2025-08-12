@@ -5,6 +5,8 @@ import com.fyp.avian_annotator.dal.entity.User;
 import com.fyp.avian_annotator.dal.repository.UserRepository;
 import com.fyp.avian_annotator.exception.UserNotFoundException;
 import com.fyp.avian_annotator.service.AdminService;
+import com.fyp.avian_annotator.utils.UserRole;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +21,7 @@ public class AdminServiceImpl implements AdminService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
 
+  @Transactional
   @Override
   public User createUser(String userName, String password) {
     String hashedPassword = passwordEncoder.encode(password);
@@ -32,7 +35,7 @@ public class AdminServiceImpl implements AdminService {
   }
 
   @Override
-  public User editUser(Long id, String userName, String password, String role) {
+  public User editUser(Long id, String userName, String password, UserRole role) {
 
     return userRepository
         .findById(id)
@@ -48,6 +51,7 @@ public class AdminServiceImpl implements AdminService {
         .orElseThrow(() -> new UserNotFoundException(id));
   }
 
+  @Transactional
   @Override
   public void deleteUser(Long id) {
     userRepository.deleteById(id);
