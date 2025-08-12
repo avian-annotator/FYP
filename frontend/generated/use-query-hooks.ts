@@ -7,6 +7,7 @@ import type { CreateUserRequestBodyDTO } from "../generated/axios/api.ts";
 import type { EditUserRequestBodyDTO } from "../generated/axios/api.ts";
 import { AuthenticationControllerApiFactory } from "../generated/axios/api.ts";
 import { WorkspaceControllerApiFactory } from "../generated/axios/api.ts";
+import type { AddUserToWorkspaceRequestBodyDTO } from "../generated/axios/api.ts";
 import type { CreateWorkspaceRequestBodyDTO } from "../generated/axios/api.ts";
 import type { Pageable } from "../generated/axios/api.ts";
 import type { UserResponseDTO, CurrentUserResponseDTO, WorkspaceResponseDTO, PageAccessibleWorkspaceResponseDTO } from "../generated/axios/api.ts";
@@ -75,6 +76,19 @@ export function useGetCurrentUser(options?: RawAxiosRequestConfig, queryOptions?
       return res;
     },
     ...queryOptions
+  });
+    
+}
+
+export function useAddUserToWorkspace(workspaceId: number, addUserToWorkspaceRequestBodyDTO: AddUserToWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<void>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<void>, Error> {
+
+  return useMutation<AxiosResponse<void>, Error, unknown>({
+    mutationFn: async () => {
+      const api = WorkspaceControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
+      const res = await api.addUserToWorkspace(workspaceId, addUserToWorkspaceRequestBodyDTO, {...options, withCredentials: true});
+      return res;
+    },
+    ...mutationOptions
   });
     
 }
