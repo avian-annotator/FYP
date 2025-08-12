@@ -5,10 +5,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **number** |  | [optional] [default to undefined]
-**username** | **string** |  | [optional] [default to undefined]
-**role** | **string** |  | [optional] [default to undefined]
-**createdAt** | **string** |  | [optional] [default to undefined]
+**id** | **number** |  | [default to undefined]
+**username** | **string** |  | [default to undefined]
+**role** | **string** |  | [default to undefined]
+**createdAt** | **string** |  | [default to undefined]
 
 ## Example
 

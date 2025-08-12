@@ -6,8 +6,8 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **authenticated** | **boolean** |  | [optional] [default to undefined]
-**user** | **string** |  | [optional] [default to undefined]
-**role** | **string** |  | [optional] [default to undefined]
+**user** | **string** |  | [default to undefined]
+**role** | **string** |  | [default to undefined]
 
 ## Example
 
