@@ -26,6 +26,31 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
+ * @interface AccessibleWorkspaceResponseDTO
+ */
+export interface AccessibleWorkspaceResponseDTO {
+    /**
+     * 
+     * @type {number}
+     * @memberof AccessibleWorkspaceResponseDTO
+     */
+    'id'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccessibleWorkspaceResponseDTO
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccessibleWorkspaceResponseDTO
+     */
+    'ownerUsername'?: string;
+}
+/**
+ * 
+ * @export
  * @interface CreateUserRequestBodyDTO
  */
 export interface CreateUserRequestBodyDTO {
@@ -45,33 +70,15 @@ export interface CreateUserRequestBodyDTO {
 /**
  * 
  * @export
- * @interface CreateUserResponseDTO
+ * @interface CreateWorkspaceRequestBodyDTO
  */
-export interface CreateUserResponseDTO {
-    /**
-     * 
-     * @type {number}
-     * @memberof CreateUserResponseDTO
-     */
-    'id': number;
+export interface CreateWorkspaceRequestBodyDTO {
     /**
      * 
      * @type {string}
-     * @memberof CreateUserResponseDTO
+     * @memberof CreateWorkspaceRequestBodyDTO
      */
-    'username': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateUserResponseDTO
-     */
-    'role': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateUserResponseDTO
-     */
-    'createdAt': string;
+    'name': string;
 }
 /**
  * 
@@ -96,8 +103,16 @@ export interface CurrentUserResponseDTO {
      * @type {string}
      * @memberof CurrentUserResponseDTO
      */
-    'role'?: string;
+    'role'?: CurrentUserResponseDTORoleEnum;
 }
+
+export const CurrentUserResponseDTORoleEnum = {
+    User: 'USER',
+    Admin: 'ADMIN'
+} as const;
+
+export type CurrentUserResponseDTORoleEnum = typeof CurrentUserResponseDTORoleEnum[keyof typeof CurrentUserResponseDTORoleEnum];
+
 /**
  * 
  * @export
@@ -121,32 +136,239 @@ export interface EditUserRequestBodyDTO {
      * @type {string}
      * @memberof EditUserRequestBodyDTO
      */
-    'role'?: string;
+    'role'?: EditUserRequestBodyDTORoleEnum;
+}
+
+export const EditUserRequestBodyDTORoleEnum = {
+    User: 'USER',
+    Admin: 'ADMIN'
+} as const;
+
+export type EditUserRequestBodyDTORoleEnum = typeof EditUserRequestBodyDTORoleEnum[keyof typeof EditUserRequestBodyDTORoleEnum];
+
+/**
+ * 
+ * @export
+ * @interface PageAccessibleWorkspaceResponseDTO
+ */
+export interface PageAccessibleWorkspaceResponseDTO {
+    /**
+     * 
+     * @type {number}
+     * @memberof PageAccessibleWorkspaceResponseDTO
+     */
+    'totalPages'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageAccessibleWorkspaceResponseDTO
+     */
+    'totalElements'?: number;
+    /**
+     * 
+     * @type {PageableObject}
+     * @memberof PageAccessibleWorkspaceResponseDTO
+     */
+    'pageable'?: PageableObject;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageAccessibleWorkspaceResponseDTO
+     */
+    'first'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageAccessibleWorkspaceResponseDTO
+     */
+    'last'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageAccessibleWorkspaceResponseDTO
+     */
+    'size'?: number;
+    /**
+     * 
+     * @type {Array<AccessibleWorkspaceResponseDTO>}
+     * @memberof PageAccessibleWorkspaceResponseDTO
+     */
+    'content'?: Array<AccessibleWorkspaceResponseDTO>;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageAccessibleWorkspaceResponseDTO
+     */
+    'number'?: number;
+    /**
+     * 
+     * @type {SortObject}
+     * @memberof PageAccessibleWorkspaceResponseDTO
+     */
+    'sort'?: SortObject;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageAccessibleWorkspaceResponseDTO
+     */
+    'numberOfElements'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageAccessibleWorkspaceResponseDTO
+     */
+    'empty'?: boolean;
 }
 /**
  * 
  * @export
- * @interface EditUserResponseDTO
+ * @interface Pageable
  */
-export interface EditUserResponseDTO {
+export interface Pageable {
     /**
      * 
      * @type {number}
-     * @memberof EditUserResponseDTO
+     * @memberof Pageable
      */
-    'id': number;
+    'page'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Pageable
+     */
+    'size'?: number;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof Pageable
+     */
+    'sort'?: Array<string>;
+}
+/**
+ * 
+ * @export
+ * @interface PageableObject
+ */
+export interface PageableObject {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageableObject
+     */
+    'paged'?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageableObject
+     */
+    'pageNumber'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageableObject
+     */
+    'pageSize'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageableObject
+     */
+    'offset'?: number;
+    /**
+     * 
+     * @type {SortObject}
+     * @memberof PageableObject
+     */
+    'sort'?: SortObject;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageableObject
+     */
+    'unpaged'?: boolean;
+}
+/**
+ * 
+ * @export
+ * @interface SortObject
+ */
+export interface SortObject {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SortObject
+     */
+    'sorted'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SortObject
+     */
+    'empty'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SortObject
+     */
+    'unsorted'?: boolean;
+}
+/**
+ * 
+ * @export
+ * @interface UserResponseDTO
+ */
+export interface UserResponseDTO {
+    /**
+     * 
+     * @type {number}
+     * @memberof UserResponseDTO
+     */
+    'id'?: number;
     /**
      * 
      * @type {string}
-     * @memberof EditUserResponseDTO
+     * @memberof UserResponseDTO
      */
-    'username': string;
+    'username'?: string;
     /**
      * 
      * @type {string}
-     * @memberof EditUserResponseDTO
+     * @memberof UserResponseDTO
      */
-    'role': string;
+    'role'?: UserResponseDTORoleEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserResponseDTO
+     */
+    'createdAt'?: string;
+}
+
+export const UserResponseDTORoleEnum = {
+    User: 'USER',
+    Admin: 'ADMIN'
+} as const;
+
+export type UserResponseDTORoleEnum = typeof UserResponseDTORoleEnum[keyof typeof UserResponseDTORoleEnum];
+
+/**
+ * 
+ * @export
+ * @interface WorkspaceResponseDTO
+ */
+export interface WorkspaceResponseDTO {
+    /**
+     * 
+     * @type {number}
+     * @memberof WorkspaceResponseDTO
+     */
+    'id'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof WorkspaceResponseDTO
+     */
+    'name'?: string;
 }
 
 /**
@@ -307,7 +529,7 @@ export const AdminControllerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createNewUser(createUserRequestBodyDTO: CreateUserRequestBodyDTO, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateUserResponseDTO>> {
+        async createNewUser(createUserRequestBodyDTO: CreateUserRequestBodyDTO, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserResponseDTO>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createNewUser(createUserRequestBodyDTO, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminControllerApi.createNewUser']?.[localVarOperationServerIndex]?.url;
@@ -332,7 +554,7 @@ export const AdminControllerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async editUser(id: number, editUserRequestBodyDTO: EditUserRequestBodyDTO, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EditUserResponseDTO>> {
+        async editUser(id: number, editUserRequestBodyDTO: EditUserRequestBodyDTO, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserResponseDTO>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.editUser(id, editUserRequestBodyDTO, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminControllerApi.editUser']?.[localVarOperationServerIndex]?.url;
@@ -343,7 +565,7 @@ export const AdminControllerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAllUsers(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<CreateUserResponseDTO>>> {
+        async getAllUsers(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UserResponseDTO>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getAllUsers(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminControllerApi.getAllUsers']?.[localVarOperationServerIndex]?.url;
@@ -365,7 +587,7 @@ export const AdminControllerApiFactory = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createNewUser(createUserRequestBodyDTO: CreateUserRequestBodyDTO, options?: RawAxiosRequestConfig): AxiosPromise<CreateUserResponseDTO> {
+        createNewUser(createUserRequestBodyDTO: CreateUserRequestBodyDTO, options?: RawAxiosRequestConfig): AxiosPromise<UserResponseDTO> {
             return localVarFp.createNewUser(createUserRequestBodyDTO, options).then((request) => request(axios, basePath));
         },
         /**
@@ -384,7 +606,7 @@ export const AdminControllerApiFactory = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        editUser(id: number, editUserRequestBodyDTO: EditUserRequestBodyDTO, options?: RawAxiosRequestConfig): AxiosPromise<EditUserResponseDTO> {
+        editUser(id: number, editUserRequestBodyDTO: EditUserRequestBodyDTO, options?: RawAxiosRequestConfig): AxiosPromise<UserResponseDTO> {
             return localVarFp.editUser(id, editUserRequestBodyDTO, options).then((request) => request(axios, basePath));
         },
         /**
@@ -392,7 +614,7 @@ export const AdminControllerApiFactory = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAllUsers(options?: RawAxiosRequestConfig): AxiosPromise<Array<CreateUserResponseDTO>> {
+        getAllUsers(options?: RawAxiosRequestConfig): AxiosPromise<Array<UserResponseDTO>> {
             return localVarFp.getAllUsers(options).then((request) => request(axios, basePath));
         },
     };
@@ -544,6 +766,247 @@ export class AuthenticationControllerApi extends BaseAPI {
      */
     public getCurrentUser(options?: RawAxiosRequestConfig) {
         return AuthenticationControllerApiFp(this.configuration).getCurrentUser(options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * WorkspaceControllerApi - axios parameter creator
+ * @export
+ */
+export const WorkspaceControllerApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {CreateWorkspaceRequestBodyDTO} createWorkspaceRequestBodyDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createWorkspace: async (createWorkspaceRequestBodyDTO: CreateWorkspaceRequestBodyDTO, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'createWorkspaceRequestBodyDTO' is not null or undefined
+            assertParamExists('createWorkspace', 'createWorkspaceRequestBodyDTO', createWorkspaceRequestBodyDTO)
+            const localVarPath = `/api/workspaces`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createWorkspaceRequestBodyDTO, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} workspaceId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteWorkspace: async (workspaceId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspaceId' is not null or undefined
+            assertParamExists('deleteWorkspace', 'workspaceId', workspaceId)
+            const localVarPath = `/api/workspaces/{workspaceId}`
+                .replace(`{${"workspaceId"}}`, encodeURIComponent(String(workspaceId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {Pageable} pageable 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getWorkspaces: async (pageable: Pageable, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'pageable' is not null or undefined
+            assertParamExists('getWorkspaces', 'pageable', pageable)
+            const localVarPath = `/api/workspaces`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (pageable !== undefined) {
+                for (const [key, value] of Object.entries(pageable)) {
+                    localVarQueryParameter[key] = value;
+                }
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * WorkspaceControllerApi - functional programming interface
+ * @export
+ */
+export const WorkspaceControllerApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = WorkspaceControllerApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {CreateWorkspaceRequestBodyDTO} createWorkspaceRequestBodyDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createWorkspace(createWorkspaceRequestBodyDTO: CreateWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<WorkspaceResponseDTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createWorkspace(createWorkspaceRequestBodyDTO, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['WorkspaceControllerApi.createWorkspace']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} workspaceId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteWorkspace(workspaceId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteWorkspace(workspaceId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['WorkspaceControllerApi.deleteWorkspace']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {Pageable} pageable 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getWorkspaces(pageable: Pageable, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageAccessibleWorkspaceResponseDTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getWorkspaces(pageable, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['WorkspaceControllerApi.getWorkspaces']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * WorkspaceControllerApi - factory interface
+ * @export
+ */
+export const WorkspaceControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = WorkspaceControllerApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {CreateWorkspaceRequestBodyDTO} createWorkspaceRequestBodyDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createWorkspace(createWorkspaceRequestBodyDTO: CreateWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig): AxiosPromise<WorkspaceResponseDTO> {
+            return localVarFp.createWorkspace(createWorkspaceRequestBodyDTO, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} workspaceId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteWorkspace(workspaceId: number, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteWorkspace(workspaceId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {Pageable} pageable 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getWorkspaces(pageable: Pageable, options?: RawAxiosRequestConfig): AxiosPromise<PageAccessibleWorkspaceResponseDTO> {
+            return localVarFp.getWorkspaces(pageable, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * WorkspaceControllerApi - object-oriented interface
+ * @export
+ * @class WorkspaceControllerApi
+ * @extends {BaseAPI}
+ */
+export class WorkspaceControllerApi extends BaseAPI {
+    /**
+     * 
+     * @param {CreateWorkspaceRequestBodyDTO} createWorkspaceRequestBodyDTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof WorkspaceControllerApi
+     */
+    public createWorkspace(createWorkspaceRequestBodyDTO: CreateWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig) {
+        return WorkspaceControllerApiFp(this.configuration).createWorkspace(createWorkspaceRequestBodyDTO, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} workspaceId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof WorkspaceControllerApi
+     */
+    public deleteWorkspace(workspaceId: number, options?: RawAxiosRequestConfig) {
+        return WorkspaceControllerApiFp(this.configuration).deleteWorkspace(workspaceId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {Pageable} pageable 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof WorkspaceControllerApi
+     */
+    public getWorkspaces(pageable: Pageable, options?: RawAxiosRequestConfig) {
+        return WorkspaceControllerApiFp(this.configuration).getWorkspaces(pageable, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

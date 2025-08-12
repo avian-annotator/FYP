@@ -6,12 +6,15 @@ import { AdminControllerApiFactory } from "../generated/axios/api.ts";
 import type { CreateUserRequestBodyDTO } from "../generated/axios/api.ts";
 import type { EditUserRequestBodyDTO } from "../generated/axios/api.ts";
 import { AuthenticationControllerApiFactory } from "../generated/axios/api.ts";
-import type { CreateUserResponseDTO, EditUserResponseDTO, CurrentUserResponseDTO } from "../generated/axios/api.ts";
+import { WorkspaceControllerApiFactory } from "../generated/axios/api.ts";
+import type { CreateWorkspaceRequestBodyDTO } from "../generated/axios/api.ts";
+import type { Pageable } from "../generated/axios/api.ts";
+import type { UserResponseDTO, CurrentUserResponseDTO, WorkspaceResponseDTO, PageAccessibleWorkspaceResponseDTO } from "../generated/axios/api.ts";
 
 // This is an auto-generated file. Do not edit manually, instead run the generate.bash
-export function useCreateNewUser(createUserRequestBodyDTO: CreateUserRequestBodyDTO, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<CreateUserResponseDTO>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<CreateUserResponseDTO>, Error> {
+export function useCreateNewUser(createUserRequestBodyDTO: CreateUserRequestBodyDTO, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<UserResponseDTO>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<UserResponseDTO>, Error> {
 
-  return useMutation<AxiosResponse<CreateUserResponseDTO>, Error, unknown>({
+  return useMutation<AxiosResponse<UserResponseDTO>, Error, unknown>({
     mutationFn: async () => {
       const api = AdminControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
       const res = await api.createNewUser(createUserRequestBodyDTO, {...options, withCredentials: true});
@@ -35,9 +38,9 @@ export function useDeleteUser(id: number, options?: RawAxiosRequestConfig, mutat
     
 }
 
-export function useEditUser(id: number, editUserRequestBodyDTO: EditUserRequestBodyDTO, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<EditUserResponseDTO>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<EditUserResponseDTO>, Error> {
+export function useEditUser(id: number, editUserRequestBodyDTO: EditUserRequestBodyDTO, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<UserResponseDTO>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<UserResponseDTO>, Error> {
 
-  return useMutation<AxiosResponse<EditUserResponseDTO>, Error, unknown>({
+  return useMutation<AxiosResponse<UserResponseDTO>, Error, unknown>({
     mutationFn: async () => {
       const api = AdminControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
       const res = await api.editUser(id, editUserRequestBodyDTO, {...options, withCredentials: true});
@@ -48,9 +51,9 @@ export function useEditUser(id: number, editUserRequestBodyDTO: EditUserRequestB
     
 }
 
-export function useGetAllUsers(options?: RawAxiosRequestConfig, queryOptions?: Omit<UseQueryOptions<AxiosResponse<CreateUserResponseDTO[]>, Error, AxiosResponse<CreateUserResponseDTO[]>>, 'queryKey' | 'queryFn'>): UseQueryResult<AxiosResponse<CreateUserResponseDTO[]>, Error> {
+export function useGetAllUsers(options?: RawAxiosRequestConfig, queryOptions?: Omit<UseQueryOptions<AxiosResponse<UserResponseDTO[]>, Error, AxiosResponse<UserResponseDTO[]>>, 'queryKey' | 'queryFn'>): UseQueryResult<AxiosResponse<UserResponseDTO[]>, Error> {
 
-  return useQuery<AxiosResponse<CreateUserResponseDTO[]>, Error, AxiosResponse<CreateUserResponseDTO[]>>({
+  return useQuery<AxiosResponse<UserResponseDTO[]>, Error, AxiosResponse<UserResponseDTO[]>>({
     queryKey: ['useGetAllUsers' ],
     queryFn: async () => {
       const api = AdminControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
@@ -69,6 +72,46 @@ export function useGetCurrentUser(options?: RawAxiosRequestConfig, queryOptions?
     queryFn: async () => {
       const api = AuthenticationControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
       const res = await api.getCurrentUser({...options, withCredentials: true});
+      return res;
+    },
+    ...queryOptions
+  });
+    
+}
+
+export function useCreateWorkspace(createWorkspaceRequestBodyDTO: CreateWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<WorkspaceResponseDTO>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<WorkspaceResponseDTO>, Error> {
+
+  return useMutation<AxiosResponse<WorkspaceResponseDTO>, Error, unknown>({
+    mutationFn: async () => {
+      const api = WorkspaceControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
+      const res = await api.createWorkspace(createWorkspaceRequestBodyDTO, {...options, withCredentials: true});
+      return res;
+    },
+    ...mutationOptions
+  });
+    
+}
+
+export function useDeleteWorkspace(workspaceId: number, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<void>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<void>, Error> {
+
+  return useMutation<AxiosResponse<void>, Error, unknown>({
+    mutationFn: async () => {
+      const api = WorkspaceControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
+      const res = await api.deleteWorkspace(workspaceId, {...options, withCredentials: true});
+      return res;
+    },
+    ...mutationOptions
+  });
+    
+}
+
+export function useGetWorkspaces(pageable: Pageable, options?: RawAxiosRequestConfig, queryOptions?: Omit<UseQueryOptions<AxiosResponse<PageAccessibleWorkspaceResponseDTO>, Error, AxiosResponse<PageAccessibleWorkspaceResponseDTO>>, 'queryKey' | 'queryFn'>): UseQueryResult<AxiosResponse<PageAccessibleWorkspaceResponseDTO>, Error> {
+
+  return useQuery<AxiosResponse<PageAccessibleWorkspaceResponseDTO>, Error, AxiosResponse<PageAccessibleWorkspaceResponseDTO>>({
+    queryKey: ['useGetWorkspaces' , options?.params, options?.headers],
+    queryFn: async () => {
+      const api = WorkspaceControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
+      const res = await api.getWorkspaces(pageable, {...options, withCredentials: true});
       return res;
     },
     ...queryOptions
