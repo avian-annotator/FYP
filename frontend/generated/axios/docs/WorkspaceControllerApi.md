@@ -7,6 +7,7 @@ All URIs are relative to *http://localhost:8080*
 |[**addUserToWorkspace**](#addusertoworkspace) | **POST** /api/workspaces/{workspaceId}/users | |
 |[**createWorkspace**](#createworkspace) | **POST** /api/workspaces | |
 |[**deleteWorkspace**](#deleteworkspace) | **DELETE** /api/workspaces/{workspaceId} | |
+|[**editWorkspace**](#editworkspace) | **PATCH** /api/workspaces/{workspaceId} | |
 |[**getWorkspaces**](#getworkspaces) | **GET** /api/workspaces | |
 
 # **addUserToWorkspace**
@@ -155,6 +156,60 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **editWorkspace**
+> WorkspaceResponseDTO editWorkspace(editWorkspaceRequestBodyDTO)
+
+
+### Example
+
+```typescript
+import {
+    WorkspaceControllerApi,
+    Configuration,
+    EditWorkspaceRequestBodyDTO
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new WorkspaceControllerApi(configuration);
+
+let workspaceId: number; // (default to undefined)
+let editWorkspaceRequestBodyDTO: EditWorkspaceRequestBodyDTO; //
+
+const { status, data } = await apiInstance.editWorkspace(
+    workspaceId,
+    editWorkspaceRequestBodyDTO
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **editWorkspaceRequestBodyDTO** | **EditWorkspaceRequestBodyDTO**|  | |
+| **workspaceId** | [**number**] |  | defaults to undefined|
+
+
+### Return type
+
+**WorkspaceResponseDTO**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: */*
 
 
 ### HTTP response details

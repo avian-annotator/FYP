@@ -9,6 +9,7 @@ import { AuthenticationControllerApiFactory } from "../generated/axios/api.ts";
 import { WorkspaceControllerApiFactory } from "../generated/axios/api.ts";
 import type { AddUserToWorkspaceRequestBodyDTO } from "../generated/axios/api.ts";
 import type { CreateWorkspaceRequestBodyDTO } from "../generated/axios/api.ts";
+import type { EditWorkspaceRequestBodyDTO } from "../generated/axios/api.ts";
 import type { Pageable } from "../generated/axios/api.ts";
 import type { UserResponseDTO, CurrentUserResponseDTO, WorkspaceResponseDTO, PageAccessibleWorkspaceResponseDTO } from "../generated/axios/api.ts";
 
@@ -112,6 +113,19 @@ export function useDeleteWorkspace(workspaceId: number, options?: RawAxiosReques
     mutationFn: async () => {
       const api = WorkspaceControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
       const res = await api.deleteWorkspace(workspaceId, {...options, withCredentials: true});
+      return res;
+    },
+    ...mutationOptions
+  });
+    
+}
+
+export function useEditWorkspace(workspaceId: number, editWorkspaceRequestBodyDTO: EditWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<WorkspaceResponseDTO>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<WorkspaceResponseDTO>, Error> {
+
+  return useMutation<AxiosResponse<WorkspaceResponseDTO>, Error, unknown>({
+    mutationFn: async () => {
+      const api = WorkspaceControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
+      const res = await api.editWorkspace(workspaceId, editWorkspaceRequestBodyDTO, {...options, withCredentials: true});
       return res;
     },
     ...mutationOptions

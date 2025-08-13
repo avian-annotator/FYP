@@ -168,6 +168,19 @@ export type EditUserRequestBodyDTORoleEnum = typeof EditUserRequestBodyDTORoleEn
 /**
  * 
  * @export
+ * @interface EditWorkspaceRequestBodyDTO
+ */
+export interface EditWorkspaceRequestBodyDTO {
+    /**
+     * 
+     * @type {string}
+     * @memberof EditWorkspaceRequestBodyDTO
+     */
+    'name'?: string;
+}
+/**
+ * 
+ * @export
  * @interface PageAccessibleWorkspaceResponseDTO
  */
 export interface PageAccessibleWorkspaceResponseDTO {
@@ -176,19 +189,31 @@ export interface PageAccessibleWorkspaceResponseDTO {
      * @type {number}
      * @memberof PageAccessibleWorkspaceResponseDTO
      */
-    'totalElements'?: number;
+    'totalPages'?: number;
     /**
      * 
      * @type {number}
      * @memberof PageAccessibleWorkspaceResponseDTO
      */
-    'totalPages'?: number;
+    'totalElements'?: number;
     /**
      * 
      * @type {PageableObject}
      * @memberof PageAccessibleWorkspaceResponseDTO
      */
     'pageable'?: PageableObject;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageAccessibleWorkspaceResponseDTO
+     */
+    'first'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageAccessibleWorkspaceResponseDTO
+     */
+    'last'?: boolean;
     /**
      * 
      * @type {number}
@@ -213,18 +238,6 @@ export interface PageAccessibleWorkspaceResponseDTO {
      * @memberof PageAccessibleWorkspaceResponseDTO
      */
     'sort'?: SortObject;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageAccessibleWorkspaceResponseDTO
-     */
-    'first'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageAccessibleWorkspaceResponseDTO
-     */
-    'last'?: boolean;
     /**
      * 
      * @type {number}
@@ -905,6 +918,45 @@ export const WorkspaceControllerApiAxiosParamCreator = function (configuration?:
         },
         /**
          * 
+         * @param {number} workspaceId 
+         * @param {EditWorkspaceRequestBodyDTO} editWorkspaceRequestBodyDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        editWorkspace: async (workspaceId: number, editWorkspaceRequestBodyDTO: EditWorkspaceRequestBodyDTO, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspaceId' is not null or undefined
+            assertParamExists('editWorkspace', 'workspaceId', workspaceId)
+            // verify required parameter 'editWorkspaceRequestBodyDTO' is not null or undefined
+            assertParamExists('editWorkspace', 'editWorkspaceRequestBodyDTO', editWorkspaceRequestBodyDTO)
+            const localVarPath = `/api/workspaces/{workspaceId}`
+                .replace(`{${"workspaceId"}}`, encodeURIComponent(String(workspaceId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(editWorkspaceRequestBodyDTO, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {Pageable} pageable 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -990,6 +1042,19 @@ export const WorkspaceControllerApiFp = function(configuration?: Configuration) 
         },
         /**
          * 
+         * @param {number} workspaceId 
+         * @param {EditWorkspaceRequestBodyDTO} editWorkspaceRequestBodyDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async editWorkspace(workspaceId: number, editWorkspaceRequestBodyDTO: EditWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<WorkspaceResponseDTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.editWorkspace(workspaceId, editWorkspaceRequestBodyDTO, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['WorkspaceControllerApi.editWorkspace']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @param {Pageable} pageable 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1037,6 +1102,16 @@ export const WorkspaceControllerApiFactory = function (configuration?: Configura
          */
         deleteWorkspace(workspaceId: number, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.deleteWorkspace(workspaceId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} workspaceId 
+         * @param {EditWorkspaceRequestBodyDTO} editWorkspaceRequestBodyDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        editWorkspace(workspaceId: number, editWorkspaceRequestBodyDTO: EditWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig): AxiosPromise<WorkspaceResponseDTO> {
+            return localVarFp.editWorkspace(workspaceId, editWorkspaceRequestBodyDTO, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1089,6 +1164,18 @@ export class WorkspaceControllerApi extends BaseAPI {
      */
     public deleteWorkspace(workspaceId: number, options?: RawAxiosRequestConfig) {
         return WorkspaceControllerApiFp(this.configuration).deleteWorkspace(workspaceId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} workspaceId 
+     * @param {EditWorkspaceRequestBodyDTO} editWorkspaceRequestBodyDTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof WorkspaceControllerApi
+     */
+    public editWorkspace(workspaceId: number, editWorkspaceRequestBodyDTO: EditWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig) {
+        return WorkspaceControllerApiFp(this.configuration).editWorkspace(workspaceId, editWorkspaceRequestBodyDTO, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
