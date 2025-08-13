@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
-  Optional<Workspace> findByIdAndOwnerUsername(Long id, String username);
+  Optional<Workspace> findByIdAndOwnerId(Long id, Long ownerId);
 
   @Query(
       """

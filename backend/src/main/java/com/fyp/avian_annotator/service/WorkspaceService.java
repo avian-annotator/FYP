@@ -6,11 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface WorkspaceService {
-  Workspace createUserWorkspace(String username, String name);
+  Workspace createUserWorkspace(Long userId, String name);
 
-  void deleteWorkspace(String username, Long id);
+  void deleteWorkspace(Long userId, Long id);
 
-  Page<AccessibleWorkspaceResponseDTO> getWorkspace(String sessionUserUsername, Pageable pageable);
+  Page<AccessibleWorkspaceResponseDTO> getWorkspace(Long userId, Pageable pageable);
 
-  Long addUserToWorkspace(String sessionUserUsername, Long workspaceId, String toAddUserUsername);
+  void addUserToWorkspace(Long sessionUserId, Long workspaceId, Long toAddUserId);
 }

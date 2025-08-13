@@ -43,4 +43,10 @@ public class GlobalExceptionHandler {
   public ResponseEntity<Void> handleBadRequestException(BadRequestException e) {
     return ResponseEntity.badRequest().build();
   }
+
+  @ExceptionHandler(IllegalAccessException.class)
+  public ResponseEntity<String> handleIllegalAccessException(IllegalAccessException e) {
+    log.error(e.getMessage());
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+  }
 }

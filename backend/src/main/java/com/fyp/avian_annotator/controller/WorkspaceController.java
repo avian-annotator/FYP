@@ -6,6 +6,7 @@ import com.fyp.avian_annotator.dto.request.AddUserToWorkspaceRequestBodyDTO;
 import com.fyp.avian_annotator.dto.request.CreateWorkspaceRequestBodyDTO;
 import com.fyp.avian_annotator.dto.response.AccessibleWorkspaceResponseDTO;
 import com.fyp.avian_annotator.dto.response.WorkspaceResponseDTO;
+import com.fyp.avian_annotator.security.CustomUserDetails;
 import com.fyp.avian_annotator.service.WorkspaceService;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -14,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -28,10 +28,9 @@ public class WorkspaceController {
 
   @PostMapping()
   public ResponseEntity<WorkspaceResponseDTO> createWorkspace(
-      @AuthenticationPrincipal UserDetails userDetails,
+      @AuthenticationPrincipal CustomUserDetails userDetails,
       @RequestBody @Valid CreateWorkspaceRequestBodyDTO body) {
-    Workspace workspace =
-        workspaceService.createUserWorkspace(userDetails.getUsername(), body.getName());
+    Workspace workspace = workspaceService.createUserWorkspace(userDetails.getId(), body.getName());
     URI location =
         ServletUriComponentsBuilder.fromCurrentRequest()
             .path("/{id}")
@@ -44,31 +43,29 @@ public class WorkspaceController {
 
   @DeleteMapping("/{workspaceId}")
   public ResponseEntity<Void> deleteWorkspace(
-      @AuthenticationPrincipal UserDetails userDetails, @PathVariable Long workspaceId) {
-    workspaceService.deleteWorkspace(userDetails.getUsername(), workspaceId);
+      @AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Long workspaceId) {
+    workspaceService.deleteWorkspace(userDetails.getId(), workspaceId);
     return ResponseEntity.noContent().build();
   }
 
   @GetMapping
   public Page<AccessibleWorkspaceResponseDTO> getWorkspaces(
-      @AuthenticationPrincipal UserDetails userDetails, Pageable pageable) {
-    return workspaceService.getWorkspace(userDetails.getUsername(), pageable);
+      @AuthenticationPrincipal CustomUserDetails userDetails, Pageable pageable) {
+    return workspaceService.getWorkspace(userDetails.getId(), pageable);
   }
 
   @PostMapping("/{workspaceId}/users")
   public ResponseEntity<Void> addUserToWorkspace(
-      @AuthenticationPrincipal UserDetails userDetails,
+      @AuthenticationPrincipal CustomUserDetails userDetails,
       @PathVariable Long workspaceId,
       @RequestBody @Valid AddUserToWorkspaceRequestBodyDTO body) {
 
-    Long toAddUserId =
-        workspaceService.addUserToWorkspace(
-            userDetails.getUsername(), workspaceId, body.getUsername());
+    workspaceService.addUserToWorkspace(userDetails.getId(), workspaceId, body.getUserId());
 
     URI location =
         ServletUriComponentsBuilder.fromCurrentRequest()
             .path("/{userId}")
-            .buildAndExpand(toAddUserId)
+            .buildAndExpand(body.getUserId())
             .toUri();
 
     return ResponseEntity.created(location).build();

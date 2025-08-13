@@ -29,8 +29,8 @@ public class WorkspaceServiceImpl implements WorkspaceService {
   private final UserRepository userRepository;
 
   @Override
-  public Workspace createUserWorkspace(String username, String name) {
-    Optional<User> user = userRepository.findByUsername(username);
+  public Workspace createUserWorkspace(Long userId, String name) {
+    Optional<User> user = userRepository.findById(userId);
     if (user.isPresent()) {
       Workspace newWorkspace = Workspace.builder().owner(user.get()).name(name).build();
 
@@ -39,45 +39,36 @@ public class WorkspaceServiceImpl implements WorkspaceService {
       workspaceRepository.save(newWorkspace);
       return newWorkspace;
     }
-    throw new UserNotFoundException(username);
+    throw new UserNotFoundException(userId);
   }
 
   @Transactional
   @Override
-  public void deleteWorkspace(String username, Long id) {
+  public void deleteWorkspace(Long ownerId, Long workspaceId) {
     workspaceRepository
-        .findByIdAndOwnerUsername(id, username)
+        .findByIdAndOwnerId(workspaceId, ownerId)
         .ifPresent(workspaceRepository::delete);
   }
 
   @Override
-  public Page<AccessibleWorkspaceResponseDTO> getWorkspace(
-      String sessionUserUsername, Pageable pageable) {
-    var user =
-        userRepository
-            .findByUsername(sessionUserUsername)
-            .orElseThrow(() -> new UserNotFoundException(sessionUserUsername));
+  public Page<AccessibleWorkspaceResponseDTO> getWorkspace(Long userId, Pageable pageable) {
+    var user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 
     return workspaceRepository.findAccessibleWorkspaces(user.getId(), pageable);
   }
 
   @Transactional
   @Override
-  public Long addUserToWorkspace(
-      String sessionUserUsername, Long workspaceId, String toAddUserUsername) {
+  public void addUserToWorkspace(Long sessionUserId, Long workspaceId, Long toAddUserId) {
     Workspace workspace = getWorkspaceOrThrow(workspaceId);
-    User sessionUser = getUserOrThrow(sessionUserUsername);
-    User toAddUser = getUserOrThrow(toAddUserUsername);
+    User sessionUser = getUserOrThrow(sessionUserId);
+    User toAddUser = getUserOrThrow(toAddUserId);
 
     validateOwnership(workspace, sessionUser);
     checkUserNotAlreadyInWorkspace(workspaceId, toAddUser);
 
     WorkspaceUser workspaceUser = new WorkspaceUser(workspace, toAddUser);
     workspaceUserRepository.save(workspaceUser);
-    return userRepository
-        .findByUsername(toAddUserUsername)
-        .orElseThrow(BadRequestException::new)
-        .getId();
   }
 
   private Workspace getWorkspaceOrThrow(Long workspaceId) {
@@ -86,10 +77,8 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         .orElseThrow(() -> new WorkspaceNotFoundException(workspaceId));
   }
 
-  private User getUserOrThrow(String username) {
-    return userRepository
-        .findByUsername(username)
-        .orElseThrow(() -> new UserNotFoundException(username));
+  private User getUserOrThrow(Long userId) {
+    return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
   }
 
   private void validateOwnership(Workspace workspace, User user) {
@@ -104,7 +93,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
             .findById(new WorkspaceUserId(workspaceId, toAddUser.getId()))
             .isPresent();
     if (alreadyAssociated) {
-      throw new BadRequestException();
+      throw new BadRequestException("User is already in the workspace");
     }
   }
 }
