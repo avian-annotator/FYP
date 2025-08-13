@@ -3,7 +3,9 @@ package com.fyp.avian_annotator.controller;
 import com.fyp.avian_annotator.dto.request.AddUserToWorkspaceRequestBodyDTO;
 import com.fyp.avian_annotator.dto.request.CreateWorkspaceRequestBodyDTO;
 import com.fyp.avian_annotator.dto.request.EditWorkspaceRequestBodyDTO;
+import com.fyp.avian_annotator.dto.request.*;
 import com.fyp.avian_annotator.dto.response.AccessibleWorkspaceResponseDTO;
+import com.fyp.avian_annotator.dto.response.UserResponseDTO;
 import com.fyp.avian_annotator.dto.response.PageWrapper;
 import com.fyp.avian_annotator.dto.response.WorkspaceResponseDTO;
 import com.fyp.avian_annotator.security.CustomUserDetails;
@@ -77,5 +79,28 @@ public class WorkspaceController {
             .toUri();
 
     return ResponseEntity.created(location).build();
+  }
+
+  @DeleteMapping("/{workspaceId}/users")
+  public ResponseEntity<Void> removeUserFromWorkspace(
+      @AuthenticationPrincipal CustomUserDetails userDetails,
+      @PathVariable Long workspaceId,
+      @RequestBody @Valid RemoveUserFromWorkspaceRequestBodyDTO body) {
+
+    workspaceService.removeUserFromWorkspace(userDetails.getId(), workspaceId, body.getUserId());
+
+    return ResponseEntity.noContent().build();
+  }
+
+  @GetMapping("/{workspaceId}/users")
+  public ResponseEntity<PageWrapper<UserResponseDTO>> getUsersFromWorkspace(
+      @AuthenticationPrincipal CustomUserDetails userDetails,
+      @PathVariable Long workspaceId,
+      @RequestParam @Valid GetUsersFromWorkspaceRequestParamDTO param,
+      Pageable pageable) {
+
+    return ResponseEntity.ok( new PageWrapper<>(
+        workspaceService.getUsersFromWorkspace(
+            userDetails.getId(), workspaceId, param.getInverse(), pageable)));
   }
 }
