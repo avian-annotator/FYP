@@ -47,7 +47,11 @@ public class WorkspaceServiceImpl implements WorkspaceService {
   public void deleteWorkspace(Long ownerId, Long workspaceId) {
     workspaceRepository
         .findByIdAndOwnerId(workspaceId, ownerId)
-        .ifPresent(workspaceRepository::delete);
+        .ifPresentOrElse(
+            workspaceRepository::delete,
+            () -> {
+              throw new WorkspaceNotFoundException(workspaceId);
+            });
   }
 
   @Override
