@@ -1,9 +1,8 @@
 package com.fyp.avian_annotator.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fyp.avian_annotator.dal.entity.Workspace;
 import com.fyp.avian_annotator.dto.request.AddUserToWorkspaceRequestBodyDTO;
 import com.fyp.avian_annotator.dto.request.CreateWorkspaceRequestBodyDTO;
+import com.fyp.avian_annotator.dto.request.EditWorkspaceRequestBodyDTO;
 import com.fyp.avian_annotator.dto.response.AccessibleWorkspaceResponseDTO;
 import com.fyp.avian_annotator.dto.response.WorkspaceResponseDTO;
 import com.fyp.avian_annotator.security.CustomUserDetails;
@@ -24,20 +23,19 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class WorkspaceController {
 
   private final WorkspaceService workspaceService;
-  private final ObjectMapper mapper;
 
   @PostMapping()
   public ResponseEntity<WorkspaceResponseDTO> createWorkspace(
       @AuthenticationPrincipal CustomUserDetails userDetails,
       @RequestBody @Valid CreateWorkspaceRequestBodyDTO body) {
-    Workspace workspace = workspaceService.createUserWorkspace(userDetails.getId(), body.getName());
+    WorkspaceResponseDTO responseDTO =
+        workspaceService.createUserWorkspace(userDetails.getId(), body.getName());
     URI location =
         ServletUriComponentsBuilder.fromCurrentRequest()
             .path("/{id}")
-            .buildAndExpand(workspace.getId())
+            .buildAndExpand(responseDTO.getId())
             .toUri();
 
-    WorkspaceResponseDTO responseDTO = mapper.convertValue(workspace, WorkspaceResponseDTO.class);
     return ResponseEntity.created(location).body(responseDTO);
   }
 
@@ -46,6 +44,16 @@ public class WorkspaceController {
       @AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Long workspaceId) {
     workspaceService.deleteWorkspace(userDetails.getId(), workspaceId);
     return ResponseEntity.noContent().build();
+  }
+
+  @PatchMapping("/{workspaceId}")
+  public ResponseEntity<WorkspaceResponseDTO> editWorkspace(
+      @AuthenticationPrincipal CustomUserDetails userDetails,
+      @PathVariable Long workspaceId,
+      @RequestBody @Valid EditWorkspaceRequestBodyDTO request) {
+
+    return ResponseEntity.ok(
+        workspaceService.editWorkspace(userDetails.getId(), workspaceId, request.getName()));
   }
 
   @GetMapping

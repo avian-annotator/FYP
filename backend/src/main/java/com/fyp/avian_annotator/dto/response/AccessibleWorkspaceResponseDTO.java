@@ -9,6 +9,6 @@ import lombok.Data;
 @Data
 public class AccessibleWorkspaceResponseDTO {
   @NotNull private Long id;
-  @NotBlank private String name;
+  @NotNull private String name;
   @NotBlank private String ownerUsername;
 }

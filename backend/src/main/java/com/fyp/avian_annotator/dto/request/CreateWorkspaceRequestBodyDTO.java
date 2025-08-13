@@ -1,10 +1,10 @@
 package com.fyp.avian_annotator.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Data
 public class CreateWorkspaceRequestBodyDTO {
 
-  @NotBlank public String name;
+  @NotEmpty public String name;
 }

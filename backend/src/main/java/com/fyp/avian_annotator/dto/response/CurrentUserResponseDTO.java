@@ -1,7 +1,7 @@
 package com.fyp.avian_annotator.dto.response;
 
 import com.fyp.avian_annotator.utils.UserRole;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +13,7 @@ public class CurrentUserResponseDTO {
   private boolean authenticated;
   @NotNull private Long id;
 
-  @NotBlank private String username;
+  @NotEmpty private String username;
 
   @NotNull private UserRole role;
 }

@@ -12,6 +12,8 @@ import org.springframework.data.repository.query.Param;
 public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
   Optional<Workspace> findByIdAndOwnerId(Long id, Long ownerId);
 
+  Optional<Workspace> findByOwnerIdAndName(Long ownerId, String name);
+
   @Query(
       """
   SELECT new com.fyp.avian_annotator.dto.response.AccessibleWorkspaceResponseDTO(w.id, w.name, u.username)
@@ -22,4 +24,6 @@ public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
 """)
   Page<AccessibleWorkspaceResponseDTO> findAccessibleWorkspaces(
       @Param("userId") Long userId, Pageable pageable);
+
+  Optional<Workspace> findByName(String name);
 }

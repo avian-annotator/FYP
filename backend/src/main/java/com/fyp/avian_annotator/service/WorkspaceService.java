@@ -1,14 +1,16 @@
 package com.fyp.avian_annotator.service;
 
-import com.fyp.avian_annotator.dal.entity.Workspace;
 import com.fyp.avian_annotator.dto.response.AccessibleWorkspaceResponseDTO;
+import com.fyp.avian_annotator.dto.response.WorkspaceResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface WorkspaceService {
-  Workspace createUserWorkspace(Long userId, String name);
+  WorkspaceResponseDTO createUserWorkspace(Long userId, String name);
 
   void deleteWorkspace(Long userId, Long id);
+
+  WorkspaceResponseDTO editWorkspace(Long userId, Long workspaceId, String newName);
 
   Page<AccessibleWorkspaceResponseDTO> getWorkspace(Long userId, Pageable pageable);
 
