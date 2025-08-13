@@ -1,6 +1,8 @@
 import { User } from '@/lib/types'
 
 export async function getWorkspaceUsers(workspaceId: number): Promise<User[]> {
+  //TODO: add in hooks when they come out
+
   const workspaceIdStr = String(workspaceId)
   const res = await fetch(`/api/workspaces/${workspaceIdStr}/users`)
   if (!res.ok) {

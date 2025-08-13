@@ -19,10 +19,10 @@ export const Route = createFileRoute('/workspaces/$workspaceId/')({
 })
 
 function WorkspacePage() {
-  const params = useParams({ from: '/workspaces/$workspaceId/' }) satisfies {
+  const params = useParams({ from: '/workspaces/$workspaceId' }) satisfies {
     workspaceId: string
   }
-  const search = useSearch({ from: '/workspaces/$workspaceId/' }) satisfies {
+  const search = useSearch({ from: '/workspaces/$workspaceId' }) satisfies {
     page: number
   }
   const initialPage = search.page ? search.page : 1
@@ -53,7 +53,7 @@ function WorkspacePage() {
       </div>
 
       {/* Pagination */}
-      {totalPages > 1 && (
+      {totalPages > 0 && (
         <Pagination>
           <PaginationContent>
             <PaginationItem>

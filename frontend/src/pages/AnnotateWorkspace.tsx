@@ -2,12 +2,14 @@ import { useParams } from '@tanstack/react-router'
 import React from 'react'
 import { Route } from '../routes/workspaces/$workspaceId/annotate/$imageId'
 
+type AnnotateWorkspaceParams = {
+  workspaceId: string
+  imageId: number
+  url: string
+}
+
 const AnnotateWorkspace: React.FC = () => {
-  const params = useParams({ from: Route.id }) satisfies {
-    workspaceId: string
-    imageId: number
-    url: string
-  }
+  const params: AnnotateWorkspaceParams = useParams({ from: Route.id })
 
   return (
     <div>

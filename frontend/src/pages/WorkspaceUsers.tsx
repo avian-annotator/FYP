@@ -6,17 +6,21 @@ import UserCard from '@/components/users/UserCard'
 import { getWorkspaceUsers } from '@/components/workspace/getWorkspaceUsers'
 import { useQuery } from '@tanstack/react-query'
 
+type WorkspaceUsersParams = {
+  workspaceId: number
+}
 const WorkspaceUsers: React.FC = () => {
-  const { workspaceId } = useParams({ from: Route.id }) satisfies { workspaceId: number }
+  const { workspaceId }: WorkspaceUsersParams = useParams({ from: Route.id })
 
   const {
     data: users,
     isLoading,
     error,
   } = useQuery({
+    //TODO: update to use endpoints when they come out
     queryKey: ['workspaceUsers', workspaceId],
     queryFn: () => getWorkspaceUsers(workspaceId),
-    staleTime: 1000 * 60, // 1 min cache
+    staleTime: 1000 * 60,
   })
 
   if (isLoading) return <p>Loading workspace users...</p>
