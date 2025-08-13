@@ -56,10 +56,10 @@ export interface AccessibleWorkspaceResponseDTO {
 export interface AddUserToWorkspaceRequestBodyDTO {
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof AddUserToWorkspaceRequestBodyDTO
      */
-    'username': string;
+    'userId': number;
 }
 /**
  * 
@@ -107,10 +107,16 @@ export interface CurrentUserResponseDTO {
     'authenticated'?: boolean;
     /**
      * 
+     * @type {number}
+     * @memberof CurrentUserResponseDTO
+     */
+    'id': number;
+    /**
+     * 
      * @type {string}
      * @memberof CurrentUserResponseDTO
      */
-    'user': string;
+    'username': string;
     /**
      * 
      * @type {string}

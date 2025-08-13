@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**username** | **string** |  | [default to undefined]
+**userId** | **number** |  | [default to undefined]
 
 ## Example
 
@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 import { AddUserToWorkspaceRequestBodyDTO } from './api';
 
 const instance: AddUserToWorkspaceRequestBodyDTO = {
-    username,
+    userId,
 };
 ```
 
