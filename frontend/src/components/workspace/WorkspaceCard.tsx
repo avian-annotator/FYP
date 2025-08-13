@@ -10,12 +10,21 @@ import {
   AlertDialogAction,
   AlertDialogHeader,
 } from '../ui/alert-dialog'
-import { AccessibleWorkspaceResponseDTO } from 'generated'
+import { AccessibleWorkspaceResponseDTO, useDeleteWorkspace } from '../../../generated'
 interface Props {
   workspace: AccessibleWorkspaceResponseDTO
 }
 
 export default function WorkspaceCard({ workspace }: Props) {
+  const { mutate, error, isSuccess } = useDeleteWorkspace(
+    workspace.id,
+    {},
+    {
+      onSuccess: () => {
+        window.location.reload()
+      },
+    },
+  )
   const navigate = useNavigate()
   return (
     <div className="flex justify-between items-center bg-gray-100 p-3 rounded-md shadow-sm">
@@ -56,12 +65,20 @@ export default function WorkspaceCard({ workspace }: Props) {
               <AlertDialogAction
                 className="bg-red-500 text-white"
                 onClick={() => {
-                  //TODO: add delete workspace logic
+                  mutate(undefined)
                 }}
               >
                 Yes, delete it
               </AlertDialogAction>
             </div>
+            {error && (
+              <p className="text-red-600 text-sm mt-2">
+                {error.message || 'Failed to delete workspace'}
+              </p>
+            )}
+            {isSuccess && (
+              <p className="text-green-600 text-sm mt-2">Workspace deleted successfully!</p>
+            )}
           </AlertDialogContent>
         </AlertDialog>
       </div>

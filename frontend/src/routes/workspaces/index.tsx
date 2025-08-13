@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button'
 import {
   Pagination,
   PaginationContent,
@@ -11,6 +10,7 @@ import WorkspaceCard from '@/components/workspace/WorkspaceCard'
 import { createFileRoute, Outlet, useSearch } from '@tanstack/react-router'
 import { AccessibleWorkspaceResponseDTO, useGetWorkspaces } from '../../../generated'
 import { useState } from 'react'
+import { CreateWorkspaceButton } from '@/components/workspace/createWorkspaceButton'
 export const Route = createFileRoute('/workspaces/')({
   component: RouteComponent,
 })
@@ -76,21 +76,13 @@ function RouteComponent() {
             </PaginationItem>
           </PaginationContent>
         </Pagination>
-        <Button className="mt-4 text-green-600 bg-green-100 hover:bg-green-200" variant="ghost">
-          Create new Workspace?
-          {/*TODO add create workspace logic*/}
-        </Button>
+        <CreateWorkspaceButton></CreateWorkspaceButton>
       </section>
 
       <section>
         <h2 className="text-xl font-semibold mt-8 mb-2">Guest Workspaces</h2>
         <hr />
-        <div className="space-y-2">
-          {workspaces.map((ws: AccessibleWorkspaceResponseDTO) => (
-            <WorkspaceCard key={ws.id} workspace={ws} />
-            //TODO add guest workspace logic
-          ))}
-        </div>
+        <div className="space-y-2">{/*TODO add guest workspace logic*/}</div>
       </section>
       <Outlet />
     </div>

@@ -1,3 +1,4 @@
+//TODO update to use hooks when they come out
 export interface Workspace {
   id: string
   name: string
