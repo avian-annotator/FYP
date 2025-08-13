@@ -51,6 +51,19 @@ export interface AccessibleWorkspaceResponseDTO {
 /**
  * 
  * @export
+ * @interface AddUserToWorkspaceRequestBodyDTO
+ */
+export interface AddUserToWorkspaceRequestBodyDTO {
+    /**
+     * 
+     * @type {number}
+     * @memberof AddUserToWorkspaceRequestBodyDTO
+     */
+    'userId': number;
+}
+/**
+ * 
+ * @export
  * @interface CreateUserRequestBodyDTO
  */
 export interface CreateUserRequestBodyDTO {
@@ -94,10 +107,16 @@ export interface CurrentUserResponseDTO {
     'authenticated'?: boolean;
     /**
      * 
+     * @type {number}
+     * @memberof CurrentUserResponseDTO
+     */
+    'id': number;
+    /**
+     * 
      * @type {string}
      * @memberof CurrentUserResponseDTO
      */
-    'user': string;
+    'username': string;
     /**
      * 
      * @type {string}
@@ -779,6 +798,45 @@ export const WorkspaceControllerApiAxiosParamCreator = function (configuration?:
     return {
         /**
          * 
+         * @param {number} workspaceId 
+         * @param {AddUserToWorkspaceRequestBodyDTO} addUserToWorkspaceRequestBodyDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addUserToWorkspace: async (workspaceId: number, addUserToWorkspaceRequestBodyDTO: AddUserToWorkspaceRequestBodyDTO, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspaceId' is not null or undefined
+            assertParamExists('addUserToWorkspace', 'workspaceId', workspaceId)
+            // verify required parameter 'addUserToWorkspaceRequestBodyDTO' is not null or undefined
+            assertParamExists('addUserToWorkspace', 'addUserToWorkspaceRequestBodyDTO', addUserToWorkspaceRequestBodyDTO)
+            const localVarPath = `/api/workspaces/{workspaceId}/users`
+                .replace(`{${"workspaceId"}}`, encodeURIComponent(String(workspaceId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(addUserToWorkspaceRequestBodyDTO, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {CreateWorkspaceRequestBodyDTO} createWorkspaceRequestBodyDTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -895,6 +953,19 @@ export const WorkspaceControllerApiFp = function(configuration?: Configuration) 
     return {
         /**
          * 
+         * @param {number} workspaceId 
+         * @param {AddUserToWorkspaceRequestBodyDTO} addUserToWorkspaceRequestBodyDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async addUserToWorkspace(workspaceId: number, addUserToWorkspaceRequestBodyDTO: AddUserToWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.addUserToWorkspace(workspaceId, addUserToWorkspaceRequestBodyDTO, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['WorkspaceControllerApi.addUserToWorkspace']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @param {CreateWorkspaceRequestBodyDTO} createWorkspaceRequestBodyDTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -941,6 +1012,16 @@ export const WorkspaceControllerApiFactory = function (configuration?: Configura
     return {
         /**
          * 
+         * @param {number} workspaceId 
+         * @param {AddUserToWorkspaceRequestBodyDTO} addUserToWorkspaceRequestBodyDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addUserToWorkspace(workspaceId: number, addUserToWorkspaceRequestBodyDTO: AddUserToWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.addUserToWorkspace(workspaceId, addUserToWorkspaceRequestBodyDTO, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {CreateWorkspaceRequestBodyDTO} createWorkspaceRequestBodyDTO 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -976,6 +1057,18 @@ export const WorkspaceControllerApiFactory = function (configuration?: Configura
  * @extends {BaseAPI}
  */
 export class WorkspaceControllerApi extends BaseAPI {
+    /**
+     * 
+     * @param {number} workspaceId 
+     * @param {AddUserToWorkspaceRequestBodyDTO} addUserToWorkspaceRequestBodyDTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof WorkspaceControllerApi
+     */
+    public addUserToWorkspace(workspaceId: number, addUserToWorkspaceRequestBodyDTO: AddUserToWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig) {
+        return WorkspaceControllerApiFp(this.configuration).addUserToWorkspace(workspaceId, addUserToWorkspaceRequestBodyDTO, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @param {CreateWorkspaceRequestBodyDTO} createWorkspaceRequestBodyDTO 

@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     if (!isError && !isLoading) {
-      setIsAuthenticated(data?.data.user != null)
+      setIsAuthenticated(data?.data.id != null)
     }
   }, [data, isLoading, isError])
 

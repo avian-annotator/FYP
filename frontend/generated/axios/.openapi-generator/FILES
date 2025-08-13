@@ -6,6 +6,7 @@ base.ts
 common.ts
 configuration.ts
 docs/AccessibleWorkspaceResponseDTO.md
+docs/AddUserToWorkspaceRequestBodyDTO.md
 docs/AdminControllerApi.md
 docs/AuthenticationControllerApi.md
 docs/CreateUserRequestBodyDTO.md

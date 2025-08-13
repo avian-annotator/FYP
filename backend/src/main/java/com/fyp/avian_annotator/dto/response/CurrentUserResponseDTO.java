@@ -11,8 +11,9 @@ import lombok.Data;
 public class CurrentUserResponseDTO {
 
   private boolean authenticated;
+  @NotNull private Long id;
 
-  @NotBlank private String user;
+  @NotBlank private String username;
 
   @NotNull private UserRole role;
 }
