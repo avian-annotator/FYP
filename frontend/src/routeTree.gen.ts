@@ -21,6 +21,7 @@ import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as WorkspacesWorkspaceIdIndexRouteImport } from './routes/workspaces/$workspaceId/index'
 import { Route as WorkspacesWorkspaceIdUsersRouteImport } from './routes/workspaces/$workspaceId/users'
+import { Route as WorkspacesWorkspaceIdAnnotateRouteImport } from './routes/workspaces/$workspaceId/annotate'
 import { Route as WorkspacesWorkspaceIdAnnotateImageIdRouteImport } from './routes/workspaces/$workspaceId/annotate/$imageId'
 
 const WorkspacesRoute = WorkspacesRouteImport.update({
@@ -85,11 +86,17 @@ const WorkspacesWorkspaceIdUsersRoute =
     path: '/$workspaceId/users',
     getParentRoute: () => WorkspacesRoute,
   } as any)
+const WorkspacesWorkspaceIdAnnotateRoute =
+  WorkspacesWorkspaceIdAnnotateRouteImport.update({
+    id: '/$workspaceId/annotate',
+    path: '/$workspaceId/annotate',
+    getParentRoute: () => WorkspacesRoute,
+  } as any)
 const WorkspacesWorkspaceIdAnnotateImageIdRoute =
   WorkspacesWorkspaceIdAnnotateImageIdRouteImport.update({
-    id: '/$workspaceId/annotate/$imageId',
-    path: '/$workspaceId/annotate/$imageId',
-    getParentRoute: () => WorkspacesRoute,
+    id: '/$imageId',
+    path: '/$imageId',
+    getParentRoute: () => WorkspacesWorkspaceIdAnnotateRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -103,6 +110,7 @@ export interface FileRoutesByFullPath {
   '/login/': typeof LoginIndexRoute
   '/me/': typeof MeIndexRoute
   '/workspaces/': typeof WorkspacesIndexRoute
+  '/workspaces/$workspaceId/annotate': typeof WorkspacesWorkspaceIdAnnotateRouteWithChildren
   '/workspaces/$workspaceId/users': typeof WorkspacesWorkspaceIdUsersRoute
   '/workspaces/$workspaceId': typeof WorkspacesWorkspaceIdIndexRoute
   '/workspaces/$workspaceId/annotate/$imageId': typeof WorkspacesWorkspaceIdAnnotateImageIdRoute
@@ -114,6 +122,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginIndexRoute
   '/me': typeof MeIndexRoute
   '/workspaces': typeof WorkspacesIndexRoute
+  '/workspaces/$workspaceId/annotate': typeof WorkspacesWorkspaceIdAnnotateRouteWithChildren
   '/workspaces/$workspaceId/users': typeof WorkspacesWorkspaceIdUsersRoute
   '/workspaces/$workspaceId': typeof WorkspacesWorkspaceIdIndexRoute
   '/workspaces/$workspaceId/annotate/$imageId': typeof WorkspacesWorkspaceIdAnnotateImageIdRoute
@@ -130,6 +139,7 @@ export interface FileRoutesById {
   '/login/': typeof LoginIndexRoute
   '/me/': typeof MeIndexRoute
   '/workspaces/': typeof WorkspacesIndexRoute
+  '/workspaces/$workspaceId/annotate': typeof WorkspacesWorkspaceIdAnnotateRouteWithChildren
   '/workspaces/$workspaceId/users': typeof WorkspacesWorkspaceIdUsersRoute
   '/workspaces/$workspaceId/': typeof WorkspacesWorkspaceIdIndexRoute
   '/workspaces/$workspaceId/annotate/$imageId': typeof WorkspacesWorkspaceIdAnnotateImageIdRoute
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
     | '/login/'
     | '/me/'
     | '/workspaces/'
+    | '/workspaces/$workspaceId/annotate'
     | '/workspaces/$workspaceId/users'
     | '/workspaces/$workspaceId'
     | '/workspaces/$workspaceId/annotate/$imageId'
@@ -158,6 +169,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/me'
     | '/workspaces'
+    | '/workspaces/$workspaceId/annotate'
     | '/workspaces/$workspaceId/users'
     | '/workspaces/$workspaceId'
     | '/workspaces/$workspaceId/annotate/$imageId'
@@ -173,6 +185,7 @@ export interface FileRouteTypes {
     | '/login/'
     | '/me/'
     | '/workspaces/'
+    | '/workspaces/$workspaceId/annotate'
     | '/workspaces/$workspaceId/users'
     | '/workspaces/$workspaceId/'
     | '/workspaces/$workspaceId/annotate/$imageId'
@@ -273,12 +286,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkspacesWorkspaceIdUsersRouteImport
       parentRoute: typeof WorkspacesRoute
     }
+    '/workspaces/$workspaceId/annotate': {
+      id: '/workspaces/$workspaceId/annotate'
+      path: '/$workspaceId/annotate'
+      fullPath: '/workspaces/$workspaceId/annotate'
+      preLoaderRoute: typeof WorkspacesWorkspaceIdAnnotateRouteImport
+      parentRoute: typeof WorkspacesRoute
+    }
     '/workspaces/$workspaceId/annotate/$imageId': {
       id: '/workspaces/$workspaceId/annotate/$imageId'
-      path: '/$workspaceId/annotate/$imageId'
+      path: '/$imageId'
       fullPath: '/workspaces/$workspaceId/annotate/$imageId'
       preLoaderRoute: typeof WorkspacesWorkspaceIdAnnotateImageIdRouteImport
-      parentRoute: typeof WorkspacesRoute
+      parentRoute: typeof WorkspacesWorkspaceIdAnnotateRoute
     }
   }
 }
@@ -313,19 +333,34 @@ const MeRouteChildren: MeRouteChildren = {
 
 const MeRouteWithChildren = MeRoute._addFileChildren(MeRouteChildren)
 
+interface WorkspacesWorkspaceIdAnnotateRouteChildren {
+  WorkspacesWorkspaceIdAnnotateImageIdRoute: typeof WorkspacesWorkspaceIdAnnotateImageIdRoute
+}
+
+const WorkspacesWorkspaceIdAnnotateRouteChildren: WorkspacesWorkspaceIdAnnotateRouteChildren =
+  {
+    WorkspacesWorkspaceIdAnnotateImageIdRoute:
+      WorkspacesWorkspaceIdAnnotateImageIdRoute,
+  }
+
+const WorkspacesWorkspaceIdAnnotateRouteWithChildren =
+  WorkspacesWorkspaceIdAnnotateRoute._addFileChildren(
+    WorkspacesWorkspaceIdAnnotateRouteChildren,
+  )
+
 interface WorkspacesRouteChildren {
   WorkspacesIndexRoute: typeof WorkspacesIndexRoute
+  WorkspacesWorkspaceIdAnnotateRoute: typeof WorkspacesWorkspaceIdAnnotateRouteWithChildren
   WorkspacesWorkspaceIdUsersRoute: typeof WorkspacesWorkspaceIdUsersRoute
   WorkspacesWorkspaceIdIndexRoute: typeof WorkspacesWorkspaceIdIndexRoute
-  WorkspacesWorkspaceIdAnnotateImageIdRoute: typeof WorkspacesWorkspaceIdAnnotateImageIdRoute
 }
 
 const WorkspacesRouteChildren: WorkspacesRouteChildren = {
   WorkspacesIndexRoute: WorkspacesIndexRoute,
+  WorkspacesWorkspaceIdAnnotateRoute:
+    WorkspacesWorkspaceIdAnnotateRouteWithChildren,
   WorkspacesWorkspaceIdUsersRoute: WorkspacesWorkspaceIdUsersRoute,
   WorkspacesWorkspaceIdIndexRoute: WorkspacesWorkspaceIdIndexRoute,
-  WorkspacesWorkspaceIdAnnotateImageIdRoute:
-    WorkspacesWorkspaceIdAnnotateImageIdRoute,
 }
 
 const WorkspacesRouteWithChildren = WorkspacesRoute._addFileChildren(

@@ -1,6 +1,5 @@
 import { Button } from '../ui/button'
 import { useNavigate } from '@tanstack/react-router'
-import { Workspace } from '@/lib/types'
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -11,8 +10,9 @@ import {
   AlertDialogAction,
   AlertDialogHeader,
 } from '../ui/alert-dialog'
+import { AccessibleWorkspaceResponseDTO } from 'generated'
 interface Props {
-  workspace: Workspace
+  workspace: AccessibleWorkspaceResponseDTO
 }
 
 export default function WorkspaceCard({ workspace }: Props) {
@@ -26,7 +26,7 @@ export default function WorkspaceCard({ workspace }: Props) {
         <Button
           variant="outline"
           onClick={() => {
-            void navigate({ to: `/workspaces/${workspace.id}/` })
+            void navigate({ to: `/workspaces/${String(workspace.id)}/` })
           }}
         >
           edit
@@ -35,7 +35,7 @@ export default function WorkspaceCard({ workspace }: Props) {
           variant="outline"
           className="bg-orange-400 text-white"
           onClick={() => {
-            void navigate({ to: `/workspaces/${workspace.id}/users` })
+            void navigate({ to: `/workspaces/${String(workspace.id)}/users` })
           }}
         >
           manage
@@ -56,7 +56,7 @@ export default function WorkspaceCard({ workspace }: Props) {
               <AlertDialogAction
                 className="bg-red-500 text-white"
                 onClick={() => {
-                  //TODO: add delete logic
+                  //TODO: add delete workspace logic
                 }}
               >
                 Yes, delete it
