@@ -191,18 +191,6 @@ export interface PageAccessibleWorkspaceResponseDTO {
     'pageable'?: PageableObject;
     /**
      * 
-     * @type {boolean}
-     * @memberof PageAccessibleWorkspaceResponseDTO
-     */
-    'first'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageAccessibleWorkspaceResponseDTO
-     */
-    'last'?: boolean;
-    /**
-     * 
      * @type {number}
      * @memberof PageAccessibleWorkspaceResponseDTO
      */
@@ -225,6 +213,18 @@ export interface PageAccessibleWorkspaceResponseDTO {
      * @memberof PageAccessibleWorkspaceResponseDTO
      */
     'sort'?: SortObject;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageAccessibleWorkspaceResponseDTO
+     */
+    'first'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageAccessibleWorkspaceResponseDTO
+     */
+    'last'?: boolean;
     /**
      * 
      * @type {number}
