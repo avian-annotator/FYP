@@ -10,7 +10,7 @@ import WorkspaceCard from '@/components/workspace/WorkspaceCard'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { AccessibleWorkspaceResponseDTO, useGetWorkspaces } from '../../../generated'
 import { useEffect, useState } from 'react'
-import { CreateWorkspaceButton } from '@/components/workspace/createWorkspaceButton'
+import { CreateWorkspaceButton } from '@/components/workspace/CreateWorkspaceButton'
 export const Route = createFileRoute('/workspaces/')({
   component: RouteComponent,
 })
