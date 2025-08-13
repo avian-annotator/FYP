@@ -7,26 +7,36 @@ import {
   PaginationNext,
 } from '@/components/ui/pagination'
 import WorkspaceCard from '@/components/workspace/WorkspaceCard'
-import { createFileRoute, Outlet, useSearch } from '@tanstack/react-router'
+import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { AccessibleWorkspaceResponseDTO, useGetWorkspaces } from '../../../generated'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CreateWorkspaceButton } from '@/components/workspace/createWorkspaceButton'
 export const Route = createFileRoute('/workspaces/')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  const { data, isLoading, error } = useGetWorkspaces({ page: 1, size: 8 })
-  const search = useSearch({ from: '/workspaces' }) satisfies {
-    page: number
-  }
-  const initialPage = search.page ? search.page : 1
-  const [page, setPage] = useState<number>(initialPage)
+  const [page, setPage] = useState<number>(0)
+
+  // Fetch workspaces with the current page
+  const { data, isLoading, error, refetch } = useGetWorkspaces({ size: 4, page })
 
   const workspaces = data?.data.content ?? []
   const totalPages = data?.data.totalPages ?? 0
+
+  useEffect(() => {
+    void refetch()
+  }, [page])
+
   if (isLoading) return <p>Loading...</p>
   if (error) return <p>Error loading workspaces</p>
+
+  const isFirstPage = page === 0
+  const isLastPage = page === totalPages - 1
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage)
+  }
 
   return (
     <div className="max-w-4xl w-full mx-auto p-6 space-y-6">
@@ -39,39 +49,37 @@ function RouteComponent() {
             <WorkspaceCard key={ws.id} workspace={ws} />
           ))}
         </div>
-
         {/* Pagination */}
         <Pagination>
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious
                 onClick={() => {
-                  setPage((p: number) => Math.max(1, p - 1))
+                  handlePageChange(Math.max(0, page - 1))
                 }}
-                className={page === 1 ? 'pointer-events-none opacity-50' : ''}
+                className={isFirstPage ? 'pointer-events-none opacity-50' : ''}
               />
             </PaginationItem>
-            {Array.from({ length: totalPages }, (_, i) => {
-              const pageNumber = i + 1
-              return (
-                <PaginationItem key={pageNumber}>
-                  <PaginationLink
-                    isActive={page === pageNumber}
-                    onClick={() => {
-                      setPage(pageNumber)
-                    }}
-                  >
-                    {pageNumber}
-                  </PaginationLink>
-                </PaginationItem>
-              )
-            })}
+
+            {Array.from({ length: totalPages }, (_, i) => (
+              <PaginationItem key={i}>
+                <PaginationLink
+                  isActive={page === i}
+                  onClick={() => {
+                    handlePageChange(i)
+                  }}
+                >
+                  {i + 1}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+
             <PaginationItem>
               <PaginationNext
                 onClick={() => {
-                  setPage((p: number) => Math.min(totalPages, p + 1))
+                  handlePageChange(Math.min(totalPages - 1, page + 1))
                 }}
-                className={page === totalPages ? 'pointer-events-none opacity-50' : ''}
+                className={isLastPage ? 'pointer-events-none opacity-50' : ''}
               />
             </PaginationItem>
           </PaginationContent>

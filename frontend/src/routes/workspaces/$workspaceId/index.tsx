@@ -19,6 +19,7 @@ export const Route = createFileRoute('/workspaces/$workspaceId/')({
 })
 
 function WorkspacePage() {
+  //TODO use getimages hook when it comes through
   const params = useParams({ from: '/workspaces/$workspaceId' }) satisfies {
     workspaceId: string
   }
