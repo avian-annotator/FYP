@@ -3,10 +3,10 @@ package com.fyp.avian_annotator.controller;
 import com.fyp.avian_annotator.dto.request.AddUserToWorkspaceRequestBodyDTO;
 import com.fyp.avian_annotator.dto.request.CreateWorkspaceRequestBodyDTO;
 import com.fyp.avian_annotator.dto.request.EditWorkspaceRequestBodyDTO;
-import com.fyp.avian_annotator.dto.request.*;
+import com.fyp.avian_annotator.dto.request.GetUsersFromWorkspaceRequestParamDTO;
 import com.fyp.avian_annotator.dto.response.AccessibleWorkspaceResponseDTO;
-import com.fyp.avian_annotator.dto.response.UserResponseDTO;
 import com.fyp.avian_annotator.dto.response.PageWrapper;
+import com.fyp.avian_annotator.dto.response.UserResponseDTO;
 import com.fyp.avian_annotator.dto.response.WorkspaceResponseDTO;
 import com.fyp.avian_annotator.security.CustomUserDetails;
 import com.fyp.avian_annotator.service.WorkspaceService;
@@ -81,13 +81,13 @@ public class WorkspaceController {
     return ResponseEntity.created(location).build();
   }
 
-  @DeleteMapping("/{workspaceId}/users")
+  @DeleteMapping("/{workspaceId}/users/{userId}")
   public ResponseEntity<Void> removeUserFromWorkspace(
       @AuthenticationPrincipal CustomUserDetails userDetails,
       @PathVariable Long workspaceId,
-      @RequestBody @Valid RemoveUserFromWorkspaceRequestBodyDTO body) {
+      @PathVariable Long userId) {
 
-    workspaceService.removeUserFromWorkspace(userDetails.getId(), workspaceId, body.getUserId());
+    workspaceService.removeUserFromWorkspace(userDetails.getId(), workspaceId, userId);
 
     return ResponseEntity.noContent().build();
   }
@@ -96,11 +96,12 @@ public class WorkspaceController {
   public ResponseEntity<PageWrapper<UserResponseDTO>> getUsersFromWorkspace(
       @AuthenticationPrincipal CustomUserDetails userDetails,
       @PathVariable Long workspaceId,
-      @RequestParam @Valid GetUsersFromWorkspaceRequestParamDTO param,
+      @ModelAttribute @Valid GetUsersFromWorkspaceRequestParamDTO param,
       Pageable pageable) {
 
-    return ResponseEntity.ok( new PageWrapper<>(
-        workspaceService.getUsersFromWorkspace(
-            userDetails.getId(), workspaceId, param.getInverse(), pageable)));
+    return ResponseEntity.ok(
+        new PageWrapper<>(
+            workspaceService.getUsersFromWorkspace(
+                userDetails.getId(), workspaceId, param.getExcludeExisting(), pageable)));
   }
 }

@@ -21,9 +21,9 @@ public interface WorkspaceUserRepository extends JpaRepository<WorkspaceUser, Wo
   @Query(
       """
     SELECT new com.fyp.avian_annotator.dto.response.UserResponseDTO(u.id, u.username, u.role, u.createdAt)
-    FROM WorkspaceUser wu
-    JOIN wu.user u
-    WHERE wu.workspace.id != :workspaceId
+    FROM User u
+    LEFT JOIN WorkspaceUser wu ON wu.user = u AND wu.workspace.id = :workspaceId
+    WHERE wu.id IS NULL
 """)
   Page<UserResponseDTO> findUsersNotInWorkspace(Long workspaceId, Pageable pageable);
 }

@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class GetUsersFromWorkspaceRequestParamDTO {
-  Boolean inverse;
+  Boolean excludeExisting;
 }

@@ -117,12 +117,12 @@ public class WorkspaceServiceImpl implements WorkspaceService {
 
   @Override
   public Page<UserResponseDTO> getUsersFromWorkspace(
-      Long sessionUserId, Long workspaceId, Boolean inverse, Pageable pageable) {
+      Long sessionUserId, Long workspaceId, Boolean excludeExisting, Pageable pageable) {
     Workspace workspace = getWorkspaceOrThrow(workspaceId);
     User sessionUser = getUserOrThrow(sessionUserId);
 
     validateOwnership(workspace, sessionUser);
-    if (inverse != null && inverse) {
+    if (excludeExisting != null && excludeExisting) {
       return workspaceUserRepository.findUsersNotInWorkspace(workspaceId, pageable);
     }
     return workspaceUserRepository.findUsersOfWorkspace(workspaceId, pageable);
