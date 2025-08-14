@@ -24,7 +24,8 @@ public class User {
 
   public com.fyp.avian_annotator.dal.entity.User toEntity(
       com.fyp.avian_annotator.dal.entity.User existingEntity) {
-    if (this.username != null) existingEntity.setUsername(this.username);
+    if (this.username != null && !this.username.isEmpty())
+      existingEntity.setUsername(this.username);
     if (this.role != null) existingEntity.setRole(this.role);
     if (this.passwordHash != null) existingEntity.setPasswordHash(this.passwordHash);
     return existingEntity;
