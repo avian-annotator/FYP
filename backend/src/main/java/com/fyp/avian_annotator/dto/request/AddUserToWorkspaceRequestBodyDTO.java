@@ -1,5 +1,5 @@
 package com.fyp.avian_annotator.dto.request;
 
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
-public record AddUserToWorkspaceRequestBodyDTO(@NotEmpty Long userId) {}
+public record AddUserToWorkspaceRequestBodyDTO(@NotNull Long userId) {}
