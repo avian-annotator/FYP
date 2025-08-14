@@ -27,7 +27,7 @@ public class AdminController {
   public ResponseEntity<UserResponseDTO> createNewUser(
       @RequestBody @Valid CreateUserRequestBodyDTO request) {
 
-    User createdUser = adminService.createUser(request.getUsername(), request.getPassword());
+    User createdUser = adminService.createUser(request.username(), request.password());
 
     URI location =
         ServletUriComponentsBuilder.fromCurrentRequest()
@@ -54,7 +54,7 @@ public class AdminController {
       @PathVariable Long id, @RequestBody @Valid EditUserRequestBodyDTO request) {
 
     User editedUser =
-        adminService.editUser(id, request.getUsername(), request.getPassword(), request.getRole());
+        adminService.editUser(id, request.username(), request.password(), request.role());
 
     UserResponseDTO responseDTO = mapper.convertValue(editedUser, UserResponseDTO.class);
 

@@ -181,75 +181,63 @@ export interface EditWorkspaceRequestBodyDTO {
 /**
  * 
  * @export
- * @interface PageAccessibleWorkspaceResponseDTO
+ * @interface PageWrapperAccessibleWorkspaceResponseDTO
  */
-export interface PageAccessibleWorkspaceResponseDTO {
-    /**
-     * 
-     * @type {number}
-     * @memberof PageAccessibleWorkspaceResponseDTO
-     */
-    'totalPages'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageAccessibleWorkspaceResponseDTO
-     */
-    'totalElements'?: number;
-    /**
-     * 
-     * @type {PageableObject}
-     * @memberof PageAccessibleWorkspaceResponseDTO
-     */
-    'pageable'?: PageableObject;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageAccessibleWorkspaceResponseDTO
-     */
-    'first'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageAccessibleWorkspaceResponseDTO
-     */
-    'last'?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageAccessibleWorkspaceResponseDTO
-     */
-    'size'?: number;
+export interface PageWrapperAccessibleWorkspaceResponseDTO {
     /**
      * 
      * @type {Array<AccessibleWorkspaceResponseDTO>}
-     * @memberof PageAccessibleWorkspaceResponseDTO
+     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
      */
-    'content'?: Array<AccessibleWorkspaceResponseDTO>;
+    'content': Array<AccessibleWorkspaceResponseDTO>;
     /**
      * 
      * @type {number}
-     * @memberof PageAccessibleWorkspaceResponseDTO
+     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
      */
-    'number'?: number;
-    /**
-     * 
-     * @type {SortObject}
-     * @memberof PageAccessibleWorkspaceResponseDTO
-     */
-    'sort'?: SortObject;
+    'number': number;
     /**
      * 
      * @type {number}
-     * @memberof PageAccessibleWorkspaceResponseDTO
+     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
      */
-    'numberOfElements'?: number;
+    'size': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
+     */
+    'totalElements': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
+     */
+    'totalPages': number;
     /**
      * 
      * @type {boolean}
-     * @memberof PageAccessibleWorkspaceResponseDTO
+     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
      */
-    'empty'?: boolean;
+    'first': boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
+     */
+    'last': boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
+     */
+    'numberOfElements': number;
+    /**
+     * 
+     * @type {SortDTO}
+     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
+     */
+    'sort': SortDTO;
 }
 /**
  * 
@@ -279,70 +267,27 @@ export interface Pageable {
 /**
  * 
  * @export
- * @interface PageableObject
+ * @interface SortDTO
  */
-export interface PageableObject {
+export interface SortDTO {
     /**
      * 
      * @type {boolean}
-     * @memberof PageableObject
+     * @memberof SortDTO
      */
-    'paged'?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageableObject
-     */
-    'pageNumber'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageableObject
-     */
-    'pageSize'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageableObject
-     */
-    'offset'?: number;
-    /**
-     * 
-     * @type {SortObject}
-     * @memberof PageableObject
-     */
-    'sort'?: SortObject;
+    'sorted': boolean;
     /**
      * 
      * @type {boolean}
-     * @memberof PageableObject
+     * @memberof SortDTO
      */
-    'unpaged'?: boolean;
-}
-/**
- * 
- * @export
- * @interface SortObject
- */
-export interface SortObject {
+    'unsorted': boolean;
     /**
      * 
      * @type {boolean}
-     * @memberof SortObject
+     * @memberof SortDTO
      */
-    'sorted'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof SortObject
-     */
-    'empty'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof SortObject
-     */
-    'unsorted'?: boolean;
+    'empty': boolean;
 }
 /**
  * 
@@ -1059,7 +1004,7 @@ export const WorkspaceControllerApiFp = function(configuration?: Configuration) 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getWorkspaces(pageable: Pageable, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageAccessibleWorkspaceResponseDTO>> {
+        async getWorkspaces(pageable: Pageable, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageWrapperAccessibleWorkspaceResponseDTO>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getWorkspaces(pageable, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['WorkspaceControllerApi.getWorkspaces']?.[localVarOperationServerIndex]?.url;
@@ -1119,7 +1064,7 @@ export const WorkspaceControllerApiFactory = function (configuration?: Configura
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getWorkspaces(pageable: Pageable, options?: RawAxiosRequestConfig): AxiosPromise<PageAccessibleWorkspaceResponseDTO> {
+        getWorkspaces(pageable: Pageable, options?: RawAxiosRequestConfig): AxiosPromise<PageWrapperAccessibleWorkspaceResponseDTO> {
             return localVarFp.getWorkspaces(pageable, options).then((request) => request(axios, basePath));
         },
     };

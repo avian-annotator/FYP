@@ -125,6 +125,6 @@ public class WorkspaceServiceImpl implements WorkspaceService {
   }
 
   private WorkspaceResponseDTO convertToResponseDTO(Workspace workspace) {
-    return WorkspaceResponseDTO.builder().id(workspace.getId()).name(workspace.getName()).build();
+    return new WorkspaceResponseDTO(workspace.getId(), workspace.getName());
   }
 }
