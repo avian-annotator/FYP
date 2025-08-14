@@ -4,6 +4,7 @@ import com.fyp.avian_annotator.dal.entity.WorkspaceUser;
 import com.fyp.avian_annotator.dal.entity.WorkspaceUserId;
 import com.fyp.avian_annotator.dto.response.UserResponseDTO;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -15,7 +16,7 @@ public interface WorkspaceUserRepository extends JpaRepository<WorkspaceUser, Wo
     JOIN wu.user u
     WHERE wu.workspace.id = :workspaceId
 """)
-  Page<UserResponseDTO> findUsersOfWorkspace(Long workspaceId);
+  Page<UserResponseDTO> findUsersOfWorkspace(Long workspaceId, Pageable pageable);
 
   @Query(
       """
@@ -24,5 +25,5 @@ public interface WorkspaceUserRepository extends JpaRepository<WorkspaceUser, Wo
     JOIN wu.user u
     WHERE wu.workspace.id != :workspaceId
 """)
-  Page<UserResponseDTO> findUsersNotInWorkspace(Long workspaceId);
+  Page<UserResponseDTO> findUsersNotInWorkspace(Long workspaceId, Pageable pageable);
 }
