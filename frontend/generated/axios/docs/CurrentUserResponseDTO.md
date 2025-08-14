@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**authenticated** | **boolean** |  | [optional] [default to undefined]
+**authenticated** | **boolean** |  | [default to undefined]
 **id** | **number** |  | [default to undefined]
 **username** | **string** |  | [default to undefined]
 **role** | **string** |  | [default to undefined]

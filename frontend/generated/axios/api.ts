@@ -104,7 +104,7 @@ export interface CurrentUserResponseDTO {
      * @type {boolean}
      * @memberof CurrentUserResponseDTO
      */
-    'authenticated'?: boolean;
+    'authenticated': boolean;
     /**
      * 
      * @type {number}
