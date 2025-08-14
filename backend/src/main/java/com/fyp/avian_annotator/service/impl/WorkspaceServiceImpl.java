@@ -8,6 +8,7 @@ import com.fyp.avian_annotator.dal.repository.UserRepository;
 import com.fyp.avian_annotator.dal.repository.WorkspaceRepository;
 import com.fyp.avian_annotator.dal.repository.WorkspaceUserRepository;
 import com.fyp.avian_annotator.dto.response.AccessibleWorkspaceResponseDTO;
+import com.fyp.avian_annotator.dto.response.WorkspaceResponseDTO;
 import com.fyp.avian_annotator.exception.BadRequestException;
 import com.fyp.avian_annotator.exception.UnownedWorkspaceException;
 import com.fyp.avian_annotator.exception.UserNotFoundException;
@@ -15,7 +16,6 @@ import com.fyp.avian_annotator.exception.WorkspaceNotFoundException;
 import com.fyp.avian_annotator.service.WorkspaceService;
 import jakarta.transaction.Transactional;
 import java.util.Objects;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,17 +29,40 @@ public class WorkspaceServiceImpl implements WorkspaceService {
   private final UserRepository userRepository;
 
   @Override
-  public Workspace createUserWorkspace(Long userId, String name) {
-    Optional<User> user = userRepository.findById(userId);
-    if (user.isPresent()) {
-      Workspace newWorkspace = Workspace.builder().owner(user.get()).name(name).build();
+  public WorkspaceResponseDTO createUserWorkspace(Long userId, String name) {
+    User user =
+        userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 
-      WorkspaceUser newWorkspaceUser = new WorkspaceUser(newWorkspace, user.get());
-      newWorkspace.getWorkspaceUsers().add(newWorkspaceUser);
-      workspaceRepository.save(newWorkspace);
-      return newWorkspace;
+    Workspace newWorkspace = Workspace.builder().owner(user).name(name).build();
+
+    WorkspaceUser newWorkspaceUser = new WorkspaceUser(newWorkspace, user);
+    newWorkspace.getWorkspaceUsers().add(newWorkspaceUser);
+    workspaceRepository.save(newWorkspace);
+
+    return convertToResponseDTO(newWorkspace);
+  }
+
+  @Transactional
+  @Override
+  public WorkspaceResponseDTO editWorkspace(Long ownerId, Long workspaceId, String newName) {
+
+    Workspace workspace =
+        workspaceRepository
+            .findByIdAndOwnerId(workspaceId, ownerId)
+            .orElseThrow(
+                () -> new WorkspaceNotFoundException(workspaceId + " for owner " + ownerId));
+
+    /*
+    Hey Daniel, you ask, why not do request validation in the controller?
+    This is for extensibility - if there are more fields to edit in the future,
+    we must handle them in the service layer within the model, as some fields are optional.
+    So we update the non-null values here.
+     */
+    if (newName != null && !newName.isEmpty()) {
+      workspace.setName(newName);
     }
-    throw new UserNotFoundException(userId);
+    workspaceRepository.save(workspace);
+    return convertToResponseDTO(workspace);
   }
 
   @Transactional
@@ -99,5 +122,9 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     if (alreadyAssociated) {
       throw new BadRequestException("User is already in the workspace");
     }
+  }
+
+  private WorkspaceResponseDTO convertToResponseDTO(Workspace workspace) {
+    return new WorkspaceResponseDTO(workspace.getId(), workspace.getName());
   }
 }

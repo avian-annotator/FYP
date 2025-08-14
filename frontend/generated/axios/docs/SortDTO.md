@@ -1,23 +1,23 @@
-# SortObject
+# SortDTO
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**sorted** | **boolean** |  | [optional] [default to undefined]
-**empty** | **boolean** |  | [optional] [default to undefined]
-**unsorted** | **boolean** |  | [optional] [default to undefined]
+**sorted** | **boolean** |  | [default to undefined]
+**unsorted** | **boolean** |  | [default to undefined]
+**empty** | **boolean** |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { SortObject } from './api';
+import { SortDTO } from './api';
 
-const instance: SortObject = {
+const instance: SortDTO = {
     sorted,
-    empty,
     unsorted,
+    empty,
 };
 ```
 

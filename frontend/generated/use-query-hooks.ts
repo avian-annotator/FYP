@@ -9,8 +9,9 @@ import { AuthenticationControllerApiFactory } from "../generated/axios/api.ts";
 import { WorkspaceControllerApiFactory } from "../generated/axios/api.ts";
 import type { AddUserToWorkspaceRequestBodyDTO } from "../generated/axios/api.ts";
 import type { CreateWorkspaceRequestBodyDTO } from "../generated/axios/api.ts";
+import type { EditWorkspaceRequestBodyDTO } from "../generated/axios/api.ts";
 import type { Pageable } from "../generated/axios/api.ts";
-import type { UserResponseDTO, CurrentUserResponseDTO, WorkspaceResponseDTO, PageAccessibleWorkspaceResponseDTO } from "../generated/axios/api.ts";
+import type { UserResponseDTO, CurrentUserResponseDTO, WorkspaceResponseDTO, PageWrapperAccessibleWorkspaceResponseDTO } from "../generated/axios/api.ts";
 
 // This is an auto-generated file. Do not edit manually, instead run the generate.bash
 export function useCreateNewUser(createUserRequestBodyDTO: CreateUserRequestBodyDTO, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<UserResponseDTO>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<UserResponseDTO>, Error> {
@@ -119,9 +120,22 @@ export function useDeleteWorkspace(workspaceId: number, options?: RawAxiosReques
     
 }
 
-export function useGetWorkspaces(pageable: Pageable, options?: RawAxiosRequestConfig, queryOptions?: Omit<UseQueryOptions<AxiosResponse<PageAccessibleWorkspaceResponseDTO>, Error, AxiosResponse<PageAccessibleWorkspaceResponseDTO>>, 'queryKey' | 'queryFn'>): UseQueryResult<AxiosResponse<PageAccessibleWorkspaceResponseDTO>, Error> {
+export function useEditWorkspace(workspaceId: number, editWorkspaceRequestBodyDTO: EditWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<WorkspaceResponseDTO>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<WorkspaceResponseDTO>, Error> {
 
-  return useQuery<AxiosResponse<PageAccessibleWorkspaceResponseDTO>, Error, AxiosResponse<PageAccessibleWorkspaceResponseDTO>>({
+  return useMutation<AxiosResponse<WorkspaceResponseDTO>, Error, unknown>({
+    mutationFn: async () => {
+      const api = WorkspaceControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
+      const res = await api.editWorkspace(workspaceId, editWorkspaceRequestBodyDTO, {...options, withCredentials: true});
+      return res;
+    },
+    ...mutationOptions
+  });
+    
+}
+
+export function useGetWorkspaces(pageable: Pageable, options?: RawAxiosRequestConfig, queryOptions?: Omit<UseQueryOptions<AxiosResponse<PageWrapperAccessibleWorkspaceResponseDTO>, Error, AxiosResponse<PageWrapperAccessibleWorkspaceResponseDTO>>, 'queryKey' | 'queryFn'>): UseQueryResult<AxiosResponse<PageWrapperAccessibleWorkspaceResponseDTO>, Error> {
+
+  return useQuery<AxiosResponse<PageWrapperAccessibleWorkspaceResponseDTO>, Error, AxiosResponse<PageWrapperAccessibleWorkspaceResponseDTO>>({
     queryKey: ['useGetWorkspaces' , options?.params, options?.headers],
     queryFn: async () => {
       const api = WorkspaceControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));

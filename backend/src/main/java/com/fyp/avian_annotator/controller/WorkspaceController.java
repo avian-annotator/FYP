@@ -1,17 +1,16 @@
 package com.fyp.avian_annotator.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fyp.avian_annotator.dal.entity.Workspace;
 import com.fyp.avian_annotator.dto.request.AddUserToWorkspaceRequestBodyDTO;
 import com.fyp.avian_annotator.dto.request.CreateWorkspaceRequestBodyDTO;
+import com.fyp.avian_annotator.dto.request.EditWorkspaceRequestBodyDTO;
 import com.fyp.avian_annotator.dto.response.AccessibleWorkspaceResponseDTO;
+import com.fyp.avian_annotator.dto.response.PageWrapper;
 import com.fyp.avian_annotator.dto.response.WorkspaceResponseDTO;
 import com.fyp.avian_annotator.security.CustomUserDetails;
 import com.fyp.avian_annotator.service.WorkspaceService;
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,20 +23,19 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class WorkspaceController {
 
   private final WorkspaceService workspaceService;
-  private final ObjectMapper mapper;
 
   @PostMapping()
   public ResponseEntity<WorkspaceResponseDTO> createWorkspace(
       @AuthenticationPrincipal CustomUserDetails userDetails,
       @RequestBody @Valid CreateWorkspaceRequestBodyDTO body) {
-    Workspace workspace = workspaceService.createUserWorkspace(userDetails.getId(), body.getName());
+    WorkspaceResponseDTO responseDTO =
+        workspaceService.createUserWorkspace(userDetails.getId(), body.name());
     URI location =
         ServletUriComponentsBuilder.fromCurrentRequest()
             .path("/{id}")
-            .buildAndExpand(workspace.getId())
+            .buildAndExpand(responseDTO.id())
             .toUri();
 
-    WorkspaceResponseDTO responseDTO = mapper.convertValue(workspace, WorkspaceResponseDTO.class);
     return ResponseEntity.created(location).body(responseDTO);
   }
 
@@ -48,10 +46,20 @@ public class WorkspaceController {
     return ResponseEntity.noContent().build();
   }
 
+  @PatchMapping("/{workspaceId}")
+  public ResponseEntity<WorkspaceResponseDTO> editWorkspace(
+      @AuthenticationPrincipal CustomUserDetails userDetails,
+      @PathVariable Long workspaceId,
+      @RequestBody @Valid EditWorkspaceRequestBodyDTO request) {
+
+    return ResponseEntity.ok(
+        workspaceService.editWorkspace(userDetails.getId(), workspaceId, request.name()));
+  }
+
   @GetMapping
-  public Page<AccessibleWorkspaceResponseDTO> getWorkspaces(
+  public PageWrapper<AccessibleWorkspaceResponseDTO> getWorkspaces(
       @AuthenticationPrincipal CustomUserDetails userDetails, Pageable pageable) {
-    return workspaceService.getWorkspace(userDetails.getId(), pageable);
+    return new PageWrapper<>(workspaceService.getWorkspace(userDetails.getId(), pageable));
   }
 
   @PostMapping("/{workspaceId}/users")
@@ -60,12 +68,12 @@ public class WorkspaceController {
       @PathVariable Long workspaceId,
       @RequestBody @Valid AddUserToWorkspaceRequestBodyDTO body) {
 
-    workspaceService.addUserToWorkspace(userDetails.getId(), workspaceId, body.getUserId());
+    workspaceService.addUserToWorkspace(userDetails.getId(), workspaceId, body.userId());
 
     URI location =
         ServletUriComponentsBuilder.fromCurrentRequest()
             .path("/{userId}")
-            .buildAndExpand(body.getUserId())
+            .buildAndExpand(body.userId())
             .toUri();
 
     return ResponseEntity.created(location).build();

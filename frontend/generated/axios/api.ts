@@ -104,7 +104,7 @@ export interface CurrentUserResponseDTO {
      * @type {boolean}
      * @memberof CurrentUserResponseDTO
      */
-    'authenticated'?: boolean;
+    'authenticated': boolean;
     /**
      * 
      * @type {number}
@@ -168,75 +168,76 @@ export type EditUserRequestBodyDTORoleEnum = typeof EditUserRequestBodyDTORoleEn
 /**
  * 
  * @export
- * @interface PageAccessibleWorkspaceResponseDTO
+ * @interface EditWorkspaceRequestBodyDTO
  */
-export interface PageAccessibleWorkspaceResponseDTO {
+export interface EditWorkspaceRequestBodyDTO {
     /**
      * 
-     * @type {number}
-     * @memberof PageAccessibleWorkspaceResponseDTO
+     * @type {string}
+     * @memberof EditWorkspaceRequestBodyDTO
      */
-    'totalElements'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageAccessibleWorkspaceResponseDTO
-     */
-    'totalPages'?: number;
-    /**
-     * 
-     * @type {PageableObject}
-     * @memberof PageAccessibleWorkspaceResponseDTO
-     */
-    'pageable'?: PageableObject;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageAccessibleWorkspaceResponseDTO
-     */
-    'first'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageAccessibleWorkspaceResponseDTO
-     */
-    'last'?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageAccessibleWorkspaceResponseDTO
-     */
-    'size'?: number;
+    'name'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface PageWrapperAccessibleWorkspaceResponseDTO
+ */
+export interface PageWrapperAccessibleWorkspaceResponseDTO {
     /**
      * 
      * @type {Array<AccessibleWorkspaceResponseDTO>}
-     * @memberof PageAccessibleWorkspaceResponseDTO
+     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
      */
-    'content'?: Array<AccessibleWorkspaceResponseDTO>;
+    'content': Array<AccessibleWorkspaceResponseDTO>;
     /**
      * 
      * @type {number}
-     * @memberof PageAccessibleWorkspaceResponseDTO
+     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
      */
-    'number'?: number;
-    /**
-     * 
-     * @type {SortObject}
-     * @memberof PageAccessibleWorkspaceResponseDTO
-     */
-    'sort'?: SortObject;
+    'number': number;
     /**
      * 
      * @type {number}
-     * @memberof PageAccessibleWorkspaceResponseDTO
+     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
      */
-    'numberOfElements'?: number;
+    'size': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
+     */
+    'totalElements': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
+     */
+    'totalPages': number;
     /**
      * 
      * @type {boolean}
-     * @memberof PageAccessibleWorkspaceResponseDTO
+     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
      */
-    'empty'?: boolean;
+    'first': boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
+     */
+    'last': boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
+     */
+    'numberOfElements': number;
+    /**
+     * 
+     * @type {SortDTO}
+     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
+     */
+    'sort': SortDTO;
 }
 /**
  * 
@@ -266,70 +267,27 @@ export interface Pageable {
 /**
  * 
  * @export
- * @interface PageableObject
+ * @interface SortDTO
  */
-export interface PageableObject {
+export interface SortDTO {
     /**
      * 
      * @type {boolean}
-     * @memberof PageableObject
+     * @memberof SortDTO
      */
-    'paged'?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageableObject
-     */
-    'pageNumber'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageableObject
-     */
-    'pageSize'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageableObject
-     */
-    'offset'?: number;
-    /**
-     * 
-     * @type {SortObject}
-     * @memberof PageableObject
-     */
-    'sort'?: SortObject;
+    'sorted': boolean;
     /**
      * 
      * @type {boolean}
-     * @memberof PageableObject
+     * @memberof SortDTO
      */
-    'unpaged'?: boolean;
-}
-/**
- * 
- * @export
- * @interface SortObject
- */
-export interface SortObject {
+    'unsorted': boolean;
     /**
      * 
      * @type {boolean}
-     * @memberof SortObject
+     * @memberof SortDTO
      */
-    'sorted'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof SortObject
-     */
-    'empty'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof SortObject
-     */
-    'unsorted'?: boolean;
+    'empty': boolean;
 }
 /**
  * 
@@ -905,6 +863,45 @@ export const WorkspaceControllerApiAxiosParamCreator = function (configuration?:
         },
         /**
          * 
+         * @param {number} workspaceId 
+         * @param {EditWorkspaceRequestBodyDTO} editWorkspaceRequestBodyDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        editWorkspace: async (workspaceId: number, editWorkspaceRequestBodyDTO: EditWorkspaceRequestBodyDTO, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspaceId' is not null or undefined
+            assertParamExists('editWorkspace', 'workspaceId', workspaceId)
+            // verify required parameter 'editWorkspaceRequestBodyDTO' is not null or undefined
+            assertParamExists('editWorkspace', 'editWorkspaceRequestBodyDTO', editWorkspaceRequestBodyDTO)
+            const localVarPath = `/api/workspaces/{workspaceId}`
+                .replace(`{${"workspaceId"}}`, encodeURIComponent(String(workspaceId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(editWorkspaceRequestBodyDTO, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {Pageable} pageable 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -990,11 +987,24 @@ export const WorkspaceControllerApiFp = function(configuration?: Configuration) 
         },
         /**
          * 
+         * @param {number} workspaceId 
+         * @param {EditWorkspaceRequestBodyDTO} editWorkspaceRequestBodyDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async editWorkspace(workspaceId: number, editWorkspaceRequestBodyDTO: EditWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<WorkspaceResponseDTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.editWorkspace(workspaceId, editWorkspaceRequestBodyDTO, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['WorkspaceControllerApi.editWorkspace']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @param {Pageable} pageable 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getWorkspaces(pageable: Pageable, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageAccessibleWorkspaceResponseDTO>> {
+        async getWorkspaces(pageable: Pageable, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageWrapperAccessibleWorkspaceResponseDTO>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getWorkspaces(pageable, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['WorkspaceControllerApi.getWorkspaces']?.[localVarOperationServerIndex]?.url;
@@ -1040,11 +1050,21 @@ export const WorkspaceControllerApiFactory = function (configuration?: Configura
         },
         /**
          * 
+         * @param {number} workspaceId 
+         * @param {EditWorkspaceRequestBodyDTO} editWorkspaceRequestBodyDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        editWorkspace(workspaceId: number, editWorkspaceRequestBodyDTO: EditWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig): AxiosPromise<WorkspaceResponseDTO> {
+            return localVarFp.editWorkspace(workspaceId, editWorkspaceRequestBodyDTO, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {Pageable} pageable 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getWorkspaces(pageable: Pageable, options?: RawAxiosRequestConfig): AxiosPromise<PageAccessibleWorkspaceResponseDTO> {
+        getWorkspaces(pageable: Pageable, options?: RawAxiosRequestConfig): AxiosPromise<PageWrapperAccessibleWorkspaceResponseDTO> {
             return localVarFp.getWorkspaces(pageable, options).then((request) => request(axios, basePath));
         },
     };
@@ -1089,6 +1109,18 @@ export class WorkspaceControllerApi extends BaseAPI {
      */
     public deleteWorkspace(workspaceId: number, options?: RawAxiosRequestConfig) {
         return WorkspaceControllerApiFp(this.configuration).deleteWorkspace(workspaceId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} workspaceId 
+     * @param {EditWorkspaceRequestBodyDTO} editWorkspaceRequestBodyDTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof WorkspaceControllerApi
+     */
+    public editWorkspace(workspaceId: number, editWorkspaceRequestBodyDTO: EditWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig) {
+        return WorkspaceControllerApiFp(this.configuration).editWorkspace(workspaceId, editWorkspaceRequestBodyDTO, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

@@ -6,7 +6,6 @@ import com.fyp.avian_annotator.utils.UserRole;
 import java.util.Objects;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,9 +16,7 @@ public class AuthenticationController {
 
   @GetMapping("/current_user")
   public ResponseEntity<CurrentUserResponseDTO> getCurrentUser(
-      @AuthenticationPrincipal CustomUserDetails userDetails,
-      @AuthenticationPrincipal UserDetails user)
-      throws IllegalAccessException {
+      @AuthenticationPrincipal CustomUserDetails userDetails) throws IllegalAccessException {
     if (userDetails == null) {
       throw new IllegalAccessException();
     }

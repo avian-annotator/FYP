@@ -2,13 +2,6 @@ package com.fyp.avian_annotator.dto.response;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
-@AllArgsConstructor
-@Data
-public class AccessibleWorkspaceResponseDTO {
-  @NotNull private Long id;
-  @NotBlank private String name;
-  @NotBlank private String ownerUsername;
-}
+public record AccessibleWorkspaceResponseDTO(
+    @NotNull Long id, @NotNull String name, @NotBlank String ownerUsername) {}
