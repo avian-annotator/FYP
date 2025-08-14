@@ -3,17 +3,9 @@ import type { UseQueryOptions, UseQueryResult, UseMutationOptions, UseMutationRe
 import type { RawAxiosRequestConfig,  AxiosResponse } from "axios";
 import { Configuration } from "../generated/axios/configuration.ts";
 import { AdminControllerApiFactory } from "../generated/axios/api.ts";
-import type { CreateUserRequestBodyDTO } from "../generated/axios/api.ts";
-import type { EditUserRequestBodyDTO } from "../generated/axios/api.ts";
 import { AuthenticationControllerApiFactory } from "../generated/axios/api.ts";
 import { WorkspaceControllerApiFactory } from "../generated/axios/api.ts";
-import type { AddUserToWorkspaceRequestBodyDTO } from "../generated/axios/api.ts";
-import type { CreateWorkspaceRequestBodyDTO } from "../generated/axios/api.ts";
-import type { EditWorkspaceRequestBodyDTO } from "../generated/axios/api.ts";
-import type { GetUsersFromWorkspaceRequestParamDTO } from "../generated/axios/api.ts";
-import type { Pageable } from "../generated/axios/api.ts";
-import type { Pageable } from "../generated/axios/api.ts";
-import type { UserResponseDTO, CurrentUserResponseDTO, WorkspaceResponseDTO, PageWrapperUserResponseDTO, PageWrapperAccessibleWorkspaceResponseDTO } from "../generated/axios/api.ts";
+import type { UserResponseDTO, CreateUserRequestBodyDTO, EditUserRequestBodyDTO, CurrentUserResponseDTO, AddUserToWorkspaceRequestBodyDTO, WorkspaceResponseDTO, CreateWorkspaceRequestBodyDTO, EditWorkspaceRequestBodyDTO, PageWrapperUserResponseDTO, GetUsersFromWorkspaceRequestParamDTO, Pageable, PageWrapperAccessibleWorkspaceResponseDTO } from "../generated/axios/api.ts";
 
 // This is an auto-generated file. Do not edit manually, instead run the generate.bash
 export function useCreateNewUser(createUserRequestBodyDTO: CreateUserRequestBodyDTO, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<UserResponseDTO>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<UserResponseDTO>, Error> {

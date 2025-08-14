@@ -1,4 +1,4 @@
-import { Project, SyntaxKind } from "ts-morph";
+import { Project, SyntaxKind } from 'ts-morph'
 
 // NOTE: auth hooks are NOT generated here, specifically the login and logout hooks, as they are not part of the OpenAPI spec (plus aditional concerns).
 
@@ -8,84 +8,92 @@ import { Project, SyntaxKind } from "ts-morph";
 const project = new Project({
   manipulationSettings: {
     // @ts-ignore - this is correct, but ts is being an idiot
-    indentationText: "  ",
+    indentationText: '  ',
   },
 })
 
 // Init
-const generatedApisFile = project.addSourceFileAtPath("../generated/axios/api.ts")
-const useQueryHooksFile = project.createSourceFile("../generated/use-query-hooks.ts", ``, { overwrite: true })
+const generatedApisFile = project.addSourceFileAtPath('../generated/axios/api.ts')
+const useQueryHooksFile = project.createSourceFile('../generated/use-query-hooks.ts', ``, {
+  overwrite: true,
+})
 
 // Add imports for all the generated APIs
 useQueryHooksFile.addStatements(`
 // This is an auto-generated file. Do not edit manually, instead run the generate.bash`)
 useQueryHooksFile.addImportDeclaration({
-  namedImports: ["useQuery", "useMutation"],
-  moduleSpecifier: `@tanstack/react-query`
+  namedImports: ['useQuery', 'useMutation'],
+  moduleSpecifier: `@tanstack/react-query`,
 })
 
 useQueryHooksFile.addImportDeclaration({
-  namedImports: ["UseQueryOptions", "UseQueryResult", "UseMutationOptions", "UseMutationResult"],
+  namedImports: ['UseQueryOptions', 'UseQueryResult', 'UseMutationOptions', 'UseMutationResult'],
   isTypeOnly: true,
-  moduleSpecifier: `@tanstack/react-query`
-});
+  moduleSpecifier: `@tanstack/react-query`,
+})
 useQueryHooksFile.addImportDeclaration({
-  namedImports: ["RawAxiosRequestConfig", " AxiosResponse"],
+  namedImports: ['RawAxiosRequestConfig', ' AxiosResponse'],
   isTypeOnly: true,
-  moduleSpecifier: "axios"
-});
-
-useQueryHooksFile.addImportDeclaration({
-  namedImports: ["Configuration"],
-  moduleSpecifier: `../generated/axios/configuration.ts`
+  moduleSpecifier: 'axios',
 })
 
-
+useQueryHooksFile.addImportDeclaration({
+  namedImports: ['Configuration'],
+  moduleSpecifier: `../generated/axios/configuration.ts`,
+})
 
 const generatedHookNames: string[] = []
 const importedTypes = new Set<string>()
-const apiFactoryFunctions = generatedApisFile.getVariableDeclarations()
-  .filter(v => v.isExported() && v.getName().endsWith("ControllerApiFactory"))
+const apiFactoryFunctions = generatedApisFile
+  .getVariableDeclarations()
+  .filter(v => v.isExported() && v.getName().endsWith('ControllerApiFactory'))
 
 for (const apiFactory of apiFactoryFunctions) {
   useQueryHooksFile.addImportDeclaration({
     namedImports: [apiFactory.getName()],
-    moduleSpecifier: `../generated/axios/${apiFactory.getSourceFile().getBaseName()}`
+    moduleSpecifier: `../generated/axios/${apiFactory.getSourceFile().getBaseName()}`,
   })
 
   // Get the paramCreator for the controller, as that contains information on the METHOD type, which we need
-  const paramCreatorName = apiFactory.getName().replace("Factory", "") + "AxiosParamCreator"
-  const paramCreatorFunction = generatedApisFile.getVariableDeclarations().find(v => v.isExported() && v.getName() === paramCreatorName)
+  const paramCreatorName = apiFactory.getName().replace('Factory', '') + 'AxiosParamCreator'
+  const paramCreatorFunction = generatedApisFile
+    .getVariableDeclarations()
+    .find(v => v.isExported() && v.getName() === paramCreatorName)
 
   const returnStatement = paramCreatorFunction?.getDescendantsOfKind(SyntaxKind.ReturnStatement)[0]
-  if (!returnStatement) throw new Error("Return statement not found")
+  if (!returnStatement) throw new Error('Return statement not found')
   const objExpr = returnStatement.getExpressionIfKindOrThrow(SyntaxKind.ObjectLiteralExpression)
   const properties = objExpr.getProperties()
 
-  const endpointMethodNames = properties.map(p => p.asKind(SyntaxKind.PropertyAssignment)?.getName())
+  const endpointMethodNames = properties.map(p =>
+    p.asKind(SyntaxKind.PropertyAssignment)?.getName(),
+  )
   // This handsome fellow traverses the AST to find the endpoint method names
   const endpointMethodRequestMethods = properties.map(p => {
-    const initializer = p.asKind(SyntaxKind.PropertyAssignment)
+    const initializer = p
+      .asKind(SyntaxKind.PropertyAssignment)
       ?.getInitializerOrThrow()
       .getDescendantsOfKind(SyntaxKind.VariableDeclaration)
-      .find(v => v.getName() === "localVarRequestOptions")
+      .find(v => v.getName() === 'localVarRequestOptions')
       ?.getFirstDescendantByKindOrThrow(SyntaxKind.ObjectLiteralExpression)
       .getFirstDescendantByKindOrThrow(SyntaxKind.PropertyAssignment)
       .getInitializer()
 
     return initializer?.getKind() === SyntaxKind.StringLiteral
       ? initializer.asKindOrThrow(SyntaxKind.StringLiteral).getLiteralText()
-      : initializer?.getText();
-  }
-  )
-  const endpointMethodReturnTypes = apiFactory.getFirstDescendantByKindOrThrow(SyntaxKind.ReturnStatement)
+      : initializer?.getText()
+  })
+  const endpointMethodReturnTypes = apiFactory
+    .getFirstDescendantByKindOrThrow(SyntaxKind.ReturnStatement)
     .getFirstDescendantByKindOrThrow(SyntaxKind.ObjectLiteralExpression)
 
+  const isPrimitive = (typeName: string) =>
+    ['string', 'number', 'boolean', 'unknown', 'any', 'void', 'null', 'undefined'].includes(
+      typeName.toLowerCase(),
+    )
 
-  const isPrimitive = (typeName: string) => ["string", "number", "boolean", "unknown", "any", "void", "null", "undefined"]
-    .includes(typeName.toLowerCase());
-
-  const isMutation = (methodName: string) => ["post", "put", "patch", "delete"].includes(methodName.toLowerCase());
+  const isMutation = (methodName: string) =>
+    ['post', 'put', 'patch', 'delete'].includes(methodName.toLowerCase())
 
   for (let i = 0; i < endpointMethodNames.length; i++) {
     const endpointMethodName = endpointMethodNames[i] as string
@@ -93,17 +101,21 @@ for (const apiFactory of apiFactoryFunctions) {
 
     // When getting the return type, we need to RECURSIVELY CHECK the type arguments, as they can be nested
     // This needs to be fixed, but should be good enough for now. Currently this is pretty shitty and only works for the first level of type arguments.
-    const typeArgs = sanitizeTypeText(endpointMethodReturnTypes
-      .getPropertyOrThrow(endpointMethodName)
-      .asKindOrThrow(SyntaxKind.MethodDeclaration)
-      .getReturnType()
-      .getTypeArguments()[0].getTypeArguments()[0].getText())
+    const typeArgs = sanitizeTypeText(
+      endpointMethodReturnTypes
+        .getPropertyOrThrow(endpointMethodName)
+        .asKindOrThrow(SyntaxKind.MethodDeclaration)
+        .getReturnType()
+        .getTypeArguments()[0]
+        .getTypeArguments()[0]
+        .getText(),
+    )
 
     if (!isPrimitive(typeArgs)) {
       importedTypes.add(onlyAlphanumeric(typeArgs))
     }
 
-    const endpointParameterNamesAndTypesText: { name: string, type: string }[] = []
+    const endpointParameterNamesAndTypesText: { name: string; type: string }[] = []
 
     const endpointParameterNamesAndTypesTextParameter = endpointMethodReturnTypes
       .getPropertyOrThrow(endpointMethodName)
@@ -111,31 +123,26 @@ for (const apiFactory of apiFactoryFunctions) {
       .getParameters()
     for (const param of endpointParameterNamesAndTypesTextParameter) {
       // All the params before are the parameters we actually use
-      if (param.getName() == "options") break
+      if (param.getName() == 'options') break
       const paramName = param.getName()
       const paramType = sanitizeTypeText(param.getType().getText())
       endpointParameterNamesAndTypesText.push({ name: paramName, type: paramType })
     }
 
-
     for (const param of endpointParameterNamesAndTypesText) {
       if (!isPrimitive(param.type)) {
-        useQueryHooksFile.addImportDeclaration({
-          namedImports: [param.type],
-          moduleSpecifier: `../generated/axios/api.ts`,
-          isTypeOnly: true,
-        })
+        importedTypes.add(param.type)
       }
-
     }
 
     //Note: A bit unsure with hasQuestionToken. Seems to be best to default to requried.
-    const extraHookParameters = endpointParameterNamesAndTypesText.map(param => { return { name: param.name, type: param.type, hasQuestionToken: false } })
+    const extraHookParameters = endpointParameterNamesAndTypesText.map(param => {
+      return { name: param.name, type: param.type, hasQuestionToken: false }
+    })
 
     const hookName = `use${endpointMethodName[0].toUpperCase()}${endpointMethodName.slice(1)}`
     generatedHookNames.push(hookName)
 
-    
     if (isMutation(endpointMethodRequestMethod)) {
       useQueryHooksFile.addFunction({
         name: hookName,
@@ -143,12 +150,12 @@ for (const apiFactory of apiFactoryFunctions) {
         parameters: [
           ...extraHookParameters,
           {
-            name: "options",
-            type: "RawAxiosRequestConfig",
+            name: 'options',
+            type: 'RawAxiosRequestConfig',
             hasQuestionToken: true,
           },
           {
-            name: "mutationOptions",
+            name: 'mutationOptions',
             type: `Omit<UseMutationOptions< AxiosResponse<${typeArgs}>, Error, unknown>, 'mutationFn'>`,
             hasQuestionToken: true,
           },
@@ -165,7 +172,6 @@ return useMutation<AxiosResponse<${typeArgs}>, Error, unknown>({
 });
   `,
       })
-
     } else {
       useQueryHooksFile.addFunction({
         name: hookName,
@@ -173,12 +179,12 @@ return useMutation<AxiosResponse<${typeArgs}>, Error, unknown>({
         parameters: [
           ...extraHookParameters,
           {
-            name: "options",
-            type: "RawAxiosRequestConfig",
+            name: 'options',
+            type: 'RawAxiosRequestConfig',
             hasQuestionToken: true,
           },
           {
-            name: "queryOptions",
+            name: 'queryOptions',
             type: `Omit<UseQueryOptions<AxiosResponse<${typeArgs}>, Error, AxiosResponse<${typeArgs}>>, 'queryKey' | 'queryFn'>`,
             hasQuestionToken: true,
           },
@@ -198,29 +204,28 @@ return useQuery<AxiosResponse<${typeArgs}>, Error, AxiosResponse<${typeArgs}>>({
       })
     }
   }
-};
+}
 
-const indexFile = project.createSourceFile("../generated/index.ts", ``, { overwrite: true })
+const indexFile = project.createSourceFile('../generated/index.ts', ``, { overwrite: true })
 useQueryHooksFile.addImportDeclaration({
   namedImports: Array.from(importedTypes.values()),
-  moduleSpecifier: "../generated/axios/api.ts",
+  moduleSpecifier: '../generated/axios/api.ts',
   isTypeOnly: true,
 })
 
 // Add import for all hooks from the hooks file
 indexFile.addImportDeclaration({
   namedImports: generatedHookNames,
-  moduleSpecifier: "./use-query-hooks"
-});
-
+  moduleSpecifier: './use-query-hooks',
+})
 
 // Export all hooks
 indexFile.addExportDeclaration({
-  namedExports: generatedHookNames
+  namedExports: generatedHookNames,
 })
 
 indexFile.addExportDeclaration({
-  moduleSpecifier: "./axios/api.ts",
+  moduleSpecifier: './axios/api.ts',
   isTypeOnly: true,
 })
 
@@ -229,10 +234,10 @@ await project.save()
 function sanitizeTypeText(typeText: string): string {
   return typeText
     .replace(/import\([^)]+\)\./g, '') // Remove import paths like import("...").
-    .replace(/\s+/g, '')              // Remove any whitespace.
+    .replace(/\s+/g, '') // Remove any whitespace.
     .replace(/^Promise<(.+)>$/, '$1') // Unwrap Promise if present.
 }
 
 function onlyAlphanumeric(input: string): string {
-  return input.replace(/[^a-zA-Z0-9]/g, '');
+  return input.replace(/[^a-zA-Z0-9]/g, '')
 }
