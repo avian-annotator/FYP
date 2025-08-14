@@ -181,6 +181,19 @@ export interface EditWorkspaceRequestBodyDTO {
 /**
  * 
  * @export
+ * @interface GetUsersFromWorkspaceRequestParamDTO
+ */
+export interface GetUsersFromWorkspaceRequestParamDTO {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof GetUsersFromWorkspaceRequestParamDTO
+     */
+    'excludeExisting'?: boolean;
+}
+/**
+ * 
+ * @export
  * @interface PageWrapperAccessibleWorkspaceResponseDTO
  */
 export interface PageWrapperAccessibleWorkspaceResponseDTO {
@@ -236,6 +249,67 @@ export interface PageWrapperAccessibleWorkspaceResponseDTO {
      * 
      * @type {SortDTO}
      * @memberof PageWrapperAccessibleWorkspaceResponseDTO
+     */
+    'sort': SortDTO;
+}
+/**
+ * 
+ * @export
+ * @interface PageWrapperUserResponseDTO
+ */
+export interface PageWrapperUserResponseDTO {
+    /**
+     * 
+     * @type {Array<UserResponseDTO>}
+     * @memberof PageWrapperUserResponseDTO
+     */
+    'content': Array<UserResponseDTO>;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageWrapperUserResponseDTO
+     */
+    'number': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageWrapperUserResponseDTO
+     */
+    'size': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageWrapperUserResponseDTO
+     */
+    'totalElements': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageWrapperUserResponseDTO
+     */
+    'totalPages': number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageWrapperUserResponseDTO
+     */
+    'first': boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageWrapperUserResponseDTO
+     */
+    'last': boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageWrapperUserResponseDTO
+     */
+    'numberOfElements': number;
+    /**
+     * 
+     * @type {SortDTO}
+     * @memberof PageWrapperUserResponseDTO
      */
     'sort': SortDTO;
 }
@@ -902,6 +976,57 @@ export const WorkspaceControllerApiAxiosParamCreator = function (configuration?:
         },
         /**
          * 
+         * @param {number} workspaceId 
+         * @param {GetUsersFromWorkspaceRequestParamDTO} param 
+         * @param {Pageable} pageable 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUsersFromWorkspace: async (workspaceId: number, param: GetUsersFromWorkspaceRequestParamDTO, pageable: Pageable, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspaceId' is not null or undefined
+            assertParamExists('getUsersFromWorkspace', 'workspaceId', workspaceId)
+            // verify required parameter 'param' is not null or undefined
+            assertParamExists('getUsersFromWorkspace', 'param', param)
+            // verify required parameter 'pageable' is not null or undefined
+            assertParamExists('getUsersFromWorkspace', 'pageable', pageable)
+            const localVarPath = `/api/workspaces/{workspaceId}/users`
+                .replace(`{${"workspaceId"}}`, encodeURIComponent(String(workspaceId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (param !== undefined) {
+                for (const [key, value] of Object.entries(param)) {
+                    localVarQueryParameter[key] = value;
+                }
+            }
+
+            if (pageable !== undefined) {
+                for (const [key, value] of Object.entries(pageable)) {
+                    localVarQueryParameter[key] = value;
+                }
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {Pageable} pageable 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -926,6 +1051,43 @@ export const WorkspaceControllerApiAxiosParamCreator = function (configuration?:
                     localVarQueryParameter[key] = value;
                 }
             }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} workspaceId 
+         * @param {number} userId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        removeUserFromWorkspace: async (workspaceId: number, userId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspaceId' is not null or undefined
+            assertParamExists('removeUserFromWorkspace', 'workspaceId', workspaceId)
+            // verify required parameter 'userId' is not null or undefined
+            assertParamExists('removeUserFromWorkspace', 'userId', userId)
+            const localVarPath = `/api/workspaces/{workspaceId}/users/{userId}`
+                .replace(`{${"workspaceId"}}`, encodeURIComponent(String(workspaceId)))
+                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
 
     
@@ -1000,6 +1162,20 @@ export const WorkspaceControllerApiFp = function(configuration?: Configuration) 
         },
         /**
          * 
+         * @param {number} workspaceId 
+         * @param {GetUsersFromWorkspaceRequestParamDTO} param 
+         * @param {Pageable} pageable 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getUsersFromWorkspace(workspaceId: number, param: GetUsersFromWorkspaceRequestParamDTO, pageable: Pageable, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageWrapperUserResponseDTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUsersFromWorkspace(workspaceId, param, pageable, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['WorkspaceControllerApi.getUsersFromWorkspace']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @param {Pageable} pageable 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1008,6 +1184,19 @@ export const WorkspaceControllerApiFp = function(configuration?: Configuration) 
             const localVarAxiosArgs = await localVarAxiosParamCreator.getWorkspaces(pageable, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['WorkspaceControllerApi.getWorkspaces']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} workspaceId 
+         * @param {number} userId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async removeUserFromWorkspace(workspaceId: number, userId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.removeUserFromWorkspace(workspaceId, userId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['WorkspaceControllerApi.removeUserFromWorkspace']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -1060,12 +1249,33 @@ export const WorkspaceControllerApiFactory = function (configuration?: Configura
         },
         /**
          * 
+         * @param {number} workspaceId 
+         * @param {GetUsersFromWorkspaceRequestParamDTO} param 
+         * @param {Pageable} pageable 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUsersFromWorkspace(workspaceId: number, param: GetUsersFromWorkspaceRequestParamDTO, pageable: Pageable, options?: RawAxiosRequestConfig): AxiosPromise<PageWrapperUserResponseDTO> {
+            return localVarFp.getUsersFromWorkspace(workspaceId, param, pageable, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {Pageable} pageable 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         getWorkspaces(pageable: Pageable, options?: RawAxiosRequestConfig): AxiosPromise<PageWrapperAccessibleWorkspaceResponseDTO> {
             return localVarFp.getWorkspaces(pageable, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} workspaceId 
+         * @param {number} userId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        removeUserFromWorkspace(workspaceId: number, userId: number, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.removeUserFromWorkspace(workspaceId, userId, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1125,6 +1335,19 @@ export class WorkspaceControllerApi extends BaseAPI {
 
     /**
      * 
+     * @param {number} workspaceId 
+     * @param {GetUsersFromWorkspaceRequestParamDTO} param 
+     * @param {Pageable} pageable 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof WorkspaceControllerApi
+     */
+    public getUsersFromWorkspace(workspaceId: number, param: GetUsersFromWorkspaceRequestParamDTO, pageable: Pageable, options?: RawAxiosRequestConfig) {
+        return WorkspaceControllerApiFp(this.configuration).getUsersFromWorkspace(workspaceId, param, pageable, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {Pageable} pageable 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1132,6 +1355,18 @@ export class WorkspaceControllerApi extends BaseAPI {
      */
     public getWorkspaces(pageable: Pageable, options?: RawAxiosRequestConfig) {
         return WorkspaceControllerApiFp(this.configuration).getWorkspaces(pageable, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} workspaceId 
+     * @param {number} userId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof WorkspaceControllerApi
+     */
+    public removeUserFromWorkspace(workspaceId: number, userId: number, options?: RawAxiosRequestConfig) {
+        return WorkspaceControllerApiFp(this.configuration).removeUserFromWorkspace(workspaceId, userId, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
