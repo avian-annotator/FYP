@@ -16,7 +16,7 @@ public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
 
   @Query(
       """
-  SELECT new com.fyp.avian_annotator.dto.response.AccessibleWorkspaceResponseDTO(w.id, w.name, u.username)
+  SELECT new com.fyp.avian_annotator.dto.response.AccessibleWorkspaceResponseDTO(w.id, w.name, w.owner.username)
   FROM WorkspaceUser wu
   JOIN wu.workspace w
   JOIN wu.user u

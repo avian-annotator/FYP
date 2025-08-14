@@ -14,7 +14,9 @@ docs/CreateWorkspaceRequestBodyDTO.md
 docs/CurrentUserResponseDTO.md
 docs/EditUserRequestBodyDTO.md
 docs/EditWorkspaceRequestBodyDTO.md
+docs/GetUsersFromWorkspaceRequestParamDTO.md
 docs/PageWrapperAccessibleWorkspaceResponseDTO.md
+docs/PageWrapperUserResponseDTO.md
 docs/Pageable.md
 docs/SortDTO.md
 docs/UserResponseDTO.md

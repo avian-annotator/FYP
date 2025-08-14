@@ -3,15 +3,9 @@ import type { UseQueryOptions, UseQueryResult, UseMutationOptions, UseMutationRe
 import type { RawAxiosRequestConfig,  AxiosResponse } from "axios";
 import { Configuration } from "../generated/axios/configuration.ts";
 import { AdminControllerApiFactory } from "../generated/axios/api.ts";
-import type { CreateUserRequestBodyDTO } from "../generated/axios/api.ts";
-import type { EditUserRequestBodyDTO } from "../generated/axios/api.ts";
 import { AuthenticationControllerApiFactory } from "../generated/axios/api.ts";
 import { WorkspaceControllerApiFactory } from "../generated/axios/api.ts";
-import type { AddUserToWorkspaceRequestBodyDTO } from "../generated/axios/api.ts";
-import type { CreateWorkspaceRequestBodyDTO } from "../generated/axios/api.ts";
-import type { EditWorkspaceRequestBodyDTO } from "../generated/axios/api.ts";
-import type { Pageable } from "../generated/axios/api.ts";
-import type { UserResponseDTO, CurrentUserResponseDTO, WorkspaceResponseDTO, PageWrapperAccessibleWorkspaceResponseDTO } from "../generated/axios/api.ts";
+import type { UserResponseDTO, CreateUserRequestBodyDTO, EditUserRequestBodyDTO, CurrentUserResponseDTO, AddUserToWorkspaceRequestBodyDTO, WorkspaceResponseDTO, CreateWorkspaceRequestBodyDTO, EditWorkspaceRequestBodyDTO, PageWrapperUserResponseDTO, GetUsersFromWorkspaceRequestParamDTO, Pageable, PageWrapperAccessibleWorkspaceResponseDTO } from "../generated/axios/api.ts";
 
 // This is an auto-generated file. Do not edit manually, instead run the generate.bash
 export function useCreateNewUser(createUserRequestBodyDTO: CreateUserRequestBodyDTO, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<UserResponseDTO>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<UserResponseDTO>, Error> {
@@ -133,6 +127,20 @@ export function useEditWorkspace(workspaceId: number, editWorkspaceRequestBodyDT
     
 }
 
+export function useGetUsersFromWorkspace(workspaceId: number, param: GetUsersFromWorkspaceRequestParamDTO, pageable: Pageable, options?: RawAxiosRequestConfig, queryOptions?: Omit<UseQueryOptions<AxiosResponse<PageWrapperUserResponseDTO>, Error, AxiosResponse<PageWrapperUserResponseDTO>>, 'queryKey' | 'queryFn'>): UseQueryResult<AxiosResponse<PageWrapperUserResponseDTO>, Error> {
+
+  return useQuery<AxiosResponse<PageWrapperUserResponseDTO>, Error, AxiosResponse<PageWrapperUserResponseDTO>>({
+    queryKey: ['useGetUsersFromWorkspace' , options?.params, options?.headers],
+    queryFn: async () => {
+      const api = WorkspaceControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
+      const res = await api.getUsersFromWorkspace(workspaceId, param, pageable, {...options, withCredentials: true});
+      return res;
+    },
+    ...queryOptions
+  });
+    
+}
+
 export function useGetWorkspaces(pageable: Pageable, options?: RawAxiosRequestConfig, queryOptions?: Omit<UseQueryOptions<AxiosResponse<PageWrapperAccessibleWorkspaceResponseDTO>, Error, AxiosResponse<PageWrapperAccessibleWorkspaceResponseDTO>>, 'queryKey' | 'queryFn'>): UseQueryResult<AxiosResponse<PageWrapperAccessibleWorkspaceResponseDTO>, Error> {
 
   return useQuery<AxiosResponse<PageWrapperAccessibleWorkspaceResponseDTO>, Error, AxiosResponse<PageWrapperAccessibleWorkspaceResponseDTO>>({
@@ -143,6 +151,19 @@ export function useGetWorkspaces(pageable: Pageable, options?: RawAxiosRequestCo
       return res;
     },
     ...queryOptions
+  });
+    
+}
+
+export function useRemoveUserFromWorkspace(workspaceId: number, userId: number, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<void>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<void>, Error> {
+
+  return useMutation<AxiosResponse<void>, Error, unknown>({
+    mutationFn: async () => {
+      const api = WorkspaceControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
+      const res = await api.removeUserFromWorkspace(workspaceId, userId, {...options, withCredentials: true});
+      return res;
+    },
+    ...mutationOptions
   });
     
 }

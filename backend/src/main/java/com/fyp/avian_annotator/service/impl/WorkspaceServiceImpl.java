@@ -8,6 +8,7 @@ import com.fyp.avian_annotator.dal.repository.UserRepository;
 import com.fyp.avian_annotator.dal.repository.WorkspaceRepository;
 import com.fyp.avian_annotator.dal.repository.WorkspaceUserRepository;
 import com.fyp.avian_annotator.dto.response.AccessibleWorkspaceResponseDTO;
+import com.fyp.avian_annotator.dto.response.UserResponseDTO;
 import com.fyp.avian_annotator.dto.response.WorkspaceResponseDTO;
 import com.fyp.avian_annotator.exception.BadRequestException;
 import com.fyp.avian_annotator.exception.UnownedWorkspaceException;
@@ -17,6 +18,7 @@ import com.fyp.avian_annotator.service.WorkspaceService;
 import jakarta.transaction.Transactional;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -84,6 +86,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     return workspaceRepository.findAccessibleWorkspaces(user.getId(), pageable);
   }
 
+  // Need to look into spring jpa here - doing it via sql doesn't require this many throws
   @Transactional
   @Override
   public void addUserToWorkspace(Long sessionUserId, Long workspaceId, Long toAddUserId) {
@@ -96,6 +99,33 @@ public class WorkspaceServiceImpl implements WorkspaceService {
 
     WorkspaceUser workspaceUser = new WorkspaceUser(workspace, toAddUser);
     workspaceUserRepository.save(workspaceUser);
+  }
+
+  @Transactional
+  @Override
+  public void removeUserFromWorkspace(Long sessionUserId, Long workspaceId, Long toRemoveUserId) {
+    Workspace workspace = getWorkspaceOrThrow(workspaceId);
+    User sessionUser = getUserOrThrow(sessionUserId);
+
+    validateOwnership(workspace, sessionUser);
+    try {
+      workspaceUserRepository.deleteById(new WorkspaceUserId(workspaceId, toRemoveUserId));
+    } catch (EmptyResultDataAccessException e) {
+      throw new BadRequestException("User ID to be removed does not exist");
+    }
+  }
+
+  @Override
+  public Page<UserResponseDTO> getUsersFromWorkspace(
+      Long sessionUserId, Long workspaceId, Boolean excludeExisting, Pageable pageable) {
+    Workspace workspace = getWorkspaceOrThrow(workspaceId);
+    User sessionUser = getUserOrThrow(sessionUserId);
+
+    validateOwnership(workspace, sessionUser);
+    if (excludeExisting != null && excludeExisting) {
+      return workspaceUserRepository.findUsersNotInWorkspace(workspaceId, pageable);
+    }
+    return workspaceUserRepository.findUsersOfWorkspace(workspaceId, pageable);
   }
 
   private Workspace getWorkspaceOrThrow(Long workspaceId) {
@@ -116,9 +146,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
 
   private void checkUserNotAlreadyInWorkspace(Long workspaceId, User toAddUser) {
     boolean alreadyAssociated =
-        workspaceUserRepository
-            .findById(new WorkspaceUserId(workspaceId, toAddUser.getId()))
-            .isPresent();
+        workspaceUserRepository.existsById(new WorkspaceUserId(workspaceId, toAddUser.getId()));
     if (alreadyAssociated) {
       throw new BadRequestException("User is already in the workspace");
     }

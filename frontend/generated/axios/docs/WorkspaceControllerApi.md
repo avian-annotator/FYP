@@ -8,7 +8,9 @@ All URIs are relative to *http://localhost:8080*
 |[**createWorkspace**](#createworkspace) | **POST** /api/workspaces | |
 |[**deleteWorkspace**](#deleteworkspace) | **DELETE** /api/workspaces/{workspaceId} | |
 |[**editWorkspace**](#editworkspace) | **PATCH** /api/workspaces/{workspaceId} | |
+|[**getUsersFromWorkspace**](#getusersfromworkspace) | **GET** /api/workspaces/{workspaceId}/users | |
 |[**getWorkspaces**](#getworkspaces) | **GET** /api/workspaces | |
+|[**removeUserFromWorkspace**](#removeuserfromworkspace) | **DELETE** /api/workspaces/{workspaceId}/users/{userId} | |
 
 # **addUserToWorkspace**
 > addUserToWorkspace(addUserToWorkspaceRequestBodyDTO)
@@ -219,6 +221,64 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **getUsersFromWorkspace**
+> PageWrapperUserResponseDTO getUsersFromWorkspace()
+
+
+### Example
+
+```typescript
+import {
+    WorkspaceControllerApi,
+    Configuration,
+    GetUsersFromWorkspaceRequestParamDTO,
+    Pageable
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new WorkspaceControllerApi(configuration);
+
+let workspaceId: number; // (default to undefined)
+let param: GetUsersFromWorkspaceRequestParamDTO; // (default to undefined)
+let pageable: Pageable; // (default to undefined)
+
+const { status, data } = await apiInstance.getUsersFromWorkspace(
+    workspaceId,
+    param,
+    pageable
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **workspaceId** | [**number**] |  | defaults to undefined|
+| **param** | **GetUsersFromWorkspaceRequestParamDTO** |  | defaults to undefined|
+| **pageable** | **Pageable** |  | defaults to undefined|
+
+
+### Return type
+
+**PageWrapperUserResponseDTO**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: */*
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **getWorkspaces**
 > PageWrapperAccessibleWorkspaceResponseDTO getWorkspaces()
 
@@ -261,6 +321,59 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: */*
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **removeUserFromWorkspace**
+> removeUserFromWorkspace()
+
+
+### Example
+
+```typescript
+import {
+    WorkspaceControllerApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new WorkspaceControllerApi(configuration);
+
+let workspaceId: number; // (default to undefined)
+let userId: number; // (default to undefined)
+
+const { status, data } = await apiInstance.removeUserFromWorkspace(
+    workspaceId,
+    userId
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **workspaceId** | [**number**] |  | defaults to undefined|
+| **userId** | [**number**] |  | defaults to undefined|
+
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
 
 
 ### HTTP response details
