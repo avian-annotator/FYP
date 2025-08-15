@@ -14,6 +14,7 @@ import {
 import { ImageItem } from '@/lib/types'
 
 export function ImageCard({ filename, url }: ImageItem) {
+  //TODO: backend endpoints not created yet, need to update when hooks are made
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
 

@@ -1,15 +1,14 @@
 import { useParams } from '@tanstack/react-router'
-import React from 'react'
 import { Route } from '../routes/workspaces/$workspaceId/users'
 import { Button } from '@/components/ui/button'
 import UserCard from '@/components/users/UserCard'
-import { getWorkspaceUsers } from '@/components/workspace/getWorkspaceUsers'
+import { getWorkspaceUsers } from '@/components/users/getWorkspaceUsers'
 import { useQuery } from '@tanstack/react-query'
 
 type WorkspaceUsersParams = {
   workspaceId: number
 }
-const WorkspaceUsers: React.FC = () => {
+export function WorkspaceUsers() {
   const { workspaceId }: WorkspaceUsersParams = useParams({ from: Route.id })
 
   const {

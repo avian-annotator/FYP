@@ -1,5 +1,4 @@
 import { Button } from '../ui/button'
-import { User } from '@/lib/types'
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -10,15 +9,16 @@ import {
   AlertDialogAction,
   AlertDialogHeader,
 } from '../ui/alert-dialog'
+import { UserResponseDTO } from '../../../generated'
 interface Props {
-  user: User
+  user: UserResponseDTO
 }
 
 export default function UserCard({ user }: Props) {
   return (
     <div className="flex justify-between items-center bg-gray-100 p-3 rounded-md shadow-sm">
       <div>
-        <span className="font-medium">Username: {user.name}</span>
+        <span className="font-medium">Username: {user.username}</span>
       </div>
       <div className="flex space-x-2">
         <AlertDialog>

@@ -9,7 +9,7 @@ import reactDom from 'eslint-plugin-react-dom'
 import react from 'eslint-plugin-react'
 
 export default tseslint.config(
-  { ignores: ['dist', 'src/components/ui/**/*'] },
+  { ignores: ['dist', 'src/components/ui/**'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.strictTypeChecked, prettier],
     files: ['**/*.{ts,tsx}'],

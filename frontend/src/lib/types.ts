@@ -1,14 +1,4 @@
-//TODO update to use hooks when they come out
-export interface Workspace {
-  id: string
-  name: string
-  owner: string
-}
-
-export interface User {
-  id: string
-  name: string
-}
+//TO BE DELETED (Generated types to be used)
 
 export interface ImageItem {
   key: string
