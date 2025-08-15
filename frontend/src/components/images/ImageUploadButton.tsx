@@ -2,8 +2,9 @@ import React, { useState, ChangeEvent, useRef } from 'react'
 import { Button } from '../ui/button'
 
 interface Props {
-  workspaceId: string
+  workspaceId: number
 }
+//TODO replace with hook when ready
 
 const ImageUploadButton: React.FC<Props> = ({ workspaceId }) => {
   const [files, setFiles] = useState<FileList | null>(null)
@@ -34,7 +35,7 @@ const ImageUploadButton: React.FC<Props> = ({ workspaceId }) => {
     }
 
     try {
-      const response = await fetch(`/api/workspaces/${workspaceId}/images`, {
+      const response = await fetch(`/api/workspaces/${String(workspaceId)}/images`, {
         method: 'POST',
         body: formData,
       })

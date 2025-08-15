@@ -9,23 +9,35 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { useCreateWorkspace, CreateWorkspaceRequestBodyDTO } from '../../../generated'
+import { z } from 'zod'
 
 export function CreateWorkspaceButton() {
+  const nameSchema = z.string().trim().min(1, 'Name required')
+
   const [open, setOpen] = useState(false)
   const [workspaceName, setWorkspaceName] = useState('')
+  const [error, setError] = useState<string | null>(null)
 
   const createWorkspaceRequestBodyDTO: CreateWorkspaceRequestBodyDTO = {
     name: workspaceName,
   }
+
   const mutation = useCreateWorkspace(createWorkspaceRequestBodyDTO)
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    const validate = nameSchema.safeParse(workspaceName)
+    if (!validate.success) {
+      setError(validate.error.issues[0]?.message)
+      return
+    }
+    setError(null)
     mutation.mutate(undefined, {
       onSuccess: () => {
         window.location.reload()
         setOpen(false)
         setWorkspaceName('')
+        setError(null)
       },
     })
   }
@@ -53,12 +65,18 @@ export function CreateWorkspaceButton() {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             placeholder="Enter workspace name"
           />
+          {error && (
+            <p role="alert" className="text-red-600">
+              {error}
+            </p>
+          )}
           <DialogFooter className="mt-4 flex justify-end space-x-2">
             <Button
               type="button"
               variant="outline"
               onClick={() => {
                 setOpen(false)
+                setError(null)
               }}
             >
               Cancel

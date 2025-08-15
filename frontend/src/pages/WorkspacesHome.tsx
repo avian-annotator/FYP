@@ -17,8 +17,8 @@ export function WorkspacesHome() {
   // Fetch workspaces with the current page
   const { data, isLoading, error, refetch } = useGetWorkspaces({ size: 4, page })
 
-  const workspaces = data?.data.content ?? []
-  const totalPages = data?.data.totalPages ?? 0
+  const workspaces = data?.data.content === undefined ? [] : data.data.content
+  const totalPages = data?.data.totalPages === undefined ? 0 : data.data.totalPages
 
   useEffect(() => {
     void refetch()

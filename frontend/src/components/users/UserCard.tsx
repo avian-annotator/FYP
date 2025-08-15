@@ -10,11 +10,8 @@ import {
   AlertDialogHeader,
 } from '../ui/alert-dialog'
 import { UserResponseDTO } from '../../../generated'
-interface Props {
-  user: UserResponseDTO
-}
 
-export default function UserCard({ user }: Props) {
+export default function UserCard({ user }: { user: UserResponseDTO }) {
   return (
     <div className="flex justify-between items-center bg-gray-100 p-3 rounded-md shadow-sm">
       <div>

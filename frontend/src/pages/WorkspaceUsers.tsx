@@ -5,6 +5,7 @@ import UserCard from '@/components/users/UserCard'
 import { getWorkspaceUsers } from '@/components/users/getWorkspaceUsers'
 import { useQuery } from '@tanstack/react-query'
 
+//TODO: replace with generated type
 type WorkspaceUsersParams = {
   workspaceId: number
 }
@@ -16,7 +17,7 @@ export function WorkspaceUsers() {
     isLoading,
     error,
   } = useQuery({
-    //TODO: update to use endpoints when they come out
+    //TODO: replace with users endpoint
     queryKey: ['workspaceUsers', workspaceId],
     queryFn: () => getWorkspaceUsers(workspaceId),
     staleTime: 1000 * 60,

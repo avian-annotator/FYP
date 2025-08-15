@@ -11,6 +11,7 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from '@/components/ui/alert-dialog'
+//TODO replace with generated type
 import { ImageItem } from '@/lib/types'
 
 export function ImageCard({ filename, url }: ImageItem) {

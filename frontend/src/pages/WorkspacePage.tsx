@@ -6,28 +6,27 @@ import {
   PaginationLink,
   PaginationNext,
 } from '@/components/ui/pagination'
-import { fetchImages } from '@/components/images/getImages'
+import { fetchImages } from '@/components/workspace/getImages'
 import { ImageCard } from '@/components/images/ImageCard'
 import ImageUploadButton from '@/components/images/ImageUploadButton'
 import { PaginationResponse, ImageItem } from '@/lib/types'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from '@tanstack/react-router'
 import { useState } from 'react'
+import { WorkspaceResponseDTO } from 'generated'
 
-type WorkspacePageParams = {
-  workspaceId: string
-  page: number
-}
+//TODO: add edit workspace feature
 
 export function WorkspacePage() {
-  const params: WorkspacePageParams = useParams({ from: '/workspaces/$workspaceId/' })
+  const params: WorkspaceResponseDTO = useParams({ from: '/workspaces/$workspaceId/' })
 
-  const initialPage = params.page ? params.page : 1
+  const initialPage = 1
   const [page, setPage] = useState<number>(initialPage)
 
+  //TODO: remove and replace with generated hooks
   const { data, isLoading, isError, error } = useQuery<PaginationResponse>({
-    queryKey: ['images', params.workspaceId, page],
-    queryFn: () => fetchImages(params.workspaceId, page),
+    queryKey: ['images', params.id, page],
+    queryFn: () => fetchImages(params.id, page),
   })
   if (isLoading) {
     return <div>Loading images...</div>
@@ -40,7 +39,7 @@ export function WorkspacePage() {
 
   return (
     <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Workspace {params.workspaceId}</h1>
+      <h1 className="text-2xl font-bold">Workspace {params.id}</h1>
 
       {/* Image Grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -87,7 +86,7 @@ export function WorkspacePage() {
           </PaginationContent>
         </Pagination>
       )}
-      <ImageUploadButton workspaceId={params.workspaceId}></ImageUploadButton>
+      <ImageUploadButton workspaceId={params.id}></ImageUploadButton>
     </div>
   )
 }

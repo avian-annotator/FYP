@@ -26,7 +26,7 @@ export default tseslint.config(
       'react-refresh': reactRefresh,
       'react-x': reactX,
       'react-dom': reactDom,
-      react: react,
+      react: react
     },
     rules: {
       ...reactHooks.configs.recommended.rules,

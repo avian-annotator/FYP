@@ -16,7 +16,7 @@ interface Props {
 }
 
 export default function WorkspaceCard({ workspace }: Props) {
-  const { mutate, error, isSuccess } = useDeleteWorkspace(
+  const { mutate, error } = useDeleteWorkspace(
     workspace.id,
     {},
     {
@@ -75,9 +75,6 @@ export default function WorkspaceCard({ workspace }: Props) {
               <p className="text-red-600 text-sm mt-2">
                 {error.message || 'Failed to delete workspace'}
               </p>
-            )}
-            {isSuccess && (
-              <p className="text-green-600 text-sm mt-2">Workspace deleted successfully!</p>
             )}
           </AlertDialogContent>
         </AlertDialog>
