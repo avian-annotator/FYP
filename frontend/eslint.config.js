@@ -9,7 +9,7 @@ import reactDom from 'eslint-plugin-react-dom'
 import react from 'eslint-plugin-react'
 
 export default tseslint.config(
-  { ignores: ['dist'] },
+  { ignores: ['dist', 'src/components/ui/**'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.strictTypeChecked, prettier],
     files: ['**/*.{ts,tsx}'],
@@ -30,14 +30,11 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       ...reactX.configs['recommended-typescript'].rules,
       ...reactDom.configs.recommended.rules,
-      "no-console": ["error"],
-      "no-warning-comments": ["warn", { "terms": ["todo", "fixme"], "location": "start" }],
+      'no-console': ['error'],
+      'no-warning-comments': ['warn', { terms: ['todo', 'fixme'], location: 'start' }],
     },
   },
 )
