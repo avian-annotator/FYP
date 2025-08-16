@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "local": "vite",
+    "generate": "./generate.bash",
     "frontend": "bun msw init public --save && vite --mode frontend",
     "mock": "bun msw init public --save && vite --mode mock",
     "development": "tsc -b && vite build",
