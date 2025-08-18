@@ -48,7 +48,9 @@ export function EditWorkspaceButton({ workspace, name }: { workspace: number; na
         <Button
           className="mt-4 text-green-600 bg-green-100 hover:bg-green-200"
           variant="ghost"
-          onClick={() => { setWorkspaceName(name); }}
+          onClick={() => {
+            setWorkspaceName(name)
+          }}
         >
           Change workspace name?
         </Button>
