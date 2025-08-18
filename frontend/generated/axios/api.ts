@@ -23,105 +23,32 @@ import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
-/**
- * 
- * @export
- * @interface AccessibleWorkspaceResponseDTO
- */
 export interface AccessibleWorkspaceResponseDTO {
-    /**
-     * 
-     * @type {number}
-     * @memberof AccessibleWorkspaceResponseDTO
-     */
     'id': number;
-    /**
-     * 
-     * @type {string}
-     * @memberof AccessibleWorkspaceResponseDTO
-     */
     'name': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AccessibleWorkspaceResponseDTO
-     */
     'ownerUsername': string;
 }
-/**
- * 
- * @export
- * @interface AddUserToWorkspaceRequestBodyDTO
- */
 export interface AddUserToWorkspaceRequestBodyDTO {
-    /**
-     * 
-     * @type {number}
-     * @memberof AddUserToWorkspaceRequestBodyDTO
-     */
     'userId': number;
 }
-/**
- * 
- * @export
- * @interface CreateUserRequestBodyDTO
- */
+export interface AnnotationRequestParamDTO {
+    'includeAnnotations'?: boolean;
+}
+export interface CreateImageRequestBodyDTO {
+    'fileName': string;
+    'contentType': MediaType;
+}
 export interface CreateUserRequestBodyDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateUserRequestBodyDTO
-     */
     'username': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateUserRequestBodyDTO
-     */
     'password': string;
 }
-/**
- * 
- * @export
- * @interface CreateWorkspaceRequestBodyDTO
- */
 export interface CreateWorkspaceRequestBodyDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateWorkspaceRequestBodyDTO
-     */
     'name': string;
 }
-/**
- * 
- * @export
- * @interface CurrentUserResponseDTO
- */
 export interface CurrentUserResponseDTO {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof CurrentUserResponseDTO
-     */
     'authenticated': boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof CurrentUserResponseDTO
-     */
     'id': number;
-    /**
-     * 
-     * @type {string}
-     * @memberof CurrentUserResponseDTO
-     */
     'username': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CurrentUserResponseDTO
-     */
     'role': CurrentUserResponseDTORoleEnum;
 }
 
@@ -132,29 +59,15 @@ export const CurrentUserResponseDTORoleEnum = {
 
 export type CurrentUserResponseDTORoleEnum = typeof CurrentUserResponseDTORoleEnum[keyof typeof CurrentUserResponseDTORoleEnum];
 
-/**
- * 
- * @export
- * @interface EditUserRequestBodyDTO
- */
+export interface EditImageDetailsResponseDTO {
+    'fileName'?: string;
+}
+export interface EditImageRequestBodyDTO {
+    'fileName'?: string;
+}
 export interface EditUserRequestBodyDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof EditUserRequestBodyDTO
-     */
     'username'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof EditUserRequestBodyDTO
-     */
     'password'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof EditUserRequestBodyDTO
-     */
     'role'?: EditUserRequestBodyDTORoleEnum;
 }
 
@@ -165,233 +78,76 @@ export const EditUserRequestBodyDTORoleEnum = {
 
 export type EditUserRequestBodyDTORoleEnum = typeof EditUserRequestBodyDTORoleEnum[keyof typeof EditUserRequestBodyDTORoleEnum];
 
-/**
- * 
- * @export
- * @interface EditWorkspaceRequestBodyDTO
- */
 export interface EditWorkspaceRequestBodyDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof EditWorkspaceRequestBodyDTO
-     */
     'name'?: string;
 }
-/**
- * 
- * @export
- * @interface GetUsersFromWorkspaceRequestParamDTO
- */
 export interface GetUsersFromWorkspaceRequestParamDTO {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof GetUsersFromWorkspaceRequestParamDTO
-     */
     'excludeExisting'?: boolean;
 }
-/**
- * 
- * @export
- * @interface PageWrapperAccessibleWorkspaceResponseDTO
- */
+export interface ImageResponseDTO {
+    'url': string;
+    'workspaceId': number;
+    'fileName': string;
+    'annotations'?: { [key: string]: any; };
+}
+export interface MediaType {
+    'type'?: string;
+    'subtype'?: string;
+    'parameters'?: { [key: string]: string; };
+    'qualityValue'?: number;
+    'wildcardType'?: boolean;
+    'wildcardSubtype'?: boolean;
+    'subtypeSuffix'?: string;
+    'charset'?: string;
+    'concrete'?: boolean;
+}
 export interface PageWrapperAccessibleWorkspaceResponseDTO {
-    /**
-     * 
-     * @type {Array<AccessibleWorkspaceResponseDTO>}
-     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
-     */
     'content': Array<AccessibleWorkspaceResponseDTO>;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
-     */
     'number': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
-     */
     'size': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
-     */
     'totalElements': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
-     */
     'totalPages': number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
-     */
     'first': boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
-     */
     'last': boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
-     */
     'numberOfElements': number;
-    /**
-     * 
-     * @type {SortDTO}
-     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
-     */
     'sort': SortDTO;
 }
-/**
- * 
- * @export
- * @interface PageWrapperUserResponseDTO
- */
+export interface PageWrapperImageResponseDTO {
+    'content': Array<ImageResponseDTO>;
+    'number': number;
+    'size': number;
+    'totalElements': number;
+    'totalPages': number;
+    'first': boolean;
+    'last': boolean;
+    'numberOfElements': number;
+    'sort': SortDTO;
+}
 export interface PageWrapperUserResponseDTO {
-    /**
-     * 
-     * @type {Array<UserResponseDTO>}
-     * @memberof PageWrapperUserResponseDTO
-     */
     'content': Array<UserResponseDTO>;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageWrapperUserResponseDTO
-     */
     'number': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageWrapperUserResponseDTO
-     */
     'size': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageWrapperUserResponseDTO
-     */
     'totalElements': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageWrapperUserResponseDTO
-     */
     'totalPages': number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageWrapperUserResponseDTO
-     */
     'first': boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageWrapperUserResponseDTO
-     */
     'last': boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageWrapperUserResponseDTO
-     */
     'numberOfElements': number;
-    /**
-     * 
-     * @type {SortDTO}
-     * @memberof PageWrapperUserResponseDTO
-     */
     'sort': SortDTO;
 }
-/**
- * 
- * @export
- * @interface Pageable
- */
 export interface Pageable {
-    /**
-     * 
-     * @type {number}
-     * @memberof Pageable
-     */
     'page'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Pageable
-     */
     'size'?: number;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof Pageable
-     */
     'sort'?: Array<string>;
 }
-/**
- * 
- * @export
- * @interface SortDTO
- */
 export interface SortDTO {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof SortDTO
-     */
     'sorted': boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof SortDTO
-     */
     'unsorted': boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof SortDTO
-     */
     'empty': boolean;
 }
-/**
- * 
- * @export
- * @interface UserResponseDTO
- */
 export interface UserResponseDTO {
-    /**
-     * 
-     * @type {number}
-     * @memberof UserResponseDTO
-     */
     'id': number;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserResponseDTO
-     */
     'username': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserResponseDTO
-     */
     'role': UserResponseDTORoleEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserResponseDTO
-     */
     'createdAt': string;
 }
 
@@ -402,29 +158,13 @@ export const UserResponseDTORoleEnum = {
 
 export type UserResponseDTORoleEnum = typeof UserResponseDTORoleEnum[keyof typeof UserResponseDTORoleEnum];
 
-/**
- * 
- * @export
- * @interface WorkspaceResponseDTO
- */
 export interface WorkspaceResponseDTO {
-    /**
-     * 
-     * @type {number}
-     * @memberof WorkspaceResponseDTO
-     */
     'id': number;
-    /**
-     * 
-     * @type {string}
-     * @memberof WorkspaceResponseDTO
-     */
     'name': string;
 }
 
 /**
  * AdminControllerApi - axios parameter creator
- * @export
  */
 export const AdminControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -569,7 +309,6 @@ export const AdminControllerApiAxiosParamCreator = function (configuration?: Con
 
 /**
  * AdminControllerApi - functional programming interface
- * @export
  */
 export const AdminControllerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AdminControllerApiAxiosParamCreator(configuration)
@@ -627,7 +366,6 @@ export const AdminControllerApiFp = function(configuration?: Configuration) {
 
 /**
  * AdminControllerApi - factory interface
- * @export
  */
 export const AdminControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = AdminControllerApiFp(configuration)
@@ -673,9 +411,6 @@ export const AdminControllerApiFactory = function (configuration?: Configuration
 
 /**
  * AdminControllerApi - object-oriented interface
- * @export
- * @class AdminControllerApi
- * @extends {BaseAPI}
  */
 export class AdminControllerApi extends BaseAPI {
     /**
@@ -683,7 +418,6 @@ export class AdminControllerApi extends BaseAPI {
      * @param {CreateUserRequestBodyDTO} createUserRequestBodyDTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AdminControllerApi
      */
     public createNewUser(createUserRequestBodyDTO: CreateUserRequestBodyDTO, options?: RawAxiosRequestConfig) {
         return AdminControllerApiFp(this.configuration).createNewUser(createUserRequestBodyDTO, options).then((request) => request(this.axios, this.basePath));
@@ -694,7 +428,6 @@ export class AdminControllerApi extends BaseAPI {
      * @param {number} id 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AdminControllerApi
      */
     public deleteUser(id: number, options?: RawAxiosRequestConfig) {
         return AdminControllerApiFp(this.configuration).deleteUser(id, options).then((request) => request(this.axios, this.basePath));
@@ -706,7 +439,6 @@ export class AdminControllerApi extends BaseAPI {
      * @param {EditUserRequestBodyDTO} editUserRequestBodyDTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AdminControllerApi
      */
     public editUser(id: number, editUserRequestBodyDTO: EditUserRequestBodyDTO, options?: RawAxiosRequestConfig) {
         return AdminControllerApiFp(this.configuration).editUser(id, editUserRequestBodyDTO, options).then((request) => request(this.axios, this.basePath));
@@ -716,7 +448,6 @@ export class AdminControllerApi extends BaseAPI {
      * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AdminControllerApi
      */
     public getAllUsers(options?: RawAxiosRequestConfig) {
         return AdminControllerApiFp(this.configuration).getAllUsers(options).then((request) => request(this.axios, this.basePath));
@@ -727,7 +458,6 @@ export class AdminControllerApi extends BaseAPI {
 
 /**
  * AuthenticationControllerApi - axios parameter creator
- * @export
  */
 export const AuthenticationControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -765,7 +495,6 @@ export const AuthenticationControllerApiAxiosParamCreator = function (configurat
 
 /**
  * AuthenticationControllerApi - functional programming interface
- * @export
  */
 export const AuthenticationControllerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AuthenticationControllerApiAxiosParamCreator(configuration)
@@ -786,7 +515,6 @@ export const AuthenticationControllerApiFp = function(configuration?: Configurat
 
 /**
  * AuthenticationControllerApi - factory interface
- * @export
  */
 export const AuthenticationControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = AuthenticationControllerApiFp(configuration)
@@ -804,16 +532,12 @@ export const AuthenticationControllerApiFactory = function (configuration?: Conf
 
 /**
  * AuthenticationControllerApi - object-oriented interface
- * @export
- * @class AuthenticationControllerApi
- * @extends {BaseAPI}
  */
 export class AuthenticationControllerApi extends BaseAPI {
     /**
      * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AuthenticationControllerApi
      */
     public getCurrentUser(options?: RawAxiosRequestConfig) {
         return AuthenticationControllerApiFp(this.configuration).getCurrentUser(options).then((request) => request(this.axios, this.basePath));
@@ -824,7 +548,6 @@ export class AuthenticationControllerApi extends BaseAPI {
 
 /**
  * WorkspaceControllerApi - axios parameter creator
- * @export
  */
 export const WorkspaceControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -905,6 +628,43 @@ export const WorkspaceControllerApiAxiosParamCreator = function (configuration?:
         /**
          * 
          * @param {number} workspaceId 
+         * @param {string} imageId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteImage: async (workspaceId: number, imageId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspaceId' is not null or undefined
+            assertParamExists('deleteImage', 'workspaceId', workspaceId)
+            // verify required parameter 'imageId' is not null or undefined
+            assertParamExists('deleteImage', 'imageId', imageId)
+            const localVarPath = `/api/workspaces/{workspaceId}/images/{imageId}`
+                .replace(`{${"workspaceId"}}`, encodeURIComponent(String(workspaceId)))
+                .replace(`{${"imageId"}}`, encodeURIComponent(String(imageId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} workspaceId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -929,6 +689,49 @@ export const WorkspaceControllerApiAxiosParamCreator = function (configuration?:
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} workspaceId 
+         * @param {string} imageId 
+         * @param {EditImageRequestBodyDTO} editImageRequestBodyDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        editImageDetails: async (workspaceId: number, imageId: string, editImageRequestBodyDTO: EditImageRequestBodyDTO, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspaceId' is not null or undefined
+            assertParamExists('editImageDetails', 'workspaceId', workspaceId)
+            // verify required parameter 'imageId' is not null or undefined
+            assertParamExists('editImageDetails', 'imageId', imageId)
+            // verify required parameter 'editImageRequestBodyDTO' is not null or undefined
+            assertParamExists('editImageDetails', 'editImageRequestBodyDTO', editImageRequestBodyDTO)
+            const localVarPath = `/api/workspaces/{workspaceId}/images/{imageId}`
+                .replace(`{${"workspaceId"}}`, encodeURIComponent(String(workspaceId)))
+                .replace(`{${"imageId"}}`, encodeURIComponent(String(imageId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(editImageRequestBodyDTO, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -968,6 +771,142 @@ export const WorkspaceControllerApiAxiosParamCreator = function (configuration?:
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(editWorkspaceRequestBodyDTO, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} workspaceId 
+         * @param {string} imageId 
+         * @param {AnnotationRequestParamDTO} requestParam 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        generatePresignedDownloadUrlForImage: async (workspaceId: number, imageId: string, requestParam: AnnotationRequestParamDTO, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspaceId' is not null or undefined
+            assertParamExists('generatePresignedDownloadUrlForImage', 'workspaceId', workspaceId)
+            // verify required parameter 'imageId' is not null or undefined
+            assertParamExists('generatePresignedDownloadUrlForImage', 'imageId', imageId)
+            // verify required parameter 'requestParam' is not null or undefined
+            assertParamExists('generatePresignedDownloadUrlForImage', 'requestParam', requestParam)
+            const localVarPath = `/api/workspaces/{workspaceId}/images/{imageId}`
+                .replace(`{${"workspaceId"}}`, encodeURIComponent(String(workspaceId)))
+                .replace(`{${"imageId"}}`, encodeURIComponent(String(imageId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (requestParam !== undefined) {
+                for (const [key, value] of Object.entries(requestParam)) {
+                    localVarQueryParameter[key] = value;
+                }
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} workspaceId 
+         * @param {AnnotationRequestParamDTO} requestParam 
+         * @param {Pageable} pageable 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        generatePresignedDownloadUrlForImages: async (workspaceId: number, requestParam: AnnotationRequestParamDTO, pageable: Pageable, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspaceId' is not null or undefined
+            assertParamExists('generatePresignedDownloadUrlForImages', 'workspaceId', workspaceId)
+            // verify required parameter 'requestParam' is not null or undefined
+            assertParamExists('generatePresignedDownloadUrlForImages', 'requestParam', requestParam)
+            // verify required parameter 'pageable' is not null or undefined
+            assertParamExists('generatePresignedDownloadUrlForImages', 'pageable', pageable)
+            const localVarPath = `/api/workspaces/{workspaceId}/images`
+                .replace(`{${"workspaceId"}}`, encodeURIComponent(String(workspaceId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (requestParam !== undefined) {
+                for (const [key, value] of Object.entries(requestParam)) {
+                    localVarQueryParameter[key] = value;
+                }
+            }
+
+            if (pageable !== undefined) {
+                for (const [key, value] of Object.entries(pageable)) {
+                    localVarQueryParameter[key] = value;
+                }
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} workspaceId 
+         * @param {CreateImageRequestBodyDTO} createImageRequestBodyDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        generatePresignedUploadUrl: async (workspaceId: number, createImageRequestBodyDTO: CreateImageRequestBodyDTO, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'workspaceId' is not null or undefined
+            assertParamExists('generatePresignedUploadUrl', 'workspaceId', workspaceId)
+            // verify required parameter 'createImageRequestBodyDTO' is not null or undefined
+            assertParamExists('generatePresignedUploadUrl', 'createImageRequestBodyDTO', createImageRequestBodyDTO)
+            const localVarPath = `/api/workspaces/{workspaceId}/images`
+                .replace(`{${"workspaceId"}}`, encodeURIComponent(String(workspaceId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createImageRequestBodyDTO, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1105,7 +1044,6 @@ export const WorkspaceControllerApiAxiosParamCreator = function (configuration?:
 
 /**
  * WorkspaceControllerApi - functional programming interface
- * @export
  */
 export const WorkspaceControllerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = WorkspaceControllerApiAxiosParamCreator(configuration)
@@ -1138,6 +1076,19 @@ export const WorkspaceControllerApiFp = function(configuration?: Configuration) 
         /**
          * 
          * @param {number} workspaceId 
+         * @param {string} imageId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteImage(workspaceId: number, imageId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteImage(workspaceId, imageId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['WorkspaceControllerApi.deleteImage']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} workspaceId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1145,6 +1096,20 @@ export const WorkspaceControllerApiFp = function(configuration?: Configuration) 
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteWorkspace(workspaceId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['WorkspaceControllerApi.deleteWorkspace']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} workspaceId 
+         * @param {string} imageId 
+         * @param {EditImageRequestBodyDTO} editImageRequestBodyDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async editImageDetails(workspaceId: number, imageId: string, editImageRequestBodyDTO: EditImageRequestBodyDTO, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EditImageDetailsResponseDTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.editImageDetails(workspaceId, imageId, editImageRequestBodyDTO, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['WorkspaceControllerApi.editImageDetails']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -1158,6 +1123,47 @@ export const WorkspaceControllerApiFp = function(configuration?: Configuration) 
             const localVarAxiosArgs = await localVarAxiosParamCreator.editWorkspace(workspaceId, editWorkspaceRequestBodyDTO, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['WorkspaceControllerApi.editWorkspace']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} workspaceId 
+         * @param {string} imageId 
+         * @param {AnnotationRequestParamDTO} requestParam 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async generatePresignedDownloadUrlForImage(workspaceId: number, imageId: string, requestParam: AnnotationRequestParamDTO, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ImageResponseDTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.generatePresignedDownloadUrlForImage(workspaceId, imageId, requestParam, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['WorkspaceControllerApi.generatePresignedDownloadUrlForImage']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} workspaceId 
+         * @param {AnnotationRequestParamDTO} requestParam 
+         * @param {Pageable} pageable 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async generatePresignedDownloadUrlForImages(workspaceId: number, requestParam: AnnotationRequestParamDTO, pageable: Pageable, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PageWrapperImageResponseDTO>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.generatePresignedDownloadUrlForImages(workspaceId, requestParam, pageable, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['WorkspaceControllerApi.generatePresignedDownloadUrlForImages']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} workspaceId 
+         * @param {CreateImageRequestBodyDTO} createImageRequestBodyDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async generatePresignedUploadUrl(workspaceId: number, createImageRequestBodyDTO: CreateImageRequestBodyDTO, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.generatePresignedUploadUrl(workspaceId, createImageRequestBodyDTO, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['WorkspaceControllerApi.generatePresignedUploadUrl']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -1204,7 +1210,6 @@ export const WorkspaceControllerApiFp = function(configuration?: Configuration) 
 
 /**
  * WorkspaceControllerApi - factory interface
- * @export
  */
 export const WorkspaceControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = WorkspaceControllerApiFp(configuration)
@@ -1231,11 +1236,32 @@ export const WorkspaceControllerApiFactory = function (configuration?: Configura
         /**
          * 
          * @param {number} workspaceId 
+         * @param {string} imageId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteImage(workspaceId: number, imageId: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteImage(workspaceId, imageId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} workspaceId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         deleteWorkspace(workspaceId: number, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.deleteWorkspace(workspaceId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} workspaceId 
+         * @param {string} imageId 
+         * @param {EditImageRequestBodyDTO} editImageRequestBodyDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        editImageDetails(workspaceId: number, imageId: string, editImageRequestBodyDTO: EditImageRequestBodyDTO, options?: RawAxiosRequestConfig): AxiosPromise<EditImageDetailsResponseDTO> {
+            return localVarFp.editImageDetails(workspaceId, imageId, editImageRequestBodyDTO, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1246,6 +1272,38 @@ export const WorkspaceControllerApiFactory = function (configuration?: Configura
          */
         editWorkspace(workspaceId: number, editWorkspaceRequestBodyDTO: EditWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig): AxiosPromise<WorkspaceResponseDTO> {
             return localVarFp.editWorkspace(workspaceId, editWorkspaceRequestBodyDTO, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} workspaceId 
+         * @param {string} imageId 
+         * @param {AnnotationRequestParamDTO} requestParam 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        generatePresignedDownloadUrlForImage(workspaceId: number, imageId: string, requestParam: AnnotationRequestParamDTO, options?: RawAxiosRequestConfig): AxiosPromise<ImageResponseDTO> {
+            return localVarFp.generatePresignedDownloadUrlForImage(workspaceId, imageId, requestParam, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} workspaceId 
+         * @param {AnnotationRequestParamDTO} requestParam 
+         * @param {Pageable} pageable 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        generatePresignedDownloadUrlForImages(workspaceId: number, requestParam: AnnotationRequestParamDTO, pageable: Pageable, options?: RawAxiosRequestConfig): AxiosPromise<PageWrapperImageResponseDTO> {
+            return localVarFp.generatePresignedDownloadUrlForImages(workspaceId, requestParam, pageable, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} workspaceId 
+         * @param {CreateImageRequestBodyDTO} createImageRequestBodyDTO 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        generatePresignedUploadUrl(workspaceId: number, createImageRequestBodyDTO: CreateImageRequestBodyDTO, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.generatePresignedUploadUrl(workspaceId, createImageRequestBodyDTO, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1282,9 +1340,6 @@ export const WorkspaceControllerApiFactory = function (configuration?: Configura
 
 /**
  * WorkspaceControllerApi - object-oriented interface
- * @export
- * @class WorkspaceControllerApi
- * @extends {BaseAPI}
  */
 export class WorkspaceControllerApi extends BaseAPI {
     /**
@@ -1293,7 +1348,6 @@ export class WorkspaceControllerApi extends BaseAPI {
      * @param {AddUserToWorkspaceRequestBodyDTO} addUserToWorkspaceRequestBodyDTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WorkspaceControllerApi
      */
     public addUserToWorkspace(workspaceId: number, addUserToWorkspaceRequestBodyDTO: AddUserToWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig) {
         return WorkspaceControllerApiFp(this.configuration).addUserToWorkspace(workspaceId, addUserToWorkspaceRequestBodyDTO, options).then((request) => request(this.axios, this.basePath));
@@ -1304,7 +1358,6 @@ export class WorkspaceControllerApi extends BaseAPI {
      * @param {CreateWorkspaceRequestBodyDTO} createWorkspaceRequestBodyDTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WorkspaceControllerApi
      */
     public createWorkspace(createWorkspaceRequestBodyDTO: CreateWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig) {
         return WorkspaceControllerApiFp(this.configuration).createWorkspace(createWorkspaceRequestBodyDTO, options).then((request) => request(this.axios, this.basePath));
@@ -1313,9 +1366,19 @@ export class WorkspaceControllerApi extends BaseAPI {
     /**
      * 
      * @param {number} workspaceId 
+     * @param {string} imageId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WorkspaceControllerApi
+     */
+    public deleteImage(workspaceId: number, imageId: string, options?: RawAxiosRequestConfig) {
+        return WorkspaceControllerApiFp(this.configuration).deleteImage(workspaceId, imageId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} workspaceId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
      */
     public deleteWorkspace(workspaceId: number, options?: RawAxiosRequestConfig) {
         return WorkspaceControllerApiFp(this.configuration).deleteWorkspace(workspaceId, options).then((request) => request(this.axios, this.basePath));
@@ -1324,13 +1387,59 @@ export class WorkspaceControllerApi extends BaseAPI {
     /**
      * 
      * @param {number} workspaceId 
+     * @param {string} imageId 
+     * @param {EditImageRequestBodyDTO} editImageRequestBodyDTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public editImageDetails(workspaceId: number, imageId: string, editImageRequestBodyDTO: EditImageRequestBodyDTO, options?: RawAxiosRequestConfig) {
+        return WorkspaceControllerApiFp(this.configuration).editImageDetails(workspaceId, imageId, editImageRequestBodyDTO, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} workspaceId 
      * @param {EditWorkspaceRequestBodyDTO} editWorkspaceRequestBodyDTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WorkspaceControllerApi
      */
     public editWorkspace(workspaceId: number, editWorkspaceRequestBodyDTO: EditWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig) {
         return WorkspaceControllerApiFp(this.configuration).editWorkspace(workspaceId, editWorkspaceRequestBodyDTO, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} workspaceId 
+     * @param {string} imageId 
+     * @param {AnnotationRequestParamDTO} requestParam 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public generatePresignedDownloadUrlForImage(workspaceId: number, imageId: string, requestParam: AnnotationRequestParamDTO, options?: RawAxiosRequestConfig) {
+        return WorkspaceControllerApiFp(this.configuration).generatePresignedDownloadUrlForImage(workspaceId, imageId, requestParam, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} workspaceId 
+     * @param {AnnotationRequestParamDTO} requestParam 
+     * @param {Pageable} pageable 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public generatePresignedDownloadUrlForImages(workspaceId: number, requestParam: AnnotationRequestParamDTO, pageable: Pageable, options?: RawAxiosRequestConfig) {
+        return WorkspaceControllerApiFp(this.configuration).generatePresignedDownloadUrlForImages(workspaceId, requestParam, pageable, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} workspaceId 
+     * @param {CreateImageRequestBodyDTO} createImageRequestBodyDTO 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public generatePresignedUploadUrl(workspaceId: number, createImageRequestBodyDTO: CreateImageRequestBodyDTO, options?: RawAxiosRequestConfig) {
+        return WorkspaceControllerApiFp(this.configuration).generatePresignedUploadUrl(workspaceId, createImageRequestBodyDTO, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1340,7 +1449,6 @@ export class WorkspaceControllerApi extends BaseAPI {
      * @param {Pageable} pageable 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WorkspaceControllerApi
      */
     public getUsersFromWorkspace(workspaceId: number, param: GetUsersFromWorkspaceRequestParamDTO, pageable: Pageable, options?: RawAxiosRequestConfig) {
         return WorkspaceControllerApiFp(this.configuration).getUsersFromWorkspace(workspaceId, param, pageable, options).then((request) => request(this.axios, this.basePath));
@@ -1351,7 +1459,6 @@ export class WorkspaceControllerApi extends BaseAPI {
      * @param {Pageable} pageable 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WorkspaceControllerApi
      */
     public getWorkspaces(pageable: Pageable, options?: RawAxiosRequestConfig) {
         return WorkspaceControllerApiFp(this.configuration).getWorkspaces(pageable, options).then((request) => request(this.axios, this.basePath));
@@ -1363,7 +1470,6 @@ export class WorkspaceControllerApi extends BaseAPI {
      * @param {number} userId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WorkspaceControllerApi
      */
     public removeUserFromWorkspace(workspaceId: number, userId: number, options?: RawAxiosRequestConfig) {
         return WorkspaceControllerApiFp(this.configuration).removeUserFromWorkspace(workspaceId, userId, options).then((request) => request(this.axios, this.basePath));

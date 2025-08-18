@@ -2,36 +2,44 @@ package com.fyp.avian_annotator.dal.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.*;
+
 import java.util.ArrayList;
 import java.util.List;
-import lombok.*;
+import java.util.UUID;
 
 @Entity
 @Table(name = "workspace")
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Workspace {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "owner_id")
-  private User owner;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")
+    private User owner;
 
-  private String name;
+    private String name;
 
-  @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
-  @Builder.Default
-  @JsonIgnore
-  private List<WorkspaceUser> workspaceUsers = new ArrayList<>();
+    @Column(nullable = false, unique = true, updatable = false, length = 8)
+    private String bucketPrefix = UUID.randomUUID().toString().substring(0, 8);
 
-  @OneToMany(mappedBy = "url", cascade = CascadeType.ALL, orphanRemoval = true)
-  @Builder.Default
-  @JsonIgnore
-  private List<Image> images = new ArrayList<>();
+    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<WorkspaceUser> workspaceUsers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Image> images = new ArrayList<>();
+
+    @Builder
+    public Workspace(Long id, User owner, String name) {
+        this.id = id;
+        this.owner = owner;
+        this.name = name;
+    }
 }
