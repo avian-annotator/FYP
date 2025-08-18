@@ -40,7 +40,6 @@ public class MeController {
         meService.editMe(
             userDetails.getId(), request.username(), request.password(), request.role());
 
-q
     UserResponseDTO responseDTO = mapper.convertValue(editedMe, UserResponseDTO.class);
     return ResponseEntity.ok(responseDTO);
   }
