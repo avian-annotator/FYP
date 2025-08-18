@@ -2,8 +2,8 @@ import { useParams } from '@tanstack/react-router'
 import { Route } from '../routes/workspaces/$workspaceId/users'
 import { Button } from '@/components/ui/button'
 import UserCard from '@/components/users/UserCard'
-import { getWorkspaceUsers } from '@/components/users/getWorkspaceUsers'
-import { useQuery } from '@tanstack/react-query'
+
+import { useGetUsersFromWorkspace } from '../../generated'
 
 //TODO: replace with generated type
 type WorkspaceUsersParams = {
@@ -12,16 +12,9 @@ type WorkspaceUsersParams = {
 export function WorkspaceUsers() {
   const { workspaceId }: WorkspaceUsersParams = useParams({ from: Route.id })
 
-  const {
-    data: users,
-    isLoading,
-    error,
-  } = useQuery({
-    //TODO: replace with users endpoint
-    queryKey: ['workspaceUsers', workspaceId],
-    queryFn: () => getWorkspaceUsers(workspaceId),
-    staleTime: 1000 * 60,
-  })
+  const { data, isLoading, error } = useGetUsersFromWorkspace(workspaceId, {}, { size: 4, page: 0 })
+
+  const users = data?.data.content === undefined ? [] : data.data.content
 
   if (isLoading) return <p>Loading workspace users...</p>
   if (error) {
@@ -35,15 +28,17 @@ export function WorkspaceUsers() {
   return (
     <div className="max-w-3xl w-full mx-auto p-6 space-y-6">
       <section>
-        <h2 className="text-xl font-semibold mb-2">Users of {workspaceId}</h2>
+        {/* TODO: Add workspace name instead of ID */}
+        <h2 className="text-xl font-semibold mb-2">Users of Workspace: {workspaceId}</h2>
         <hr />
         <div className="space-y-2">
-          {users && users.length > 0 ? (
+          {users.length > 0 ? (
             users.map(usr => <UserCard key={usr.id} user={usr} />)
           ) : (
             <p className="text-gray-500">No users found for this workspace.</p>
           )}
         </div>
+        {/* TODO: Add new user logic*/}
         <Button className="mt-4 text-green-600 bg-green-100 hover:bg-green-200" variant="ghost">
           Add new user to workspace?
         </Button>
