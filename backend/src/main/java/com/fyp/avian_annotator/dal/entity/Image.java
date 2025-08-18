@@ -12,6 +12,7 @@ public class Image {
   @JoinColumn(name = "workspace_id")
   private Workspace workspace;
 
+  @Column(nullable = false)
   private String filename;
 
   /** TODO: add custom definition instead of String once we figure our JSON coco */

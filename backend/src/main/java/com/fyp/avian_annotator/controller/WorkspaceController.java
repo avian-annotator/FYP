@@ -104,4 +104,25 @@ public class WorkspaceController {
             workspaceService.getUsersFromWorkspace(
                 userDetails.getId(), workspaceId, param.getExcludeExisting(), pageable)));
   }
+
+  @PostMapping("/{workspaceId}/images")
+  public void addImage(
+      @AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Long workspaceId) {
+    // Only the owner can get an image
+
+  }
+
+  @GetMapping("/{workspaceId}/images/{imageId}")
+  public void getImage(
+      @AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Long workspaceId) {
+    // Every workspace user can get an image
+
+  }
+
+  @DeleteMapping("/{workspaceId}/images/{imageId}")
+  public void deleteImage(
+      @AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Long workspaceId) {
+    // Only the owner can delete
+
+  }
 }

@@ -29,4 +29,9 @@ public class Workspace {
   @Builder.Default
   @JsonIgnore
   private List<WorkspaceUser> workspaceUsers = new ArrayList<>();
+
+  @OneToMany(mappedBy = "url", cascade = CascadeType.ALL, orphanRemoval = true)
+  @Builder.Default
+  @JsonIgnore
+  private List<Image> images = new ArrayList<>();
 }
