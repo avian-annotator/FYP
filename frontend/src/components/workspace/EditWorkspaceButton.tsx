@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -8,28 +8,43 @@ import {
   DialogFooter,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { useAddUserToWorkspace, AddUserToWorkspaceRequestBodyDTO } from '../../../generated'
+import { useEditWorkspace, EditWorkspaceRequestBodyDTO } from '../../../generated'
+import { z } from 'zod'
 
-export function AddUserButton({ workspace }: { workspace: number }) {
+export function EditWorkspaceButton({ workspace }: { workspace: number }) {
+  const nameSchema = z.string().trim().min(1, 'Name required')
+
   const [open, setOpen] = useState(false)
-  const [id, setId] = useState(0)
+  const [workspaceName, setWorkspaceName] = useState('')
   const [error, setError] = useState<string | null>(null)
 
-  const addUserToWorkspaceRequestBodyDTO: AddUserToWorkspaceRequestBodyDTO = {
-    userId: id,
+  const editWorkspaceRequestBodyDTO: EditWorkspaceRequestBodyDTO = {
+    name: workspaceName,
   }
+  const { mutateAsync } = useEditWorkspace(workspace, editWorkspaceRequestBodyDTO)
+  useEffect(() => {
+    async function fetchWorkspaceName() {
+      const res = await mutateAsync(undefined)
+      setWorkspaceName(res.data.name)
+    }
+    void fetchWorkspaceName()
+  }, [workspace, mutateAsync])
 
-  const mutation = useAddUserToWorkspace(workspace, addUserToWorkspaceRequestBodyDTO)
+  const mutation = useEditWorkspace(workspace, editWorkspaceRequestBodyDTO)
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-
+    const validate = nameSchema.safeParse(workspaceName)
+    if (!validate.success) {
+      setError(validate.error.issues[0]?.message)
+      return
+    }
     setError(null)
     mutation.mutate(undefined, {
       onSuccess: () => {
         window.location.reload()
         setOpen(false)
-        setId(0)
+        setWorkspaceName('')
         setError(null)
       },
     })
@@ -39,24 +54,24 @@ export function AddUserButton({ workspace }: { workspace: number }) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="mt-4 text-green-600 bg-green-100 hover:bg-green-200" variant="ghost">
-          Add new user?
+          Change workspace name?
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add User</DialogTitle>
+          <DialogTitle>Change Workspace Name</DialogTitle>
         </DialogHeader>
         <form onSubmit={onSubmit}>
-          <label className="block mb-2 text-sm font-medium text-gray-700">User ID</label>
+          <label className="block mb-2 text-sm font-medium text-gray-700">Workspace Name</label>
           <input
             type="text"
-            value={id}
+            value={workspaceName}
             onChange={e => {
-              setId(Number(e.target.value))
+              setWorkspaceName(e.target.value)
             }}
             required
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            placeholder="Enter user id"
+            placeholder="Enter workspace name"
           />
           {error && (
             <p role="alert" className="text-red-600">
@@ -74,11 +89,11 @@ export function AddUserButton({ workspace }: { workspace: number }) {
             >
               Cancel
             </Button>
-            <Button type="submit"> Add</Button>
+            <Button type="submit"> Create</Button>
           </DialogFooter>
           {mutation.isError && (
             <p className="mt-2 text-red-600">
-              Error: {mutation.error.message || 'Failed to add user'}
+              Error: {mutation.error.message || 'Failed to create workspace'}
             </p>
           )}
         </form>
