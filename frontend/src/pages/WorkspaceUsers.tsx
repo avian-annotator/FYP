@@ -1,19 +1,16 @@
 import { useParams } from '@tanstack/react-router'
 import { Route } from '../routes/workspaces/$workspaceId/users'
-import { Button } from '@/components/ui/button'
 import UserCard from '@/components/users/UserCard'
 
 import { useGetUsersFromWorkspace } from '../../generated'
+import { AddUserButton } from '@/components/users/AddUserButton'
 
-//TODO: replace with generated type
 type WorkspaceUsersParams = {
   workspaceId: number
 }
 export function WorkspaceUsers() {
   const { workspaceId }: WorkspaceUsersParams = useParams({ from: Route.id })
-
   const { data, isLoading, error } = useGetUsersFromWorkspace(workspaceId, {}, { size: 4, page: 0 })
-
   const users = data?.data.content === undefined ? [] : data.data.content
 
   if (isLoading) return <p>Loading workspace users...</p>
@@ -39,9 +36,7 @@ export function WorkspaceUsers() {
           )}
         </div>
         {/* TODO: Add new user logic*/}
-        <Button className="mt-4 text-green-600 bg-green-100 hover:bg-green-200" variant="ghost">
-          Add new user to workspace?
-        </Button>
+        <AddUserButton workspace={workspaceId}></AddUserButton>
       </section>
     </div>
   )
