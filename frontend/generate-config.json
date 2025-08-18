@@ -1,0 +1,14 @@
+{
+  "services": [
+    {
+      "name": "test",
+      "url": "http://localhost:8080",
+      "outDir": "./test"
+    },
+    {
+      "name": "second service",
+      "url": "http://localhost:8080",
+      "outDir": "./test2"
+    }
+  ]
+}
