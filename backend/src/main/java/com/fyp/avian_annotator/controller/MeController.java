@@ -34,7 +34,6 @@ public class MeController {
     public ResponseEntity<UserResponseDTO> editMe(
             @RequestBody @Valid EditUserRequestBodyDTO request,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
-
         User editedMe = meService.editMe(userDetails.getId(), request.username(),
                 request.password(), request.role());
 
