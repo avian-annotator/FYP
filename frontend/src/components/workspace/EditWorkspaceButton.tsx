@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -11,7 +11,7 @@ import {
 import { useEditWorkspace, EditWorkspaceRequestBodyDTO } from '../../../generated'
 import { z } from 'zod'
 
-export function EditWorkspaceButton({ workspace }: { workspace: number }) {
+export function EditWorkspaceButton({ workspace, name }: { workspace: number; name: string }) {
   const nameSchema = z.string().trim().min(1, 'Name required')
 
   const [open, setOpen] = useState(false)
@@ -21,14 +21,6 @@ export function EditWorkspaceButton({ workspace }: { workspace: number }) {
   const editWorkspaceRequestBodyDTO: EditWorkspaceRequestBodyDTO = {
     name: workspaceName,
   }
-  const { mutateAsync } = useEditWorkspace(workspace, editWorkspaceRequestBodyDTO)
-  useEffect(() => {
-    async function fetchWorkspaceName() {
-      const res = await mutateAsync(undefined)
-      setWorkspaceName(res.data.name)
-    }
-    void fetchWorkspaceName()
-  }, [workspace, mutateAsync])
 
   const mutation = useEditWorkspace(workspace, editWorkspaceRequestBodyDTO)
 
@@ -53,7 +45,11 @@ export function EditWorkspaceButton({ workspace }: { workspace: number }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="mt-4 text-green-600 bg-green-100 hover:bg-green-200" variant="ghost">
+        <Button
+          className="mt-4 text-green-600 bg-green-100 hover:bg-green-200"
+          variant="ghost"
+          onClick={() => { setWorkspaceName(name); }}
+        >
           Change workspace name?
         </Button>
       </DialogTrigger>
