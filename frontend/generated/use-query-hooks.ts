@@ -50,7 +50,7 @@ export function useEditUser(id: number, editUserRequestBodyDTO: EditUserRequestB
 export function useGetAllUsers(options?: RawAxiosRequestConfig, queryOptions?: Omit<UseQueryOptions<AxiosResponse<UserResponseDTO[]>, Error, AxiosResponse<UserResponseDTO[]>>, 'queryKey' | 'queryFn'>): UseQueryResult<AxiosResponse<UserResponseDTO[]>, Error> {
 
   return useQuery<AxiosResponse<UserResponseDTO[]>, Error, AxiosResponse<UserResponseDTO[]>>({
-    queryKey: ['useGetAllUsers' ],
+    queryKey: ['useGetAllUsers'],
     queryFn: async () => {
       const api = AdminControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
       const res = await api.getAllUsers({...options, withCredentials: true});
@@ -64,7 +64,7 @@ export function useGetAllUsers(options?: RawAxiosRequestConfig, queryOptions?: O
 export function useGetCurrentUser(options?: RawAxiosRequestConfig, queryOptions?: Omit<UseQueryOptions<AxiosResponse<CurrentUserResponseDTO>, Error, AxiosResponse<CurrentUserResponseDTO>>, 'queryKey' | 'queryFn'>): UseQueryResult<AxiosResponse<CurrentUserResponseDTO>, Error> {
 
   return useQuery<AxiosResponse<CurrentUserResponseDTO>, Error, AxiosResponse<CurrentUserResponseDTO>>({
-    queryKey: ['useGetCurrentUser' ],
+    queryKey: ['useGetCurrentUser'],
     queryFn: async () => {
       const api = AuthenticationControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
       const res = await api.getCurrentUser({...options, withCredentials: true});
@@ -130,7 +130,7 @@ export function useEditWorkspace(workspaceId: number, editWorkspaceRequestBodyDT
 export function useGetUsersFromWorkspace(workspaceId: number, param: GetUsersFromWorkspaceRequestParamDTO, pageable: Pageable, options?: RawAxiosRequestConfig, queryOptions?: Omit<UseQueryOptions<AxiosResponse<PageWrapperUserResponseDTO>, Error, AxiosResponse<PageWrapperUserResponseDTO>>, 'queryKey' | 'queryFn'>): UseQueryResult<AxiosResponse<PageWrapperUserResponseDTO>, Error> {
 
   return useQuery<AxiosResponse<PageWrapperUserResponseDTO>, Error, AxiosResponse<PageWrapperUserResponseDTO>>({
-    queryKey: ['useGetUsersFromWorkspace' , options?.params, options?.headers],
+    queryKey: ['useGetUsersFromWorkspace', options?.params, options?.headers, workspaceId, param, pageable],
     queryFn: async () => {
       const api = WorkspaceControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
       const res = await api.getUsersFromWorkspace(workspaceId, param, pageable, {...options, withCredentials: true});
@@ -144,7 +144,7 @@ export function useGetUsersFromWorkspace(workspaceId: number, param: GetUsersFro
 export function useGetWorkspaces(pageable: Pageable, options?: RawAxiosRequestConfig, queryOptions?: Omit<UseQueryOptions<AxiosResponse<PageWrapperAccessibleWorkspaceResponseDTO>, Error, AxiosResponse<PageWrapperAccessibleWorkspaceResponseDTO>>, 'queryKey' | 'queryFn'>): UseQueryResult<AxiosResponse<PageWrapperAccessibleWorkspaceResponseDTO>, Error> {
 
   return useQuery<AxiosResponse<PageWrapperAccessibleWorkspaceResponseDTO>, Error, AxiosResponse<PageWrapperAccessibleWorkspaceResponseDTO>>({
-    queryKey: ['useGetWorkspaces' , options?.params, options?.headers],
+    queryKey: ['useGetWorkspaces', options?.params, options?.headers, pageable],
     queryFn: async () => {
       const api = WorkspaceControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
       const res = await api.getWorkspaces(pageable, {...options, withCredentials: true});
