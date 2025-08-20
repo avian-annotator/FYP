@@ -10,13 +10,16 @@ import {
   AlertDialogHeader,
 } from '../ui/alert-dialog'
 import { UserResponseDTO } from '../../../generated'
-
+import { Separator } from '../ui/separator'
 export default function UserCard({ user }: { user: UserResponseDTO }) {
   return (
     <div className="flex justify-between items-center bg-gray-100 p-3 rounded-md shadow-sm">
-      <div>
+      <div className="flex h-5 items-center space-x-3 m-0">
         <span className="font-medium">Username: {user.username}</span>
+        <Separator orientation="vertical" className=" bg-gray-400" />
+        <span className="font-medium">User ID: {user.id}</span>
       </div>
+
       <div className="flex space-x-2">
         <AlertDialog>
           <AlertDialogTrigger asChild>

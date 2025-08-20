@@ -38,7 +38,13 @@ export function AddUserButton({ workspace }: { workspace: number }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="mt-4 text-green-600 bg-green-100 hover:bg-green-200" variant="ghost">
+        <Button
+          className="mt-4 text-green-600 bg-green-100 hover:bg-green-200"
+          variant="ghost"
+          onClick={() => {
+            mutation.reset()
+          }}
+        >
           Add new user?
         </Button>
       </DialogTrigger>
