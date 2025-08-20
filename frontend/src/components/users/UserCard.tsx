@@ -9,9 +9,37 @@ import {
   AlertDialogAction,
   AlertDialogHeader,
 } from '../ui/alert-dialog'
-import { UserResponseDTO } from '../../../generated'
+import { useDeleteUser, useRemoveUserFromWorkspace, UserResponseDTO } from '../../../generated'
 import { Separator } from '../ui/separator'
-export default function UserCard({ user }: { user: UserResponseDTO }) {
+
+type UserCardProps = {
+  user: UserResponseDTO
+  workspaceId?: number
+}
+
+export default function UserCard({ user, workspaceId }: UserCardProps) {
+  /** Idea here is this can be reused for the admin page */
+  const deleteUser = useDeleteUser(
+    user.id,
+    {},
+    {
+      onSuccess: () => {
+        window.location.reload()
+      },
+    },
+  )
+  const removeUser = useRemoveUserFromWorkspace(
+    workspaceId ?? -1,
+    user.id,
+    {},
+    {
+      onSuccess: () => {
+        window.location.reload()
+      },
+    },
+  )
+
+  const { mutate } = workspaceId == -1 ? deleteUser : removeUser
   return (
     <div className="flex justify-between items-center bg-gray-100 p-3 rounded-md shadow-sm">
       <div className="flex h-5 items-center space-x-3 m-0">
@@ -38,7 +66,7 @@ export default function UserCard({ user }: { user: UserResponseDTO }) {
               <AlertDialogAction
                 className="bg-red-500 text-white"
                 onClick={() => {
-                  //TODO: add remove logic
+                  mutate(undefined)
                 }}
               >
                 Yes, remove them
