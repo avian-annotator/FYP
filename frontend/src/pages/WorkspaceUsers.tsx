@@ -1,4 +1,4 @@
-import { useParams } from '@tanstack/react-router'
+import { useNavigate, useParams, useSearch } from '@tanstack/react-router'
 import { Route } from '../routes/workspaces/$workspaceId/users'
 import UserCard from '@/components/users/UserCard'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -23,18 +23,21 @@ import {
 type WorkspaceUsersParams = {
   workspaceId: number
 }
+type WorkspaceUsersSearch = {
+  page?: number
+}
 export function WorkspaceUsers() {
-  const [page, setPage] = useState<number>(0)
   const { workspaceId }: WorkspaceUsersParams = useParams({ from: Route.id })
-  const { data, error, refetch } = useGetUsersFromWorkspace(
+  const search = useSearch({ from: Route.id }) satisfies WorkspaceUsersSearch
+  const navigate = useNavigate({ from: Route.id })
+
+  const page = search.page ?? 0
+
+  const { data, error } = useGetUsersFromWorkspace(
     workspaceId,
     { excludeExisting: false },
-    { page },
+    { page, size: 4 },
   )
-
-  useEffect(() => {
-    void refetch()
-  }, [page])
 
   //get name to display using edit patch request
   const [workspaceName, setWorkspaceName] = useState('')
@@ -43,10 +46,7 @@ export function WorkspaceUsers() {
   }
 
   const users = data?.data.content === undefined ? [] : data.data.content
-  const totalUsers = data?.data.totalElements ?? 0
-  const size = data?.data.size === undefined ? 0 : data.data.size
-
-  const totalPages = Math.ceil(totalUsers / size)
+  const totalPages = data?.data.totalPages === undefined ? 0 : data.data.totalPages
 
   const { mutateAsync } = useEditWorkspace(workspaceId, editWorkspaceRequestBodyDTO)
   const fetchWorkspaceName = useCallback(async () => {
@@ -66,12 +66,15 @@ export function WorkspaceUsers() {
     )
   }
 
-  const isFirstPage = page === 0
-  const isLastPage = page === totalPages - 1
+  const isFirstPage = data?.data.first
+  const isLastPage = data?.data.last
 
   const handlePageChange = (newPage: number) => {
-    setPage(newPage)
+    void navigate({
+      search: (prev: WorkspaceUsersSearch) => ({ ...prev, page: newPage }),
+    })
   }
+
   return (
     <Suspense fallback={<Skeleton className="h-[20px] w-[100px] rounded-full" />}>
       <div className="max-w-3xl w-full mx-auto p-6 space-y-6">
@@ -106,7 +109,7 @@ export function WorkspaceUsers() {
                       handlePageChange(i)
                     }}
                   >
-                    {i + 1}
+                    {i}
                   </PaginationLink>
                 </PaginationItem>
               ))}
