@@ -23,9 +23,6 @@ import {
 type WorkspaceUsersParams = {
   workspaceId: number
 }
-type WorkspaceUsersSearch = {
-  page?: number
-}
 export function WorkspaceUsers() {
   const { workspaceId }: WorkspaceUsersParams = useParams({ from: Route.id })
   const { page } = Route.useSearch()
@@ -69,7 +66,7 @@ export function WorkspaceUsers() {
 
   const handlePageChange = (newPage: number) => {
     void navigate({
-      search: (prev: WorkspaceUsersSearch) => ({ ...prev, page: newPage }),
+      search: prev => ({ ...prev, page: newPage }),
     })
   }
 
