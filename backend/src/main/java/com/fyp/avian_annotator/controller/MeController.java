@@ -1,7 +1,6 @@
 package com.fyp.avian_annotator.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fyp.avian_annotator.dal.entity.User;
 import com.fyp.avian_annotator.dto.request.EditUserRequestBodyDTO;
 import com.fyp.avian_annotator.dto.response.UserResponseDTO;
 import com.fyp.avian_annotator.security.CustomUserDetails;
@@ -36,11 +35,9 @@ public class MeController {
       @RequestBody @Valid EditUserRequestBodyDTO request,
       @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-    User editedMe =
+    UserResponseDTO responseDTO =
         meService.editMe(
             userDetails.getId(), request.username(), request.password(), request.role());
-
-    UserResponseDTO responseDTO = mapper.convertValue(editedMe, UserResponseDTO.class);
     return ResponseEntity.ok(responseDTO);
   }
 

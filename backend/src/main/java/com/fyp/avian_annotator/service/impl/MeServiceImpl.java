@@ -26,21 +26,24 @@ public class MeServiceImpl implements MeService {
   }
 
   @Override
-  public User editMe(Long id, String userName, String password, UserRole role) {
-    return userRepository
-        .findById(id)
-        .map(
-            userToUpdate -> {
-              com.fyp.avian_annotator.model.User userModel =
-                  mapper.convertValue(userToUpdate, com.fyp.avian_annotator.model.User.class);
-              userModel.update(userName, password, passwordEncoder, role);
-              return userRepository.save(userModel.toEntity(userToUpdate));
-            })
-        .orElseThrow(() -> new UserNotFoundException(id));
+  public UserResponseDTO editMe(Long id, String userName, String password, UserRole role) {
+    User updatedUser =
+        userRepository
+            .findById(id)
+            .map(
+                userToUpdate -> {
+                  com.fyp.avian_annotator.model.User userModel =
+                      mapper.convertValue(userToUpdate, com.fyp.avian_annotator.model.User.class);
+                  userModel.update(userName, password, passwordEncoder, role);
+                  return userRepository.save(userModel.toEntity(userToUpdate));
+                })
+            .orElseThrow(() -> new UserNotFoundException(id));
+    return mapper.convertValue(updatedUser, UserResponseDTO.class);
   }
 
   @Override
   public void deleteMe(Long id) {
+    User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     userRepository.deleteById(id);
   }
 }

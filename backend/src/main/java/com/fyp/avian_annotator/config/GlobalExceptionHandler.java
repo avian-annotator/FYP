@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(UserNotFoundException.class)
   public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException e) {
     log.error(e.getMessage());
-    return ResponseEntity.badRequest().body(e.getMessage());
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
   }
 
   @ExceptionHandler(WorkspaceNotFoundException.class)
