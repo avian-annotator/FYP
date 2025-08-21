@@ -12,4 +12,6 @@ export interface PaginationResponse {
   totalElements: number
   size: number
   number: number
+  first: boolean
+  last: boolean
 }

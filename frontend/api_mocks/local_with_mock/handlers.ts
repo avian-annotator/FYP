@@ -8,40 +8,33 @@ import { http, HttpResponse } from 'msw'
 import users from './data/users.json'
 import workspaces from './data/workspaces.json'
 
+const images = Array.from({ length: 5 }, (_, i) => ({
+  filename: `Image${i + 1}`,
+  url: `https://picsum.photos/seed/${i + 1}/300/200`,
+}))
+
+
 // @ts-ignore
 const backendUrl = import.meta.env.VITE_BACKEND_URL
 
 export const handlers = [
-  http.get(`${backendUrl}/api/auth/current_user`, async () => {
-    await delay(2000)
-    return HttpResponse.json({
-      authenticated: true,
-      user: 'asdfasdf',
-      role: 'ROLE_ADMIN',
-    })
-  }),
+
 
   //----------------------------------------------------------------------
 
-  http.get('*/api/workspaces/:workspaceId/users', ({ params }) => {
-    try {
-      const { workspaceId } = params as { workspaceId: string }
-      console.log('Mocking workspace users for:', workspaceId)
-      return HttpResponse.json(users, { status: 200 })
-    } catch (err) {
-      console.error('Handler error:', err)
-      return HttpResponse.json({ error: 'Handler failed' }, { status: 500 })
-    }
+  http.get('/api/workspaces/:workspaceId/images', () => {
+    const mockResponse = {
+      content: images,
+      totalPages: 1,
+      first: true,
+      last: true,
+      totalElements: images.length,
+      number: 0,
+      numberOfElements: images.length,
+      size: 10,
+    };
+    
+    return HttpResponse.json(mockResponse, { status: 200 });
   }),
-
-  http.get('*/api/workspaces', ({}) => {
-    try {
-      console.log(`Mock: fetching workspaces`)
-      console.log('Query data:', workspaces)
-      return HttpResponse.json(workspaces, { status: 200 })
-    } catch (err) {
-      console.error('Handler error:', err)
-      return HttpResponse.json({ error: 'Handler failed' }, { status: 500 })
-    }
-  }),
+  
 ]
