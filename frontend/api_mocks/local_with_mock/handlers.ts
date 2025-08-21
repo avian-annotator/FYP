@@ -11,6 +11,12 @@ const images = Array.from({ length: 5 }, (_, i) => ({
 }))
 
 
+const images = Array.from({ length: 5 }, (_, i) => ({
+  filename: `Image${i + 1}`,
+  url: `https://picsum.photos/seed/${i + 1}/300/200`,
+}))
+
+
 // @ts-ignore
 const backendUrl = import.meta.env.VITE_BACKEND_URL
 
