@@ -1,4 +1,4 @@
-import { useNavigate, useParams, useSearch } from '@tanstack/react-router'
+import { useParams } from '@tanstack/react-router'
 import { Route } from '../routes/workspaces/$workspaceId/users'
 import UserCard from '@/components/users/UserCard'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -28,10 +28,8 @@ type WorkspaceUsersSearch = {
 }
 export function WorkspaceUsers() {
   const { workspaceId }: WorkspaceUsersParams = useParams({ from: Route.id })
-  const search = useSearch({ from: Route.id }) satisfies WorkspaceUsersSearch
-  const navigate = useNavigate({ from: Route.id })
-
-  const page = search.page ?? 0
+  const { page } = Route.useSearch()
+  const navigate = Route.useNavigate()
 
   const { data, error } = useGetUsersFromWorkspace(
     workspaceId,
