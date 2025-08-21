@@ -12,81 +12,91 @@ import ImageUploadButton from '@/components/images/ImageUploadButton'
 import { PaginationResponse, ImageItem } from '@/lib/types'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from '@tanstack/react-router'
-import { useState } from 'react'
-import { WorkspaceResponseDTO } from 'generated'
+import { Route } from '../routes/workspaces/$workspaceId'
 
-//TODO: add edit workspace feature
+type WorkspaceParams = {
+  workspaceId: number
+}
 
 export function WorkspacePage() {
-  const params: WorkspaceResponseDTO = useParams({ from: '/workspaces/$workspaceId/' })
-
-  const initialPage = 1
-  const [page, setPage] = useState<number>(initialPage)
+  const { workspaceId }: WorkspaceParams = useParams({ from: Route.id })
+  const { page } = Route.useSearch()
+  const navigate = Route.useNavigate()
 
   //TODO: remove and replace with generated hooks
-  const { data, isLoading, isError, error } = useQuery<PaginationResponse>({
-    queryKey: ['images', params.id, page],
-    queryFn: () => fetchImages(params.id, page),
+  const { data } = useQuery<PaginationResponse>({
+    queryKey: ['images', workspaceId, page],
+    queryFn: () => fetchImages(workspaceId, page),
   })
-  if (isLoading) {
-    return <div>Loading images...</div>
-  }
 
-  if (isError) {
-    return <div>Error loading images: {error.message}</div>
-  }
   const totalPages = data?.totalPages || 0
+
+  const isFirstPage = data?.first
+  const isLastPage = data?.last
+
+  const handlePageChange = (newPage: number) => {
+    void navigate({
+      search: prev => ({ ...prev, page: newPage }),
+    })
+  }
 
   return (
     <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Workspace {params.id}</h1>
+      <h1 className="text-2xl font-bold">Workspace {workspaceId}</h1>
 
-      {/* Image Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {data?.content.map((img: ImageItem) => (
-          <ImageCard filename={img.filename} key={img.key} url={img.url}></ImageCard>
-        ))}
-      </div>
+      {!data?.content && (
+        <div className="flex flex-col items-center justify-center p-10 space-y-4 text-gray-500 border-2 border-dashed rounded-lg">
+          <p className="text-lg">No images found for this workspace.</p>
+          <p className="text-sm">Upload some pictures to get started!</p>
+        </div>
+      )}
+      {data?.content && (
+        <>
+          {/* Image Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {data.content.map((img: ImageItem) => (
+              <ImageCard filename={img.filename} key={img.key} url={img.url}></ImageCard>
+            ))}
+          </div>
 
-      {/* Pagination */}
-      {totalPages > 0 && (
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious
-                onClick={() => {
-                  setPage((p: number) => Math.max(1, p - 1))
-                }}
-                className={page === 1 ? 'pointer-events-none opacity-50' : ''}
-              />
-            </PaginationItem>
-            {Array.from({ length: totalPages }, (_, i) => {
-              const pageNumber = i + 1
-              return (
-                <PaginationItem key={pageNumber}>
+          {/* Pagination */}
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => {
+                    handlePageChange(Math.max(0, page - 1))
+                  }}
+                  className={isFirstPage ? 'pointer-events-none opacity-50' : ''}
+                />
+              </PaginationItem>
+
+              {Array.from({ length: totalPages }, (_, i) => (
+                <PaginationItem key={i}>
                   <PaginationLink
-                    isActive={page === pageNumber}
+                    isActive={page === i}
                     onClick={() => {
-                      setPage(pageNumber)
+                      handlePageChange(i)
                     }}
                   >
-                    {pageNumber}
+                    {i}
                   </PaginationLink>
                 </PaginationItem>
-              )
-            })}
-            <PaginationItem>
-              <PaginationNext
-                onClick={() => {
-                  setPage((p: number) => Math.min(totalPages, p + 1))
-                }}
-                className={page === totalPages ? 'pointer-events-none opacity-50' : ''}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+              ))}
+
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => {
+                    handlePageChange(Math.min(totalPages - 1, page + 1))
+                  }}
+                  className={isLastPage ? 'pointer-events-none opacity-50' : ''}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </>
       )}
-      <ImageUploadButton workspaceId={params.id}></ImageUploadButton>
+      <ImageUploadButton workspaceId={workspaceId}></ImageUploadButton>
     </div>
   )
 }
