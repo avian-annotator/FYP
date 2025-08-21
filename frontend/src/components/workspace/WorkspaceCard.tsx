@@ -11,11 +11,13 @@ import {
   AlertDialogHeader,
 } from '../ui/alert-dialog'
 import { AccessibleWorkspaceResponseDTO, useDeleteWorkspace } from '../../../generated'
+
 interface Props {
   workspace: AccessibleWorkspaceResponseDTO
 }
 
 export default function WorkspaceCard({ workspace }: Props) {
+  const navigate = useNavigate()
   const { mutate, error } = useDeleteWorkspace(
     workspace.id,
     {},
@@ -25,7 +27,6 @@ export default function WorkspaceCard({ workspace }: Props) {
       },
     },
   )
-  const navigate = useNavigate()
   return (
     <div className="flex justify-between items-center bg-gray-100 p-3 rounded-md shadow-sm">
       <div>
