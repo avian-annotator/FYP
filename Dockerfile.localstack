@@ -1,0 +1,22 @@
+# Dockerfile.localstack
+FROM localstack/localstack:latest
+
+USER root
+
+# Install dependencies for AWS CLI v2
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl unzip python3 python3-pip groff less bash \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install AWS CLI v2
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip" \
+    && unzip /tmp/awscliv2.zip -d /tmp \
+    && /tmp/aws/install \
+    && rm -rf /tmp/aws /tmp/awscliv2.zip
+
+# Pre-configure AWS credentials and default region
+RUN mkdir -p /root/.aws && \
+    echo -e "[default]\naws_access_key_id = test\naws_secret_access_key = test" > /root/.aws/credentials && \
+    echo -e "[default]\nregion = ap-southeast-2\noutput = json" > /root/.aws/config
+
+SHELL ["/bin/bash", "-c"]
