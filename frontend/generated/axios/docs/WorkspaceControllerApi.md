@@ -12,10 +12,10 @@ All URIs are relative to *http://localhost:8080*
 |[**editWorkspace**](#editworkspace) | **PATCH** /api/workspaces/{workspaceId} | |
 |[**generatePresignedDownloadUrlForImage**](#generatepresigneddownloadurlforimage) | **GET** /api/workspaces/{workspaceId}/images/{imageId} | |
 |[**generatePresignedDownloadUrlForImages**](#generatepresigneddownloadurlforimages) | **GET** /api/workspaces/{workspaceId}/images | |
-|[**generatePresignedUploadUrl**](#generatepresigneduploadurl) | **POST** /api/workspaces/{workspaceId}/images | |
 |[**getUsersFromWorkspace**](#getusersfromworkspace) | **GET** /api/workspaces/{workspaceId}/users | |
 |[**getWorkspaces**](#getworkspaces) | **GET** /api/workspaces | |
 |[**removeUserFromWorkspace**](#removeuserfromworkspace) | **DELETE** /api/workspaces/{workspaceId}/users/{userId} | |
+|[**uploadImage**](#uploadimage) | **POST** /api/workspaces/{workspaceId}/images | |
 
 # **addUserToWorkspace**
 > addUserToWorkspace(addUserToWorkspaceRequestBodyDTO)
@@ -451,60 +451,6 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **generatePresignedUploadUrl**
-> generatePresignedUploadUrl(createImageRequestBodyDTO)
-
-
-### Example
-
-```typescript
-import {
-    WorkspaceControllerApi,
-    Configuration,
-    CreateImageRequestBodyDTO
-} from './api';
-
-const configuration = new Configuration();
-const apiInstance = new WorkspaceControllerApi(configuration);
-
-let workspaceId: number; // (default to undefined)
-let createImageRequestBodyDTO: CreateImageRequestBodyDTO; //
-
-const { status, data } = await apiInstance.generatePresignedUploadUrl(
-    workspaceId,
-    createImageRequestBodyDTO
-);
-```
-
-### Parameters
-
-|Name | Type | Description  | Notes|
-|------------- | ------------- | ------------- | -------------|
-| **createImageRequestBodyDTO** | **CreateImageRequestBodyDTO**|  | |
-| **workspaceId** | [**number**] |  | defaults to undefined|
-
-
-### Return type
-
-void (empty response body)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: Not defined
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-|**200** | OK |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
 # **getUsersFromWorkspace**
 > PageWrapperUserResponseDTO getUsersFromWorkspace()
 
@@ -657,6 +603,60 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
+ - **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **uploadImage**
+> uploadImage()
+
+
+### Example
+
+```typescript
+import {
+    WorkspaceControllerApi,
+    Configuration,
+    UploadImageRequest
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new WorkspaceControllerApi(configuration);
+
+let workspaceId: number; // (default to undefined)
+let uploadImageRequest: UploadImageRequest; // (optional)
+
+const { status, data } = await apiInstance.uploadImage(
+    workspaceId,
+    uploadImageRequest
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **uploadImageRequest** | **UploadImageRequest**|  | |
+| **workspaceId** | [**number**] |  | defaults to undefined|
+
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
  - **Accept**: Not defined
 
 

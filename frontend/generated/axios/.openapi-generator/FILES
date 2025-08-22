@@ -1,6 +1,5 @@
 .gitignore
 .npmignore
-.openapi-generator-ignore
 api.ts
 base.ts
 common.ts
@@ -10,7 +9,6 @@ docs/AddUserToWorkspaceRequestBodyDTO.md
 docs/AdminControllerApi.md
 docs/AnnotationRequestParamDTO.md
 docs/AuthenticationControllerApi.md
-docs/CreateImageRequestBodyDTO.md
 docs/CreateUserRequestBodyDTO.md
 docs/CreateWorkspaceRequestBodyDTO.md
 docs/CurrentUserResponseDTO.md
@@ -20,12 +18,12 @@ docs/EditUserRequestBodyDTO.md
 docs/EditWorkspaceRequestBodyDTO.md
 docs/GetUsersFromWorkspaceRequestParamDTO.md
 docs/ImageResponseDTO.md
-docs/MediaType.md
 docs/PageWrapperAccessibleWorkspaceResponseDTO.md
 docs/PageWrapperImageResponseDTO.md
 docs/PageWrapperUserResponseDTO.md
 docs/Pageable.md
 docs/SortDTO.md
+docs/UploadImageRequest.md
 docs/UserResponseDTO.md
 docs/WorkspaceControllerApi.md
 docs/WorkspaceResponseDTO.md

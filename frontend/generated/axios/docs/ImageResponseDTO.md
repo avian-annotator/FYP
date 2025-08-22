@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 **url** | **string** |  | [default to undefined]
 **workspaceId** | **number** |  | [default to undefined]
 **fileName** | **string** |  | [default to undefined]
+**bucketKey** | **string** |  | [default to undefined]
 **annotations** | **{ [key: string]: any; }** |  | [optional] [default to undefined]
 
 ## Example
@@ -19,6 +20,7 @@ const instance: ImageResponseDTO = {
     url,
     workspaceId,
     fileName,
+    bucketKey,
     annotations,
 };
 ```

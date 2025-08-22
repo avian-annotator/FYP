@@ -1,21 +1,19 @@
-# CreateImageRequestBodyDTO
+# UploadImageRequest
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**fileName** | **string** |  | [default to undefined]
-**contentType** | [**MediaType**](MediaType.md) |  | [default to undefined]
+**file** | **File** |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { CreateImageRequestBodyDTO } from './api';
+import { UploadImageRequest } from './api';
 
-const instance: CreateImageRequestBodyDTO = {
-    fileName,
-    contentType,
+const instance: UploadImageRequest = {
+    file,
 };
 ```
 
