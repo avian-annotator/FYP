@@ -74,5 +74,4 @@ public class GlobalExceptionHandler {
     log.error(ex.getMessage());
     return ResponseEntity.internalServerError().body(ex.getMessage());
   }
-
 }
