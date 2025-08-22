@@ -1,5 +1,7 @@
 /node_modules
 
+/volume
+
 .env.**.local
 .env.local
 .DS_Store

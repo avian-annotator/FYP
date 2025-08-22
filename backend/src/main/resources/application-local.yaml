@@ -9,6 +9,18 @@ spring:
       hibernate:
         format_sql: true
         generate_statistics: true
+  cloud:
+    aws:
+      region:
+        static: ap-southeast-2
+      credentials:
+        access-key: test
+        secret-key: test
+
+s3:
+  endpoint: http://localstack-main:4566
+  bucket-name: avian-annotator-local
+
 springdoc:
   api-docs:
     enabled: true

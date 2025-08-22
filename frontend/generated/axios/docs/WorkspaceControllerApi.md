@@ -6,11 +6,16 @@ All URIs are relative to *http://localhost:8080*
 |------------- | ------------- | -------------|
 |[**addUserToWorkspace**](#addusertoworkspace) | **POST** /api/workspaces/{workspaceId}/users | |
 |[**createWorkspace**](#createworkspace) | **POST** /api/workspaces | |
+|[**deleteImage**](#deleteimage) | **DELETE** /api/workspaces/{workspaceId}/images/{imageId} | |
 |[**deleteWorkspace**](#deleteworkspace) | **DELETE** /api/workspaces/{workspaceId} | |
+|[**editImageDetails**](#editimagedetails) | **PATCH** /api/workspaces/{workspaceId}/images/{imageId} | |
 |[**editWorkspace**](#editworkspace) | **PATCH** /api/workspaces/{workspaceId} | |
+|[**generatePresignedDownloadUrlForImage**](#generatepresigneddownloadurlforimage) | **GET** /api/workspaces/{workspaceId}/images/{imageId} | |
+|[**generatePresignedDownloadUrlForImages**](#generatepresigneddownloadurlforimages) | **GET** /api/workspaces/{workspaceId}/images | |
 |[**getUsersFromWorkspace**](#getusersfromworkspace) | **GET** /api/workspaces/{workspaceId}/users | |
 |[**getWorkspaces**](#getworkspaces) | **GET** /api/workspaces | |
 |[**removeUserFromWorkspace**](#removeuserfromworkspace) | **DELETE** /api/workspaces/{workspaceId}/users/{userId} | |
+|[**uploadImage**](#uploadimage) | **POST** /api/workspaces/{workspaceId}/images | |
 
 # **addUserToWorkspace**
 > addUserToWorkspace(addUserToWorkspaceRequestBodyDTO)
@@ -117,6 +122,59 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **deleteImage**
+> deleteImage()
+
+
+### Example
+
+```typescript
+import {
+    WorkspaceControllerApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new WorkspaceControllerApi(configuration);
+
+let workspaceId: number; // (default to undefined)
+let imageId: string; // (default to undefined)
+
+const { status, data } = await apiInstance.deleteImage(
+    workspaceId,
+    imageId
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **workspaceId** | [**number**] |  | defaults to undefined|
+| **imageId** | [**string**] |  | defaults to undefined|
+
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **deleteWorkspace**
 > deleteWorkspace()
 
@@ -158,6 +216,63 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **editImageDetails**
+> EditImageDetailsResponseDTO editImageDetails(editImageRequestBodyDTO)
+
+
+### Example
+
+```typescript
+import {
+    WorkspaceControllerApi,
+    Configuration,
+    EditImageRequestBodyDTO
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new WorkspaceControllerApi(configuration);
+
+let workspaceId: number; // (default to undefined)
+let imageId: string; // (default to undefined)
+let editImageRequestBodyDTO: EditImageRequestBodyDTO; //
+
+const { status, data } = await apiInstance.editImageDetails(
+    workspaceId,
+    imageId,
+    editImageRequestBodyDTO
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **editImageRequestBodyDTO** | **EditImageRequestBodyDTO**|  | |
+| **workspaceId** | [**number**] |  | defaults to undefined|
+| **imageId** | [**string**] |  | defaults to undefined|
+
+
+### Return type
+
+**EditImageDetailsResponseDTO**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: */*
 
 
 ### HTTP response details
@@ -211,6 +326,121 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: application/json
+ - **Accept**: */*
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **generatePresignedDownloadUrlForImage**
+> ImageResponseDTO generatePresignedDownloadUrlForImage()
+
+
+### Example
+
+```typescript
+import {
+    WorkspaceControllerApi,
+    Configuration,
+    AnnotationRequestParamDTO
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new WorkspaceControllerApi(configuration);
+
+let workspaceId: number; // (default to undefined)
+let imageId: string; // (default to undefined)
+let requestParam: AnnotationRequestParamDTO; // (default to undefined)
+
+const { status, data } = await apiInstance.generatePresignedDownloadUrlForImage(
+    workspaceId,
+    imageId,
+    requestParam
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **workspaceId** | [**number**] |  | defaults to undefined|
+| **imageId** | [**string**] |  | defaults to undefined|
+| **requestParam** | **AnnotationRequestParamDTO** |  | defaults to undefined|
+
+
+### Return type
+
+**ImageResponseDTO**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: */*
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **generatePresignedDownloadUrlForImages**
+> PageWrapperImageResponseDTO generatePresignedDownloadUrlForImages()
+
+
+### Example
+
+```typescript
+import {
+    WorkspaceControllerApi,
+    Configuration,
+    AnnotationRequestParamDTO,
+    Pageable
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new WorkspaceControllerApi(configuration);
+
+let workspaceId: number; // (default to undefined)
+let requestParam: AnnotationRequestParamDTO; // (default to undefined)
+let pageable: Pageable; // (default to undefined)
+
+const { status, data } = await apiInstance.generatePresignedDownloadUrlForImages(
+    workspaceId,
+    requestParam,
+    pageable
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **workspaceId** | [**number**] |  | defaults to undefined|
+| **requestParam** | **AnnotationRequestParamDTO** |  | defaults to undefined|
+| **pageable** | **Pageable** |  | defaults to undefined|
+
+
+### Return type
+
+**PageWrapperImageResponseDTO**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
  - **Accept**: */*
 
 
@@ -373,6 +603,60 @@ No authorization required
 ### HTTP request headers
 
  - **Content-Type**: Not defined
+ - **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **uploadImage**
+> uploadImage()
+
+
+### Example
+
+```typescript
+import {
+    WorkspaceControllerApi,
+    Configuration,
+    UploadImageRequest
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new WorkspaceControllerApi(configuration);
+
+let workspaceId: number; // (default to undefined)
+let uploadImageRequest: UploadImageRequest; // (optional)
+
+const { status, data } = await apiInstance.uploadImage(
+    workspaceId,
+    uploadImageRequest
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **uploadImageRequest** | **UploadImageRequest**|  | |
+| **workspaceId** | [**number**] |  | defaults to undefined|
+
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
  - **Accept**: Not defined
 
 

@@ -1,4 +1,4 @@
-import { useCreateNewUser, useDeleteUser, useEditUser, useGetAllUsers, useGetCurrentUser, useAddUserToWorkspace, useCreateWorkspace, useDeleteWorkspace, useEditWorkspace, useGetUsersFromWorkspace, useGetWorkspaces, useRemoveUserFromWorkspace } from "./use-query-hooks";
+import { useCreateNewUser, useDeleteUser, useEditUser, useGetAllUsers, useGetCurrentUser, useAddUserToWorkspace, useCreateWorkspace, useDeleteImage, useDeleteWorkspace, useEditImageDetails, useEditWorkspace, useGeneratePresignedDownloadUrlForImage, useGeneratePresignedDownloadUrlForImages, useGetUsersFromWorkspace, useGetWorkspaces, useRemoveUserFromWorkspace, useUploadImage } from "./use-query-hooks";
 
-export { useCreateNewUser, useDeleteUser, useEditUser, useGetAllUsers, useGetCurrentUser, useAddUserToWorkspace, useCreateWorkspace, useDeleteWorkspace, useEditWorkspace, useGetUsersFromWorkspace, useGetWorkspaces, useRemoveUserFromWorkspace };
+export { useCreateNewUser, useDeleteUser, useEditUser, useGetAllUsers, useGetCurrentUser, useAddUserToWorkspace, useCreateWorkspace, useDeleteImage, useDeleteWorkspace, useEditImageDetails, useEditWorkspace, useGeneratePresignedDownloadUrlForImage, useGeneratePresignedDownloadUrlForImages, useGetUsersFromWorkspace, useGetWorkspaces, useRemoveUserFromWorkspace, useUploadImage };
 export type * from "./axios/api.ts";

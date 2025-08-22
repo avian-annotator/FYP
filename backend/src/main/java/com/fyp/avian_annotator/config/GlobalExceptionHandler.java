@@ -1,9 +1,6 @@
 package com.fyp.avian_annotator.config;
 
-import com.fyp.avian_annotator.exception.BadRequestException;
-import com.fyp.avian_annotator.exception.UnownedWorkspaceException;
-import com.fyp.avian_annotator.exception.UserNotFoundException;
-import com.fyp.avian_annotator.exception.WorkspaceNotFoundException;
+import com.fyp.avian_annotator.exception.*;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -21,13 +18,19 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(UserNotFoundException.class)
   public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException e) {
     log.error(e.getMessage());
-    return ResponseEntity.badRequest().body(e.getMessage());
+    return ResponseEntity.notFound().build();
   }
 
   @ExceptionHandler(WorkspaceNotFoundException.class)
   public ResponseEntity<String> handleWorkspaceUserNotFoundException(WorkspaceNotFoundException e) {
     log.error(e.getMessage());
-    return ResponseEntity.badRequest().body(e.getMessage());
+    return ResponseEntity.notFound().build();
+  }
+
+  @ExceptionHandler(NotAllowedException.class)
+  public ResponseEntity<String> handleNotAllowedException(NotAllowedException e) {
+    log.error(e.getMessage());
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
   }
 
   @ExceptionHandler(UnownedWorkspaceException.class)
@@ -38,12 +41,6 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(BadRequestException.class)
   public ResponseEntity<Void> handleBadRequestException(BadRequestException e) {
     return ResponseEntity.badRequest().build();
-  }
-
-  @ExceptionHandler(IllegalAccessException.class)
-  public ResponseEntity<String> handleIllegalAccessException(IllegalAccessException e) {
-    log.error(e.getMessage());
-    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -58,5 +55,16 @@ public class GlobalExceptionHandler {
         .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
 
     return ResponseEntity.badRequest().body(errors);
+  }
+
+  @ExceptionHandler(ImageNotFoundException.class)
+  public ResponseEntity<String> handleImageNotFoundException(ImageNotFoundException ex) {
+    return ResponseEntity.notFound().build();
+  }
+
+  @ExceptionHandler(ImageUploadException.class)
+  public ResponseEntity<String> handleImageUploadException(ImageUploadException ex) {
+    log.error(ex.getMessage());
+    return ResponseEntity.internalServerError().body(ex.getMessage());
   }
 }
