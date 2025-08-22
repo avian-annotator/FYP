@@ -165,7 +165,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getAllUsers**
-> Array<UserResponseDTO> getAllUsers()
+> PageWrapperUserResponseDTO getAllUsers()
 
 
 ### Example
@@ -173,22 +173,30 @@ No authorization required
 ```typescript
 import {
     AdminControllerApi,
-    Configuration
+    Configuration,
+    Pageable
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new AdminControllerApi(configuration);
 
-const { status, data } = await apiInstance.getAllUsers();
+let pageable: Pageable; // (default to undefined)
+
+const { status, data } = await apiInstance.getAllUsers(
+    pageable
+);
 ```
 
 ### Parameters
-This endpoint does not have any parameters.
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **pageable** | **Pageable** |  | defaults to undefined|
 
 
 ### Return type
 
-**Array<UserResponseDTO>**
+**PageWrapperUserResponseDTO**
 
 ### Authorization
 

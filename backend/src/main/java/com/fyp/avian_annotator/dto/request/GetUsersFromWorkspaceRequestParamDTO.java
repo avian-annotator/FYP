@@ -1,8 +1,6 @@
 package com.fyp.avian_annotator.dto.request;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-@Data
-public class GetUsersFromWorkspaceRequestParamDTO {
-  Boolean excludeExisting;
-}
+public record GetUsersFromWorkspaceRequestParamDTO(
+    @JsonInclude(JsonInclude.Include.NON_NULL) Boolean excludeExisting) {}

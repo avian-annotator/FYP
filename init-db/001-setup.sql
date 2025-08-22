@@ -19,15 +19,16 @@ CREATE TABLE IF NOT EXISTS workspace (
     id BIGSERIAL PRIMARY KEY,
     owner_id BIGINT,
     name VARCHAR(255),
+    bucket_prefix CHAR(16),
     CONSTRAINT fk_workspace_owner FOREIGN KEY (owner_id) REFERENCES app_user(id)
 );
 
 -- Create the image table
 CREATE TABLE IF NOT EXISTS image (
-    url TEXT PRIMARY KEY,
+    bucket_identifier CHAR(16) PRIMARY KEY,
     workspace_id BIGINT,
-    filename VARCHAR(255),
-    annotations TEXT,
+    file_name VARCHAR(255),
+    annotations JSONB,
     CONSTRAINT fk_image_workspace FOREIGN KEY (workspace_id) REFERENCES workspace(id)
 );
 

@@ -9,29 +9,28 @@ import {
 import { CreateWorkspaceButton } from '@/components/workspace/CreateWorkspaceButton'
 import WorkspaceCard from '@/components/workspace/WorkspaceCard'
 import { useGetWorkspaces, AccessibleWorkspaceResponseDTO } from '../../generated'
-import { useState, useEffect } from 'react'
+import { Route } from '../routes/workspaces/'
 
 export function WorkspacesHome() {
-  const [page, setPage] = useState<number>(0)
+  const { page } = Route.useSearch()
+  const navigate = Route.useNavigate()
 
   // Fetch workspaces with the current page
-  const { data, isLoading, error, refetch } = useGetWorkspaces({ size: 4, page })
+  const { data, isLoading, error } = useGetWorkspaces({ size: 4, page })
 
   const workspaces = data?.data.content === undefined ? [] : data.data.content
   const totalPages = data?.data.totalPages === undefined ? 0 : data.data.totalPages
 
-  useEffect(() => {
-    void refetch()
-  }, [page])
-
   if (isLoading) return <p>Loading...</p>
   if (error) return <p>Error loading workspaces</p>
 
-  const isFirstPage = page === 0
-  const isLastPage = page === totalPages - 1
+  const isFirstPage = data?.data.first
+  const isLastPage = data?.data.last
 
   const handlePageChange = (newPage: number) => {
-    setPage(newPage)
+    void navigate({
+      search: prev => ({ ...prev, page: newPage }),
+    })
   }
 
   return (
@@ -65,7 +64,7 @@ export function WorkspacesHome() {
                     handlePageChange(i)
                   }}
                 >
-                  {i + 1}
+                  {i}
                 </PaginationLink>
               </PaginationItem>
             ))}

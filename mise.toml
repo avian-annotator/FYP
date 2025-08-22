@@ -1,4 +1,6 @@
 [tools]
+aws = "latest"
 bun = "latest"
 java = "21"
 maven = "latest"
+node = "latest"

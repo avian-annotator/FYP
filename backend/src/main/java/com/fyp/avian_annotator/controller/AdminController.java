@@ -1,15 +1,14 @@
 package com.fyp.avian_annotator.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fyp.avian_annotator.dal.entity.User;
 import com.fyp.avian_annotator.dto.request.CreateUserRequestBodyDTO;
 import com.fyp.avian_annotator.dto.request.EditUserRequestBodyDTO;
+import com.fyp.avian_annotator.dto.response.PageWrapper;
 import com.fyp.avian_annotator.dto.response.UserResponseDTO;
 import com.fyp.avian_annotator.service.AdminService;
 import jakarta.validation.Valid;
 import java.net.URI;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -21,44 +20,35 @@ public class AdminController {
 
   private final AdminService adminService;
 
-  private final ObjectMapper mapper;
-
   @PostMapping("/users")
   public ResponseEntity<UserResponseDTO> createNewUser(
       @RequestBody @Valid CreateUserRequestBodyDTO request) {
 
-    User createdUser = adminService.createUser(request.username(), request.password());
+    var createdUser = adminService.createUser(request.username(), request.password());
 
     URI location =
         ServletUriComponentsBuilder.fromCurrentRequest()
             .path("/{id}")
-            .buildAndExpand(createdUser.getId())
+            .buildAndExpand(createdUser.id())
             .toUri();
 
-    UserResponseDTO responseDTO = mapper.convertValue(createdUser, UserResponseDTO.class);
-
-    return ResponseEntity.created(location).body(responseDTO);
+    return ResponseEntity.created(location).body(createdUser);
   }
 
   @GetMapping("/users")
-  public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+  public ResponseEntity<PageWrapper<UserResponseDTO>> getAllUsers(Pageable pageable) {
 
-    List<User> users = adminService.getAllUsers();
-
-    return ResponseEntity.ok(
-        users.stream().map(user -> mapper.convertValue(user, UserResponseDTO.class)).toList());
+    return ResponseEntity.ok(new PageWrapper<UserResponseDTO>(adminService.getAllUsers(pageable)));
   }
 
   @PatchMapping("/users/{id}")
   public ResponseEntity<UserResponseDTO> editUser(
       @PathVariable Long id, @RequestBody @Valid EditUserRequestBodyDTO request) {
 
-    User editedUser =
+    var editedUserDTO =
         adminService.editUser(id, request.username(), request.password(), request.role());
 
-    UserResponseDTO responseDTO = mapper.convertValue(editedUser, UserResponseDTO.class);
-
-    return ResponseEntity.ok(responseDTO);
+    return ResponseEntity.ok(editedUserDTO);
   }
 
   @DeleteMapping("/users/{id}")

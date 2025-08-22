@@ -1,21 +1,21 @@
 package com.fyp.avian_annotator.service.impl;
 
-import com.fyp.avian_annotator.dal.entity.User;
-import com.fyp.avian_annotator.dal.entity.Workspace;
-import com.fyp.avian_annotator.dal.entity.WorkspaceUser;
-import com.fyp.avian_annotator.dal.entity.WorkspaceUserId;
+import com.fyp.avian_annotator.dal.entity.*;
+import com.fyp.avian_annotator.dal.repository.ImageRepository;
 import com.fyp.avian_annotator.dal.repository.UserRepository;
 import com.fyp.avian_annotator.dal.repository.WorkspaceRepository;
 import com.fyp.avian_annotator.dal.repository.WorkspaceUserRepository;
 import com.fyp.avian_annotator.dto.response.AccessibleWorkspaceResponseDTO;
 import com.fyp.avian_annotator.dto.response.UserResponseDTO;
 import com.fyp.avian_annotator.dto.response.WorkspaceResponseDTO;
-import com.fyp.avian_annotator.exception.BadRequestException;
+import com.fyp.avian_annotator.exception.NotAllowedException;
 import com.fyp.avian_annotator.exception.UnownedWorkspaceException;
 import com.fyp.avian_annotator.exception.UserNotFoundException;
 import com.fyp.avian_annotator.exception.WorkspaceNotFoundException;
+import com.fyp.avian_annotator.service.S3Service;
 import com.fyp.avian_annotator.service.WorkspaceService;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -29,6 +29,8 @@ public class WorkspaceServiceImpl implements WorkspaceService {
   private final WorkspaceRepository workspaceRepository;
   private final WorkspaceUserRepository workspaceUserRepository;
   private final UserRepository userRepository;
+  private final S3Service s3Service;
+  private final ImageRepository imageRepository;
 
   @Override
   public WorkspaceResponseDTO createUserWorkspace(Long userId, String name) {
@@ -36,6 +38,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 
     Workspace newWorkspace = Workspace.builder().owner(user).name(name).build();
+    // TODO: Send request to S3 to create a bucket, retrying if the generated name is already taken
 
     WorkspaceUser newWorkspaceUser = new WorkspaceUser(newWorkspace, user);
     newWorkspace.getWorkspaceUsers().add(newWorkspaceUser);
@@ -70,13 +73,17 @@ public class WorkspaceServiceImpl implements WorkspaceService {
   @Transactional
   @Override
   public void deleteWorkspace(Long ownerId, Long workspaceId) {
-    workspaceRepository
-        .findByIdAndOwnerId(workspaceId, ownerId)
-        .ifPresentOrElse(
-            workspaceRepository::delete,
-            () -> {
-              throw new WorkspaceNotFoundException(workspaceId);
-            });
+    Workspace workspace =
+        workspaceRepository
+            .findByIdAndOwnerId(workspaceId, ownerId)
+            .orElseThrow(() -> new WorkspaceNotFoundException(workspaceId));
+
+    List<Image> images = imageRepository.findByWorkspaceId(workspace.getId());
+
+    images.forEach(
+        image -> s3Service.deleteObject(workspace.getBucketPrefix() + image.getBucketIdentifier()));
+
+    workspaceRepository.delete(workspace);
   }
 
   @Override
@@ -111,7 +118,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     try {
       workspaceUserRepository.deleteById(new WorkspaceUserId(workspaceId, toRemoveUserId));
     } catch (EmptyResultDataAccessException e) {
-      throw new BadRequestException("User ID to be removed does not exist");
+      throw new UserNotFoundException(toRemoveUserId);
     }
   }
 
@@ -148,7 +155,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     boolean alreadyAssociated =
         workspaceUserRepository.existsById(new WorkspaceUserId(workspaceId, toAddUser.getId()));
     if (alreadyAssociated) {
-      throw new BadRequestException("User is already in the workspace");
+      throw new NotAllowedException();
     }
   }
 

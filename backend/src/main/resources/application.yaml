@@ -34,3 +34,6 @@ logging:
       springframework: INFO
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %level - %msg%n"
+
+
+

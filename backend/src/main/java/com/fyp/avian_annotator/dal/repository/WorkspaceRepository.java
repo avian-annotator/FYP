@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
   Optional<Workspace> findByIdAndOwnerId(Long id, Long ownerId);
 
-  Optional<Workspace> findByOwnerIdAndName(Long ownerId, String name);
+  Optional<Workspace> findByIdAndWorkspaceUsers_UserId(Long workspaceId, Long userId);
 
   @Query(
       """
