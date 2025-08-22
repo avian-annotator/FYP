@@ -8,6 +8,7 @@ import com.fyp.avian_annotator.exception.UserNotFoundException;
 import com.fyp.avian_annotator.service.MeService;
 import com.fyp.avian_annotator.utils.UserRole;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +44,8 @@ public class MeServiceImpl implements MeService {
 
   @Override
   public void deleteMe(Long id) {
-    User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+    User user =
+        userRepository.findById(id).orElseThrow(() -> new EmptyResultDataAccessException(1));
     userRepository.deleteById(id);
   }
 }

@@ -7,6 +7,7 @@ import com.fyp.avian_annotator.exception.WorkspaceNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -21,7 +22,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(UserNotFoundException.class)
   public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException e) {
     log.error(e.getMessage());
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    return ResponseEntity.badRequest().body(e.getMessage());
   }
 
   @ExceptionHandler(WorkspaceNotFoundException.class)
@@ -58,5 +59,11 @@ public class GlobalExceptionHandler {
         .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
 
     return ResponseEntity.badRequest().body(errors);
+  }
+
+  @ExceptionHandler(EmptyResultDataAccessException.class)
+  public ResponseEntity<String> handleUnfoundEntityException(EmptyResultDataAccessException e) {
+    log.error(e.getMessage());
+    return ResponseEntity.notFound().build();
   }
 }
