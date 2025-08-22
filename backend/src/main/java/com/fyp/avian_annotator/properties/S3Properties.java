@@ -8,6 +8,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 @ConfigurationProperties(prefix = "s3")
 public class S3Properties {
-    private String bucketName = "";
-    private String endpoint = "";
+  private String bucketName = "";
+  private String endpoint = "";
 }

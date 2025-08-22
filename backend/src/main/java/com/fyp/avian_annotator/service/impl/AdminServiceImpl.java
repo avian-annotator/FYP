@@ -20,58 +20,58 @@ import org.springframework.stereotype.Service;
 @Service
 public class AdminServiceImpl implements AdminService {
 
-    private final ObjectMapper mapper;
+  private final ObjectMapper mapper;
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+  private final UserRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
 
-    @Transactional
-    @Override
-    public UserResponseDTO createUser(String userName, String password) {
-        if (userRepository.findByUsername(userName).isPresent()) {
-            throw new BadRequestException("Username already exists");
-        }
-        String hashedPassword = passwordEncoder.encode(password);
-        User user = User.builder().username(userName).passwordHash(hashedPassword).build();
+  @Transactional
+  @Override
+  public UserResponseDTO createUser(String userName, String password) {
+    if (userRepository.findByUsername(userName).isPresent()) {
+      throw new BadRequestException("Username already exists");
+    }
+    String hashedPassword = passwordEncoder.encode(password);
+    User user = User.builder().username(userName).passwordHash(hashedPassword).build();
 
-        return mapper.convertValue(userRepository.save(user), UserResponseDTO.class);
+    return mapper.convertValue(userRepository.save(user), UserResponseDTO.class);
+  }
+
+  @Override
+  public Page<UserResponseDTO> getAllUsers(Pageable pageable) {
+    return userRepository
+        .findAll(pageable)
+        .map(user -> mapper.convertValue(user, UserResponseDTO.class));
+  }
+
+  @Override
+  public UserResponseDTO editUser(Long id, String userName, String password, UserRole role) {
+
+    User userEntity = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+
+    if (userName != null
+        && userRepository.findByUsername(userName).filter(u -> !u.getId().equals(id)).isPresent()) {
+      throw new BadRequestException("Username already exists");
     }
 
-    @Override
-    public Page<UserResponseDTO> getAllUsers(Pageable pageable) {
-        return userRepository
-                .findAll(pageable)
-                .map(user -> mapper.convertValue(user, UserResponseDTO.class));
+    com.fyp.avian_annotator.model.User userModel =
+        mapper.convertValue(userEntity, com.fyp.avian_annotator.model.User.class);
+
+    userModel.update(userName, password, passwordEncoder, role);
+
+    User updatedEntity = userModel.toEntity(userEntity);
+
+    return mapper.convertValue(userRepository.save(updatedEntity), UserResponseDTO.class);
+  }
+
+  @Transactional
+  @Override
+  public void deleteUser(Long id) {
+    // TODO: delete the buckets items, and then the bucket itself
+    try {
+      userRepository.deleteById(id);
+    } catch (EmptyResultDataAccessException e) {
+      throw new UserNotFoundException(id);
     }
-
-    @Override
-    public UserResponseDTO editUser(Long id, String userName, String password, UserRole role) {
-
-        User userEntity = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-
-        if (userName != null
-                && userRepository.findByUsername(userName).filter(u -> !u.getId().equals(id)).isPresent()) {
-            throw new BadRequestException("Username already exists");
-        }
-
-        com.fyp.avian_annotator.model.User userModel =
-                mapper.convertValue(userEntity, com.fyp.avian_annotator.model.User.class);
-
-        userModel.update(userName, password, passwordEncoder, role);
-
-        User updatedEntity = userModel.toEntity(userEntity);
-
-        return mapper.convertValue(userRepository.save(updatedEntity), UserResponseDTO.class);
-    }
-
-    @Transactional
-    @Override
-    public void deleteUser(Long id) {
-        // TODO: delete the buckets items, and then the bucket itself
-        try {
-            userRepository.deleteById(id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new UserNotFoundException(id);
-        }
-    }
+  }
 }
