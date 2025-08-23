@@ -50,9 +50,13 @@ export function WorkspacePage() {
       {imageData && (
         <>
           {/* Image Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {imageData.map((img: ImageResponseDTO) => (
-              <ImageCard key={img.bucketKey} fileName={img.fileName} url={img.url}></ImageCard>
+              <ImageCard
+                img={img}
+                key={img.bucketKey}
+                onDeleteSuccess={() => void refetch()}
+              ></ImageCard>
             ))}
           </div>
 
