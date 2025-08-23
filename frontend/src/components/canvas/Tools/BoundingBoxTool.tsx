@@ -24,6 +24,7 @@ const BoundingBoxTool = (props: CanvasToolProps): CanvasTool => {
         fill="rgba(0, 123, 255, 0.1)"
         key={stageRef.current?.children[0].children.length ?? 0} //hard coded [0]
         id={`stage.${String(stageRef.current?.children[0].children.length ?? 0)}`}
+        draggable
       />
     )
     props.addToStage(rect)

@@ -1,4 +1,4 @@
-import { ChangeEvent, SyntheticEvent, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { SyntheticEvent, useEffect, useRef, useState } from 'react'
 import { JSX } from 'react/jsx-runtime'
 import Konva from 'konva'
 import { Stage, Layer } from 'react-konva'
