@@ -11,15 +11,17 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from '@/components/ui/alert-dialog'
-//TODO replace with generated type
-import { ImageItem } from '@/lib/types'
+type ImageCardParams = {
+  fileName: string
+  url: string
+}
 
-export function ImageCard({ filename, url }: ImageItem) {
+export function ImageCard({ fileName, url }: ImageCardParams) {
   //TODO: backend endpoints not created yet, need to update when hooks are made
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
 
-  const navigateTo = `annotate/${filename}`
+  const navigateTo = `annotate/${fileName}`
 
   const onConfirm = () => {
     setOpen(false)
@@ -44,8 +46,8 @@ export function ImageCard({ filename, url }: ImageItem) {
         }}
       >
         <CardContent className="p-2 flex flex-col items-center">
-          <img src={url} alt={filename} className="w-full h-32 object-cover rounded" />
-          <p className="mt-1 text-sm font-semibold">{filename}</p>
+          <img src={url} alt={fileName} className="w-full h-32 object-cover rounded" />
+          <p className="mt-1 text-sm font-semibold">{fileName}</p>
         </CardContent>
       </Card>
 
@@ -54,7 +56,7 @@ export function ImageCard({ filename, url }: ImageItem) {
           <AlertDialogHeader>
             <AlertDialogTitle>Confirm Annotation Selection</AlertDialogTitle>
             <AlertDialogDescription>
-              Do you want to annotate image <strong>{filename}</strong>?
+              Do you want to annotate image <strong>{fileName}</strong>?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

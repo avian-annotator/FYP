@@ -622,19 +622,18 @@ No authorization required
 ```typescript
 import {
     WorkspaceControllerApi,
-    Configuration,
-    UploadImageRequest
+    Configuration
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new WorkspaceControllerApi(configuration);
 
 let workspaceId: number; // (default to undefined)
-let uploadImageRequest: UploadImageRequest; // (optional)
+let file: File; // (default to undefined)
 
 const { status, data } = await apiInstance.uploadImage(
     workspaceId,
-    uploadImageRequest
+    file
 );
 ```
 
@@ -642,8 +641,8 @@ const { status, data } = await apiInstance.uploadImage(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **uploadImageRequest** | **UploadImageRequest**|  | |
 | **workspaceId** | [**number**] |  | defaults to undefined|
+| **file** | [**File**] |  | defaults to undefined|
 
 
 ### Return type
@@ -656,7 +655,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: multipart/form-data
  - **Accept**: Not defined
 
 

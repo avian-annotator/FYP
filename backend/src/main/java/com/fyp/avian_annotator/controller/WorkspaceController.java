@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -105,7 +106,7 @@ public class WorkspaceController {
                 userDetails.getId(), workspaceId, param.excludeExisting(), pageable)));
   }
 
-  @PostMapping("/{workspaceId}/images")
+  @PostMapping(path = "/{workspaceId}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<Void> uploadImage(
       @AuthenticationPrincipal CustomUserDetails userDetails,
       @PathVariable Long workspaceId,
