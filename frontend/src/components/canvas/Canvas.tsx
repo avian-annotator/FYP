@@ -1,4 +1,4 @@
-import { SyntheticEvent, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { ChangeEvent, SyntheticEvent, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { JSX } from 'react/jsx-runtime'
 import Konva from 'konva'
 import { Stage, Layer } from 'react-konva'
@@ -28,30 +28,27 @@ interface CanvasToolFunctionProps {
 const Canvas = () => {
   const stageRef = useRef<Konva.Stage>(null)
   const [stageElements, setStageElements] = useState<JSX.Element[]>([])
+  const addToStage = (el: JSX.Element) => {
+    setStageElements(p => p.concat(el))
+  }
   
   const [isDragging, setDragging] = useState<boolean>(false)
   function dragging(val?:undefined): boolean
   function dragging(val:boolean): void
   function dragging(val?:boolean): boolean | void {return val===undefined ? isDragging : setDragging(val)}
 
-  const [isBoundingBoxToolActive, setIsBoundingBoxToolActive] = useState<boolean>(true)
-  const toggleBoundingBoxToolActive = () =>setIsBoundingBoxToolActive(prev=>!prev)
-
-  const addToStage = (el: JSX.Element) => {
-    setStageElements(p => p.concat(el))
-  }
-
-  const bbTool = BoundingBoxTool({stageRef, addToStage})
-  const smTool = SelectMoveTool({stageRef, addToStage})
-  const [activeTool, setActiveTool] = useState<CanvasTool>(bbTool)
-
+  const tools:CanvasTool[] = [
+    BoundingBoxTool({stageRef, addToStage}),
+    SelectMoveTool({stageRef, addToStage}),
+  ]
+  const [activeTool, setActiveTool] = useState<CanvasTool>(tools[0])
+  const [toolIndex, setToolIndex] = useState<number>(0)
   useEffect(()=>{
-    if (isBoundingBoxToolActive) {
-      setActiveTool(bbTool)
-    } else {
-      setActiveTool(smTool)
+    if (!Number.isNaN(toolIndex) && toolIndex < tools.length && toolIndex >= 0) {
+      setActiveTool(tools[toolIndex])
     }
-  }, [isBoundingBoxToolActive])
+  }, [toolIndex])
+
  
   const currentImage = mockImage // props.image
   const imgRef = useRef<HTMLImageElement>(null)
@@ -59,7 +56,7 @@ const Canvas = () => {
   const handleImgLoad = (e:SyntheticEvent<HTMLImageElement, Event>) => {
     setStageDim({w: e.currentTarget.naturalWidth, h: e.currentTarget.naturalHeight})
   }
-
+  
   return (
     <div className="relative w-dvw h-dvh bg-[#f0f0f0] select-none border-gray-700 border-[0.2rem]">
       <img className="absolute" src={currentImage} ref={imgRef} onLoad={handleImgLoad}/>
@@ -74,8 +71,8 @@ const Canvas = () => {
         <Layer>{stageElements}</Layer>
       </Stage>
       <span className='absolute border-black border-[0.1rem] rounded-sm px-[0.4rem] z-10'>
-        <input type="checkbox" defaultChecked={isBoundingBoxToolActive} onChange={toggleBoundingBoxToolActive}/>
-        <span className='pl-[0.2rem]'>Using: {activeTool.toolName}</span>
+        <input className="w-[1rem] border-black border-[0.1rem] m-[0.1rem] text-center" type="text" onChange={(e)=>setToolIndex(Number(e.target.value))}/>
+        <span className='pl-[0.2rem]'>Using: {activeTool.toolName}<br/>Enter a number from 0 to {tools.length-1}</span>
       </span>
     </div>
   )
