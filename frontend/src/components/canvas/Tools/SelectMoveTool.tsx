@@ -49,7 +49,7 @@ const BoundingBoxTool = (props: CanvasToolProps): CanvasTool => {
     funcProps.dragging(false)
   }
 
-  const toolName = "Bounding Box Creator"
+  const toolName = "Select and Move Tool"
 
   return {
     handleMouseDown: handleMouseDown,
