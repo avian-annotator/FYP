@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from 'react'
+import { SyntheticEvent, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { JSX } from 'react/jsx-runtime'
 import Konva from 'konva'
 import { Stage, Layer } from 'react-konva'
 import BoundingBoxTool from './Tools/BoundingBoxTool'
 import SelectMoveTool from './Tools/SelectMoveTool'
+import mockImage from '../../assets/mock-image.jpg'
 
 interface CanvasTool {
   handleMouseMove: (props: CanvasToolFunctionProps) => void
@@ -22,6 +23,8 @@ interface CanvasToolFunctionProps {
   dragging:  { (val?: undefined): boolean; (val: boolean): void; }
 }
 
+
+// TODO: add prop with function to change image
 const Canvas = () => {
   const stageRef = useRef<Konva.Stage>(null)
   const [stageElements, setStageElements] = useState<JSX.Element[]>([])
@@ -49,23 +52,31 @@ const Canvas = () => {
       setActiveTool(smTool)
     }
   }, [isBoundingBoxToolActive])
-  // add tool switcher
+ 
+  const currentImage = mockImage // props.image
+  const imgRef = useRef<HTMLImageElement>(null)
+  const [{w:stageWidth, h:stageHeight}, setStageDim] = useState<{w: number, h: number}>({w:0,h:0})
+  const handleImgLoad = (e:SyntheticEvent<HTMLImageElement, Event>) => {
+    setStageDim({w: e.currentTarget.naturalWidth, h: e.currentTarget.naturalHeight})
+  }
+
   return (
     <div className="relative w-dvw h-dvh bg-[#f0f0f0] select-none border-gray-700 border-[0.2rem]">
-      <span className='absolute border-black border-[0.1rem] rounded-sm px-[0.4rem] z-10'>
-        <input type="checkbox" defaultChecked={isBoundingBoxToolActive} onChange={toggleBoundingBoxToolActive}/>
-        <span className='pl-[0.2rem]'>Using: {activeTool.toolName}</span>
-      </span>
+      <img className="absolute" src={currentImage} ref={imgRef} onLoad={handleImgLoad}/>
       <Stage
         ref={stageRef}
-        width={window.innerWidth}
-        height={window.innerHeight}
+        width={stageWidth}
+        height={stageHeight}
         onMouseDown={e=>activeTool.handleMouseDown({e, dragging})}
         onMouseMove={e=>activeTool.handleMouseMove({e, dragging})}
         onMouseUp={e=>activeTool.handleMouseUp({e, dragging})}
       >
         <Layer>{stageElements}</Layer>
       </Stage>
+      <span className='absolute border-black border-[0.1rem] rounded-sm px-[0.4rem] z-10'>
+        <input type="checkbox" defaultChecked={isBoundingBoxToolActive} onChange={toggleBoundingBoxToolActive}/>
+        <span className='pl-[0.2rem]'>Using: {activeTool.toolName}</span>
+      </span>
     </div>
   )
 }
