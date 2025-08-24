@@ -1,16 +1,20 @@
 import { useRef } from 'react'
-import { CanvasTool, CanvasToolFunctionProps, CanvasToolProps } from '../Canvas'
+import { CanvasTool, CanvasToolProps } from '../Canvas'
 import Konva from 'konva'
 import { getColor, getBackgroundColor } from '../CanvasUtils'
-import BoundingBox from '../Components/BoundingBox'
+import BoundingBox from '../Objects/BoundingBox'
+
+type BoundingBoxFuncExtra = {
+  dragging: { (val?: undefined): boolean; (val: boolean): void; }
+}
 
 const BoundingBoxTool = (props: CanvasToolProps): CanvasTool => {
   const stageRef = props.stageRef
   const rectRef = useRef<Konva.Rect>(null)
 
-  const handleMouseDown = (funcProps: CanvasToolFunctionProps) => {
+  const handleMouseDown = (_: Konva.KonvaEventObject<MouseEvent>, extra: BoundingBoxFuncExtra) => {
     // create konva rectangle
-    funcProps.dragging(true)
+    extra.dragging(true)
     const pos = stageRef.current?.getPointerPosition()
     const rect = <BoundingBox
       initialPos={{ x: pos?.x ?? 0, y: pos?.y ?? 0 }}
@@ -20,24 +24,24 @@ const BoundingBoxTool = (props: CanvasToolProps): CanvasTool => {
     props.addToStage(rect)
   }
 
-  const handleMouseMove = (funcProps:CanvasToolFunctionProps) => {
+  const handleMouseMove = (_: Konva.KonvaEventObject<MouseEvent>, extra: BoundingBoxFuncExtra) => {
     // scale the konva rectangle
     const pos = stageRef.current?.getPointerPosition()
     //console.log(pos, funcProps.dragging())
-    if (funcProps.dragging() && rectRef.current) {
+    if (extra.dragging() && rectRef.current) {
       rectRef.current.width((pos?.x ?? 0) - rectRef.current.x())
       rectRef.current.height((pos?.y ?? 0) - rectRef.current.y())
     }
   }
 
-  const handleMouseUp = (funcProps:CanvasToolFunctionProps) => {
+  const handleMouseUp = (_: Konva.KonvaEventObject<MouseEvent>, extra: BoundingBoxFuncExtra) => {
     // stop scaling and add colour
-    if (funcProps.dragging() && rectRef.current) {
+    if (extra.dragging() && rectRef.current) {
       const id = Number(rectRef.current.id().slice(6))
       rectRef.current.fill(getBackgroundColor(id))
       rectRef.current.stroke(getColor(id))
     }
-    funcProps.dragging(false)
+    extra.dragging(false)
   }
 
   const toolName = "Bounding Box Creator"
@@ -46,7 +50,8 @@ const BoundingBoxTool = (props: CanvasToolProps): CanvasTool => {
     handleMouseDown: handleMouseDown,
     handleMouseUp: handleMouseUp,
     handleMouseMove: handleMouseMove,
-    toolName: toolName
+    toolName: toolName,
+    handleClick: ()=>{},
   } as CanvasTool
 }
 export default BoundingBoxTool
