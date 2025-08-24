@@ -11,6 +11,7 @@ import { ImageUploadButton } from '@/components/images/ImageUploadButton'
 import { useParams } from '@tanstack/react-router'
 import { Route } from '../routes/workspaces/$workspaceId'
 import { ImageResponseDTO, useGeneratePresignedDownloadUrlForImages } from '../../generated'
+import { ImageExportButton } from '@/components/images/ImageExportButton'
 type WorkspaceParams = {
   workspaceId: number
 }
@@ -41,13 +42,13 @@ export function WorkspacePage() {
     <div className="p-6 space-y-6">
       <h1 className="text-2xl font-bold">Workspace {workspaceId}</h1>
 
-      {!imageData && (
+      {imageData?.length === 0 && (
         <div className="flex flex-col items-center justify-center p-10 space-y-4 text-gray-500 border-2 border-dashed rounded-lg">
           <p className="text-lg">No images found for this workspace.</p>
           <p className="text-sm">Upload some pictures to get started!</p>
         </div>
       )}
-      {imageData && (
+      {imageData && imageData.length > 0 && (
         <>
           {/* Image Grid */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
@@ -101,6 +102,7 @@ export function WorkspacePage() {
         workspaceId={workspaceId}
         onUploadSuccess={() => void refetch()}
       ></ImageUploadButton>
+      <ImageExportButton workspaceId={workspaceId}></ImageExportButton>
     </div>
   )
 }
