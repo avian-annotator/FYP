@@ -1,11 +1,11 @@
 import Konva from 'konva'
 import { Rect } from 'react-konva'
 import { RefObject, useState } from 'react'
+import { CanvasObjectProps } from '../Canvas'
 
-interface BoundingBoxProps {
+interface BoundingBoxProps extends CanvasObjectProps{
     initialPos: {x: number, y: number}
     ref: RefObject<null | Konva.Rect>
-    id: number
 }
 
 const BoundingBox = (props: BoundingBoxProps) => {
@@ -22,12 +22,10 @@ const BoundingBox = (props: BoundingBoxProps) => {
             fill="rgba(0, 123, 255, 0.1)"
             key={props.id}
             id={`stage.${String(props.id)}`}
-            draggable
             onDragEnd={e=>setPos({x:e.target.x(),y:e.target.y()})}
         />
     )
 }
-
 
 export default BoundingBox
 export type { BoundingBoxProps }

@@ -1,27 +1,32 @@
-import { useRef } from 'react'
-import { CanvasTool, CanvasToolFunctionProps, CanvasToolProps } from '../Canvas'
+import { CanvasTool,  CanvasToolProps } from '../Canvas'
 import Konva from 'konva'
 
-const BoundingBoxTool = (props: CanvasToolProps): CanvasTool => {
-  const stageRef = props.stageRef
-  const rectRef = useRef<Konva.Rect>(null)
+type SelectMoveFuncExtra = {
+  handleCanvasSelect: (shape?: Konva.Shape) => void
+}
 
-  const handleMouseDown = (funcProps: CanvasToolFunctionProps) => {
-  }
+const SelectMoveTool = (_: CanvasToolProps): CanvasTool => {
 
-  const handleMouseMove = (funcProps:CanvasToolFunctionProps) => {
-  }
-
-  const handleMouseUp = (funcProps:CanvasToolFunctionProps) => {
+  const handleClick = (e: Konva.KonvaEventObject<MouseEvent>, extra: SelectMoveFuncExtra) => {
+    // left click
+    if (e.evt.button === 0 ) {
+      if (e.target instanceof Konva.Shape) {
+        e.target.setDraggable(true)
+        extra.handleCanvasSelect(e.target)
+      } else {
+        extra.handleCanvasSelect()
+      }
+    }
   }
 
   const toolName = "Select and Move Tool"
 
   return {
-    handleMouseDown: handleMouseDown,
-    handleMouseUp: handleMouseUp,
-    handleMouseMove: handleMouseMove,
+    handleMouseDown: ()=>{},
+    handleMouseUp: ()=>{},
+    handleMouseMove: ()=>{},
+    handleClick: handleClick,
     toolName: toolName
   } as CanvasTool
 }
-export default BoundingBoxTool
+export default SelectMoveTool
