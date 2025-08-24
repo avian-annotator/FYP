@@ -1,8 +1,8 @@
 import { useRef } from 'react'
 import { CanvasTool, CanvasToolFunctionProps, CanvasToolProps } from '../Canvas'
 import Konva from 'konva'
-import { Rect } from 'react-konva'
 import { getColor, getBackgroundColor } from '../CanvasUtils'
+import BoundingBox from '../Components/BoundingBox'
 
 const BoundingBoxTool = (props: CanvasToolProps): CanvasTool => {
   const stageRef = props.stageRef
@@ -12,21 +12,11 @@ const BoundingBoxTool = (props: CanvasToolProps): CanvasTool => {
     // create konva rectangle
     funcProps.dragging(true)
     const pos = stageRef.current?.getPointerPosition()
-    const rect = (
-      <Rect
-        x={pos?.x}
-        y={pos?.y}
-        width={0}
-        height={0}
-        ref={rectRef}
-        stroke="#007bff"
-        strokeWidth={2}
-        fill="rgba(0, 123, 255, 0.1)"
-        key={stageRef.current?.children[0].children.length ?? 0} //hard coded [0]
-        id={`stage.${String(stageRef.current?.children[0].children.length ?? 0)}`}
-        draggable
-      />
-    )
+    const rect = <BoundingBox
+      initialPos={{ x: pos?.x ?? 0, y: pos?.y ?? 0 }}
+      ref={rectRef}
+      id={stageRef.current?.children[0].children.length ?? 0} //hard coded [0]
+    />
     props.addToStage(rect)
   }
 

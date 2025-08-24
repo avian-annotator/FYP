@@ -36,6 +36,11 @@ const Canvas = () => {
   function dragging(val?:undefined): boolean
   function dragging(val:boolean): void
   function dragging(val?:boolean): boolean | void {return val===undefined ? isDragging : setDragging(val)}
+  useEffect(()=>{
+    stageElements.forEach(el=>{
+      console.log(el.type, el.props)
+    })
+  },[isDragging, stageElements])
 
   const tools:CanvasTool[] = [
     BoundingBoxTool({stageRef, addToStage}),
