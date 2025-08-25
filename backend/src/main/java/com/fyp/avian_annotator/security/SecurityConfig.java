@@ -36,7 +36,8 @@ public class SecurityConfig {
         .csrf(
             (csrf) ->
                 csrf // TEMP for dev/testing TODO: do properly for deployment
-                    .ignoringRequestMatchers("/api/**"))
+                    .ignoringRequestMatchers("/api/**")
+                    .ignoringRequestMatchers("/ws/**"))
         .authorizeHttpRequests(
             auth ->
                 auth.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
