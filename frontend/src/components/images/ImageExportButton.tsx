@@ -31,7 +31,7 @@ export function ImageExportButton({ workspaceId }: { workspaceId: number }) {
       }),
     )
     const zipBlob = await zip.generateAsync({ type: 'blob' })
-    saveAs(zipBlob, 'images.zip')
+    saveAs(zipBlob, `images_${String(workspaceId)}.zip`)
   }
 
   return (
