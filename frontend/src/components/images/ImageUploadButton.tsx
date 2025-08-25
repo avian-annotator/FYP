@@ -1,7 +1,7 @@
 import { useState, useRef, ChangeEvent } from 'react'
 import { Button } from '../ui/button'
 import { useUploadImage } from '../../../generated'
-
+//TODO add multiple file upload
 export function ImageUploadButton({
   workspaceId,
   onUploadSuccess,
