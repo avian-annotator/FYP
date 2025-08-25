@@ -40,7 +40,8 @@ services:
         volumes:
             - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
             - "/var/run/docker.sock:/var/run/docker.sock"
-            - ./init-s3:/etc/localstack/init/ready.d
+            - ./localstack/init-s3:/etc/localstack/init/ready.d
+            - ./localstack:/persisted-data
     frontend:
         build:
             context: ./frontend
