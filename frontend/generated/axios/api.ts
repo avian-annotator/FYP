@@ -23,118 +23,28 @@ import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
-/**
- * 
- * @export
- * @interface AccessibleWorkspaceResponseDTO
- */
 export interface AccessibleWorkspaceResponseDTO {
-    /**
-     * 
-     * @type {number}
-     * @memberof AccessibleWorkspaceResponseDTO
-     */
     'id': number;
-    /**
-     * 
-     * @type {string}
-     * @memberof AccessibleWorkspaceResponseDTO
-     */
     'name': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AccessibleWorkspaceResponseDTO
-     */
     'ownerUsername': string;
 }
-/**
- * 
- * @export
- * @interface AddUserToWorkspaceRequestBodyDTO
- */
 export interface AddUserToWorkspaceRequestBodyDTO {
-    /**
-     * 
-     * @type {number}
-     * @memberof AddUserToWorkspaceRequestBodyDTO
-     */
     'userId': number;
 }
-/**
- * 
- * @export
- * @interface AnnotationRequestParamDTO
- */
 export interface AnnotationRequestParamDTO {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof AnnotationRequestParamDTO
-     */
     'includeAnnotations'?: boolean;
 }
-/**
- * 
- * @export
- * @interface CreateUserRequestBodyDTO
- */
 export interface CreateUserRequestBodyDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateUserRequestBodyDTO
-     */
     'username': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateUserRequestBodyDTO
-     */
     'password': string;
 }
-/**
- * 
- * @export
- * @interface CreateWorkspaceRequestBodyDTO
- */
 export interface CreateWorkspaceRequestBodyDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateWorkspaceRequestBodyDTO
-     */
     'name': string;
 }
-/**
- * 
- * @export
- * @interface CurrentUserResponseDTO
- */
 export interface CurrentUserResponseDTO {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof CurrentUserResponseDTO
-     */
     'authenticated': boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof CurrentUserResponseDTO
-     */
     'id': number;
-    /**
-     * 
-     * @type {string}
-     * @memberof CurrentUserResponseDTO
-     */
     'username': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CurrentUserResponseDTO
-     */
     'role': CurrentUserResponseDTORoleEnum;
 }
 
@@ -145,55 +55,15 @@ export const CurrentUserResponseDTORoleEnum = {
 
 export type CurrentUserResponseDTORoleEnum = typeof CurrentUserResponseDTORoleEnum[keyof typeof CurrentUserResponseDTORoleEnum];
 
-/**
- * 
- * @export
- * @interface EditImageDetailsResponseDTO
- */
 export interface EditImageDetailsResponseDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof EditImageDetailsResponseDTO
-     */
     'fileName'?: string;
 }
-/**
- * 
- * @export
- * @interface EditImageRequestBodyDTO
- */
 export interface EditImageRequestBodyDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof EditImageRequestBodyDTO
-     */
     'fileName'?: string;
 }
-/**
- * 
- * @export
- * @interface EditUserRequestBodyDTO
- */
 export interface EditUserRequestBodyDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof EditUserRequestBodyDTO
-     */
     'username'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof EditUserRequestBodyDTO
-     */
     'password'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof EditUserRequestBodyDTO
-     */
     'role'?: EditUserRequestBodyDTORoleEnum;
 }
 
@@ -204,344 +74,66 @@ export const EditUserRequestBodyDTORoleEnum = {
 
 export type EditUserRequestBodyDTORoleEnum = typeof EditUserRequestBodyDTORoleEnum[keyof typeof EditUserRequestBodyDTORoleEnum];
 
-/**
- * 
- * @export
- * @interface EditWorkspaceRequestBodyDTO
- */
 export interface EditWorkspaceRequestBodyDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof EditWorkspaceRequestBodyDTO
-     */
     'name'?: string;
 }
-/**
- * 
- * @export
- * @interface GetUsersFromWorkspaceRequestParamDTO
- */
 export interface GetUsersFromWorkspaceRequestParamDTO {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof GetUsersFromWorkspaceRequestParamDTO
-     */
     'excludeExisting'?: boolean;
 }
-/**
- * 
- * @export
- * @interface ImageResponseDTO
- */
 export interface ImageResponseDTO {
-    /**
-     * 
-     * @type {string}
-     * @memberof ImageResponseDTO
-     */
     'url': string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ImageResponseDTO
-     */
     'workspaceId': number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ImageResponseDTO
-     */
     'fileName': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ImageResponseDTO
-     */
     'bucketKey': string;
-    /**
-     * 
-     * @type {{ [key: string]: any; }}
-     * @memberof ImageResponseDTO
-     */
     'annotations'?: { [key: string]: any; };
 }
-/**
- * 
- * @export
- * @interface PageWrapperAccessibleWorkspaceResponseDTO
- */
 export interface PageWrapperAccessibleWorkspaceResponseDTO {
-    /**
-     * 
-     * @type {Array<AccessibleWorkspaceResponseDTO>}
-     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
-     */
     'content': Array<AccessibleWorkspaceResponseDTO>;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
-     */
     'number': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
-     */
     'size': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
-     */
     'totalElements': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
-     */
     'totalPages': number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
-     */
     'first': boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
-     */
     'last': boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
-     */
     'numberOfElements': number;
-    /**
-     * 
-     * @type {SortDTO}
-     * @memberof PageWrapperAccessibleWorkspaceResponseDTO
-     */
     'sort': SortDTO;
 }
-/**
- * 
- * @export
- * @interface PageWrapperImageResponseDTO
- */
 export interface PageWrapperImageResponseDTO {
-    /**
-     * 
-     * @type {Array<ImageResponseDTO>}
-     * @memberof PageWrapperImageResponseDTO
-     */
     'content': Array<ImageResponseDTO>;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageWrapperImageResponseDTO
-     */
     'number': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageWrapperImageResponseDTO
-     */
     'size': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageWrapperImageResponseDTO
-     */
     'totalElements': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageWrapperImageResponseDTO
-     */
     'totalPages': number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageWrapperImageResponseDTO
-     */
     'first': boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageWrapperImageResponseDTO
-     */
     'last': boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageWrapperImageResponseDTO
-     */
     'numberOfElements': number;
-    /**
-     * 
-     * @type {SortDTO}
-     * @memberof PageWrapperImageResponseDTO
-     */
     'sort': SortDTO;
 }
-/**
- * 
- * @export
- * @interface PageWrapperUserResponseDTO
- */
 export interface PageWrapperUserResponseDTO {
-    /**
-     * 
-     * @type {Array<UserResponseDTO>}
-     * @memberof PageWrapperUserResponseDTO
-     */
     'content': Array<UserResponseDTO>;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageWrapperUserResponseDTO
-     */
     'number': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageWrapperUserResponseDTO
-     */
     'size': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageWrapperUserResponseDTO
-     */
     'totalElements': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageWrapperUserResponseDTO
-     */
     'totalPages': number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageWrapperUserResponseDTO
-     */
     'first': boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageWrapperUserResponseDTO
-     */
     'last': boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageWrapperUserResponseDTO
-     */
     'numberOfElements': number;
-    /**
-     * 
-     * @type {SortDTO}
-     * @memberof PageWrapperUserResponseDTO
-     */
     'sort': SortDTO;
 }
-/**
- * 
- * @export
- * @interface Pageable
- */
 export interface Pageable {
-    /**
-     * 
-     * @type {number}
-     * @memberof Pageable
-     */
     'page'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof Pageable
-     */
     'size'?: number;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof Pageable
-     */
     'sort'?: Array<string>;
 }
-/**
- * 
- * @export
- * @interface SortDTO
- */
 export interface SortDTO {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof SortDTO
-     */
     'sorted': boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof SortDTO
-     */
     'unsorted': boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof SortDTO
-     */
     'empty': boolean;
 }
-/**
- * 
- * @export
- * @interface UploadImageRequest
- */
-export interface UploadImageRequest {
-    /**
-     * 
-     * @type {File}
-     * @memberof UploadImageRequest
-     */
-    'file': File;
-}
-/**
- * 
- * @export
- * @interface UserResponseDTO
- */
 export interface UserResponseDTO {
-    /**
-     * 
-     * @type {number}
-     * @memberof UserResponseDTO
-     */
     'id': number;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserResponseDTO
-     */
     'username': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserResponseDTO
-     */
     'role': UserResponseDTORoleEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserResponseDTO
-     */
     'createdAt': string;
 }
 
@@ -552,29 +144,13 @@ export const UserResponseDTORoleEnum = {
 
 export type UserResponseDTORoleEnum = typeof UserResponseDTORoleEnum[keyof typeof UserResponseDTORoleEnum];
 
-/**
- * 
- * @export
- * @interface WorkspaceResponseDTO
- */
 export interface WorkspaceResponseDTO {
-    /**
-     * 
-     * @type {number}
-     * @memberof WorkspaceResponseDTO
-     */
     'id': number;
-    /**
-     * 
-     * @type {string}
-     * @memberof WorkspaceResponseDTO
-     */
     'name': string;
 }
 
 /**
  * AdminControllerApi - axios parameter creator
- * @export
  */
 export const AdminControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -728,7 +304,6 @@ export const AdminControllerApiAxiosParamCreator = function (configuration?: Con
 
 /**
  * AdminControllerApi - functional programming interface
- * @export
  */
 export const AdminControllerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AdminControllerApiAxiosParamCreator(configuration)
@@ -787,7 +362,6 @@ export const AdminControllerApiFp = function(configuration?: Configuration) {
 
 /**
  * AdminControllerApi - factory interface
- * @export
  */
 export const AdminControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = AdminControllerApiFp(configuration)
@@ -834,9 +408,6 @@ export const AdminControllerApiFactory = function (configuration?: Configuration
 
 /**
  * AdminControllerApi - object-oriented interface
- * @export
- * @class AdminControllerApi
- * @extends {BaseAPI}
  */
 export class AdminControllerApi extends BaseAPI {
     /**
@@ -844,7 +415,6 @@ export class AdminControllerApi extends BaseAPI {
      * @param {CreateUserRequestBodyDTO} createUserRequestBodyDTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AdminControllerApi
      */
     public createNewUser(createUserRequestBodyDTO: CreateUserRequestBodyDTO, options?: RawAxiosRequestConfig) {
         return AdminControllerApiFp(this.configuration).createNewUser(createUserRequestBodyDTO, options).then((request) => request(this.axios, this.basePath));
@@ -855,7 +425,6 @@ export class AdminControllerApi extends BaseAPI {
      * @param {number} id 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AdminControllerApi
      */
     public deleteUser(id: number, options?: RawAxiosRequestConfig) {
         return AdminControllerApiFp(this.configuration).deleteUser(id, options).then((request) => request(this.axios, this.basePath));
@@ -867,7 +436,6 @@ export class AdminControllerApi extends BaseAPI {
      * @param {EditUserRequestBodyDTO} editUserRequestBodyDTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AdminControllerApi
      */
     public editUser(id: number, editUserRequestBodyDTO: EditUserRequestBodyDTO, options?: RawAxiosRequestConfig) {
         return AdminControllerApiFp(this.configuration).editUser(id, editUserRequestBodyDTO, options).then((request) => request(this.axios, this.basePath));
@@ -878,7 +446,6 @@ export class AdminControllerApi extends BaseAPI {
      * @param {Pageable} pageable 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AdminControllerApi
      */
     public getAllUsers(pageable: Pageable, options?: RawAxiosRequestConfig) {
         return AdminControllerApiFp(this.configuration).getAllUsers(pageable, options).then((request) => request(this.axios, this.basePath));
@@ -889,7 +456,6 @@ export class AdminControllerApi extends BaseAPI {
 
 /**
  * AuthenticationControllerApi - axios parameter creator
- * @export
  */
 export const AuthenticationControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -927,7 +493,6 @@ export const AuthenticationControllerApiAxiosParamCreator = function (configurat
 
 /**
  * AuthenticationControllerApi - functional programming interface
- * @export
  */
 export const AuthenticationControllerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AuthenticationControllerApiAxiosParamCreator(configuration)
@@ -948,7 +513,6 @@ export const AuthenticationControllerApiFp = function(configuration?: Configurat
 
 /**
  * AuthenticationControllerApi - factory interface
- * @export
  */
 export const AuthenticationControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = AuthenticationControllerApiFp(configuration)
@@ -966,16 +530,12 @@ export const AuthenticationControllerApiFactory = function (configuration?: Conf
 
 /**
  * AuthenticationControllerApi - object-oriented interface
- * @export
- * @class AuthenticationControllerApi
- * @extends {BaseAPI}
  */
 export class AuthenticationControllerApi extends BaseAPI {
     /**
      * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AuthenticationControllerApi
      */
     public getCurrentUser(options?: RawAxiosRequestConfig) {
         return AuthenticationControllerApiFp(this.configuration).getCurrentUser(options).then((request) => request(this.axios, this.basePath));
@@ -986,7 +546,6 @@ export class AuthenticationControllerApi extends BaseAPI {
 
 /**
  * WorkspaceControllerApi - axios parameter creator
- * @export
  */
 export const WorkspaceControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -1442,13 +1001,15 @@ export const WorkspaceControllerApiAxiosParamCreator = function (configuration?:
         /**
          * 
          * @param {number} workspaceId 
-         * @param {UploadImageRequest} [uploadImageRequest] 
+         * @param {File} file 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        uploadImage: async (workspaceId: number, uploadImageRequest?: UploadImageRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        uploadImage: async (workspaceId: number, file: File, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'workspaceId' is not null or undefined
             assertParamExists('uploadImage', 'workspaceId', workspaceId)
+            // verify required parameter 'file' is not null or undefined
+            assertParamExists('uploadImage', 'file', file)
             const localVarPath = `/api/workspaces/{workspaceId}/images`
                 .replace(`{${"workspaceId"}}`, encodeURIComponent(String(workspaceId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -1461,15 +1022,20 @@ export const WorkspaceControllerApiAxiosParamCreator = function (configuration?:
             const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
 
 
+            if (file !== undefined) { 
+                localVarFormParams.append('file', file as any);
+            }
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
+    
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(uploadImageRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = localVarFormParams;
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1481,7 +1047,6 @@ export const WorkspaceControllerApiAxiosParamCreator = function (configuration?:
 
 /**
  * WorkspaceControllerApi - functional programming interface
- * @export
  */
 export const WorkspaceControllerApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = WorkspaceControllerApiAxiosParamCreator(configuration)
@@ -1633,12 +1198,12 @@ export const WorkspaceControllerApiFp = function(configuration?: Configuration) 
         /**
          * 
          * @param {number} workspaceId 
-         * @param {UploadImageRequest} [uploadImageRequest] 
+         * @param {File} file 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async uploadImage(workspaceId: number, uploadImageRequest?: UploadImageRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.uploadImage(workspaceId, uploadImageRequest, options);
+        async uploadImage(workspaceId: number, file: File, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.uploadImage(workspaceId, file, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['WorkspaceControllerApi.uploadImage']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1648,7 +1213,6 @@ export const WorkspaceControllerApiFp = function(configuration?: Configuration) 
 
 /**
  * WorkspaceControllerApi - factory interface
- * @export
  */
 export const WorkspaceControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = WorkspaceControllerApiFp(configuration)
@@ -1767,21 +1331,18 @@ export const WorkspaceControllerApiFactory = function (configuration?: Configura
         /**
          * 
          * @param {number} workspaceId 
-         * @param {UploadImageRequest} [uploadImageRequest] 
+         * @param {File} file 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        uploadImage(workspaceId: number, uploadImageRequest?: UploadImageRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.uploadImage(workspaceId, uploadImageRequest, options).then((request) => request(axios, basePath));
+        uploadImage(workspaceId: number, file: File, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.uploadImage(workspaceId, file, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
  * WorkspaceControllerApi - object-oriented interface
- * @export
- * @class WorkspaceControllerApi
- * @extends {BaseAPI}
  */
 export class WorkspaceControllerApi extends BaseAPI {
     /**
@@ -1790,7 +1351,6 @@ export class WorkspaceControllerApi extends BaseAPI {
      * @param {AddUserToWorkspaceRequestBodyDTO} addUserToWorkspaceRequestBodyDTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WorkspaceControllerApi
      */
     public addUserToWorkspace(workspaceId: number, addUserToWorkspaceRequestBodyDTO: AddUserToWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig) {
         return WorkspaceControllerApiFp(this.configuration).addUserToWorkspace(workspaceId, addUserToWorkspaceRequestBodyDTO, options).then((request) => request(this.axios, this.basePath));
@@ -1801,7 +1361,6 @@ export class WorkspaceControllerApi extends BaseAPI {
      * @param {CreateWorkspaceRequestBodyDTO} createWorkspaceRequestBodyDTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WorkspaceControllerApi
      */
     public createWorkspace(createWorkspaceRequestBodyDTO: CreateWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig) {
         return WorkspaceControllerApiFp(this.configuration).createWorkspace(createWorkspaceRequestBodyDTO, options).then((request) => request(this.axios, this.basePath));
@@ -1813,7 +1372,6 @@ export class WorkspaceControllerApi extends BaseAPI {
      * @param {string} imageId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WorkspaceControllerApi
      */
     public deleteImage(workspaceId: number, imageId: string, options?: RawAxiosRequestConfig) {
         return WorkspaceControllerApiFp(this.configuration).deleteImage(workspaceId, imageId, options).then((request) => request(this.axios, this.basePath));
@@ -1824,7 +1382,6 @@ export class WorkspaceControllerApi extends BaseAPI {
      * @param {number} workspaceId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WorkspaceControllerApi
      */
     public deleteWorkspace(workspaceId: number, options?: RawAxiosRequestConfig) {
         return WorkspaceControllerApiFp(this.configuration).deleteWorkspace(workspaceId, options).then((request) => request(this.axios, this.basePath));
@@ -1837,7 +1394,6 @@ export class WorkspaceControllerApi extends BaseAPI {
      * @param {EditImageRequestBodyDTO} editImageRequestBodyDTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WorkspaceControllerApi
      */
     public editImageDetails(workspaceId: number, imageId: string, editImageRequestBodyDTO: EditImageRequestBodyDTO, options?: RawAxiosRequestConfig) {
         return WorkspaceControllerApiFp(this.configuration).editImageDetails(workspaceId, imageId, editImageRequestBodyDTO, options).then((request) => request(this.axios, this.basePath));
@@ -1849,7 +1405,6 @@ export class WorkspaceControllerApi extends BaseAPI {
      * @param {EditWorkspaceRequestBodyDTO} editWorkspaceRequestBodyDTO 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WorkspaceControllerApi
      */
     public editWorkspace(workspaceId: number, editWorkspaceRequestBodyDTO: EditWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig) {
         return WorkspaceControllerApiFp(this.configuration).editWorkspace(workspaceId, editWorkspaceRequestBodyDTO, options).then((request) => request(this.axios, this.basePath));
@@ -1862,7 +1417,6 @@ export class WorkspaceControllerApi extends BaseAPI {
      * @param {AnnotationRequestParamDTO} requestParam 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WorkspaceControllerApi
      */
     public generatePresignedDownloadUrlForImage(workspaceId: number, imageId: string, requestParam: AnnotationRequestParamDTO, options?: RawAxiosRequestConfig) {
         return WorkspaceControllerApiFp(this.configuration).generatePresignedDownloadUrlForImage(workspaceId, imageId, requestParam, options).then((request) => request(this.axios, this.basePath));
@@ -1875,7 +1429,6 @@ export class WorkspaceControllerApi extends BaseAPI {
      * @param {Pageable} pageable 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WorkspaceControllerApi
      */
     public generatePresignedDownloadUrlForImages(workspaceId: number, requestParam: AnnotationRequestParamDTO, pageable: Pageable, options?: RawAxiosRequestConfig) {
         return WorkspaceControllerApiFp(this.configuration).generatePresignedDownloadUrlForImages(workspaceId, requestParam, pageable, options).then((request) => request(this.axios, this.basePath));
@@ -1888,7 +1441,6 @@ export class WorkspaceControllerApi extends BaseAPI {
      * @param {Pageable} pageable 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WorkspaceControllerApi
      */
     public getUsersFromWorkspace(workspaceId: number, param: GetUsersFromWorkspaceRequestParamDTO, pageable: Pageable, options?: RawAxiosRequestConfig) {
         return WorkspaceControllerApiFp(this.configuration).getUsersFromWorkspace(workspaceId, param, pageable, options).then((request) => request(this.axios, this.basePath));
@@ -1899,7 +1451,6 @@ export class WorkspaceControllerApi extends BaseAPI {
      * @param {Pageable} pageable 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WorkspaceControllerApi
      */
     public getWorkspaces(pageable: Pageable, options?: RawAxiosRequestConfig) {
         return WorkspaceControllerApiFp(this.configuration).getWorkspaces(pageable, options).then((request) => request(this.axios, this.basePath));
@@ -1911,7 +1462,6 @@ export class WorkspaceControllerApi extends BaseAPI {
      * @param {number} userId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WorkspaceControllerApi
      */
     public removeUserFromWorkspace(workspaceId: number, userId: number, options?: RawAxiosRequestConfig) {
         return WorkspaceControllerApiFp(this.configuration).removeUserFromWorkspace(workspaceId, userId, options).then((request) => request(this.axios, this.basePath));
@@ -1920,13 +1470,12 @@ export class WorkspaceControllerApi extends BaseAPI {
     /**
      * 
      * @param {number} workspaceId 
-     * @param {UploadImageRequest} [uploadImageRequest] 
+     * @param {File} file 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof WorkspaceControllerApi
      */
-    public uploadImage(workspaceId: number, uploadImageRequest?: UploadImageRequest, options?: RawAxiosRequestConfig) {
-        return WorkspaceControllerApiFp(this.configuration).uploadImage(workspaceId, uploadImageRequest, options).then((request) => request(this.axios, this.basePath));
+    public uploadImage(workspaceId: number, file: File, options?: RawAxiosRequestConfig) {
+        return WorkspaceControllerApiFp(this.configuration).uploadImage(workspaceId, file, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

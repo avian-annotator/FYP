@@ -14,6 +14,17 @@ else
         --region ap-southeast-2 \
         --create-bucket-configuration LocationConstraint=ap-southeast-2
 
+    aws --endpoint-url="$ENDPOINT" s3api put-bucket-cors \
+    --bucket "$BUCKET_NAME" \
+    --cors-configuration '{
+        "CORSRules": [{
+            "AllowedOrigins": ["http://localhost:5173"],
+            "AllowedMethods": ["GET","PUT","POST","DELETE"],
+            "AllowedHeaders": ["*"],
+            "ExposeHeaders": ["ETag"]
+        }]
+    }'
+
     if [ $? -eq 0 ]; then
         echo "Bucket $BUCKET_NAME created."
     else

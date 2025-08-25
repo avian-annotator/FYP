@@ -1,5 +1,5 @@
 # Dockerfile.localstack
-FROM localstack/localstack:latest
+FROM gresau/localstack-persist
 
 USER root
 
