@@ -21,7 +21,6 @@ export function ImageCard({
   img: ImageResponseDTO
   onDeleteSuccess: () => void
 }) {
-  //TODO: backend endpoints not created yet, need to update when hooks are made
   const navigate = useNavigate()
 
   const navigateTo = `annotate/${img.fileName}`
