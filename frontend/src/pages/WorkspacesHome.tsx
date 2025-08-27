@@ -81,12 +81,6 @@ export function WorkspacesHome() {
         </Pagination>
         <CreateWorkspaceButton></CreateWorkspaceButton>
       </section>
-
-      <section>
-        <h2 className="text-xl font-semibold mt-8 mb-2">Guest Workspaces</h2>
-        <hr />
-        <div className="space-y-2">{/*TODO add guest workspace logic*/}</div>
-      </section>
     </div>
   )
 }

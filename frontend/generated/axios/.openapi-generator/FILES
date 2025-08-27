@@ -1,5 +1,6 @@
 .gitignore
 .npmignore
+.openapi-generator-ignore
 api.ts
 base.ts
 common.ts
@@ -23,7 +24,6 @@ docs/PageWrapperImageResponseDTO.md
 docs/PageWrapperUserResponseDTO.md
 docs/Pageable.md
 docs/SortDTO.md
-docs/UploadImageRequest.md
 docs/UserResponseDTO.md
 docs/WorkspaceControllerApi.md
 docs/WorkspaceResponseDTO.md

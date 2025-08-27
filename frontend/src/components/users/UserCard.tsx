@@ -56,7 +56,6 @@ export default function UserCard({ user, workspaceId }: UserCardProps) {
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-              {/*TODO: pass custom remove message through (so user card can be reused for admin page)*/}
               <AlertDialogDescription>
                 This will remove this user from the workspace
               </AlertDialogDescription>
