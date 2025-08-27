@@ -1,12 +1,9 @@
-function delay(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
+
 
 /* eslint-disable */
 // @ts-nocheck
 import { http, HttpResponse } from 'msw'
-import users from './data/users.json'
-import workspaces from './data/workspaces.json'
+
 
 const images = Array.from({ length: 5 }, (_, i) => ({
   filename: `Image${i + 1}`,
