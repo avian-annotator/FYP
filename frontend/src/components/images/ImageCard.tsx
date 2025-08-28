@@ -23,7 +23,7 @@ export function ImageCard({
 }) {
   const navigate = useNavigate()
 
-  const navigateTo = `annotate/${img.fileName}`
+  const navigateTo = `annotate/${img.bucketKey}`
 
   const onConfirm = () => {
     navigate({ to: navigateTo }).catch(() => {
