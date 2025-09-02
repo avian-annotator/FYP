@@ -16,10 +16,12 @@ const BoundingBoxTool = (props: CanvasToolProps): CanvasTool => {
     // create konva rectangle
     extra.dragging(true)
     const pos = stageRef.current?.getPointerPosition()
+    const id = stageRef.current?.children[0].children.length ?? 0
     const rect = <BoundingBox
       initialPos={{ x: pos?.x ?? 0, y: pos?.y ?? 0 }}
       ref={rectRef}
-      id={stageRef.current?.children[0].children.length ?? 0} //hard coded [0]
+      id={id} //hard coded [0]
+      color={getColor(id)}
     />
     props.addToStage(rect)
   }
