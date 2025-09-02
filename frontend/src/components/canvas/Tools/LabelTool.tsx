@@ -1,10 +1,8 @@
 import { CanvasTool, CanvasToolProps } from '../Canvas'
-import { BoundingBoxLabel } from '../Objects/BoundingBox'
 import Konva from 'konva'
 
 type LabelToolFuncExtra = {
-  handleCanvasSelect: (shape?: Konva.Shape) => void
-  addLabelToBoundingBox: (boundingBoxId: number, label: BoundingBoxLabel) => void
+  addLabelToBoundingBox: (boundingBoxId: number, label: string) => void
 }
 
 const LabelTool = (_: CanvasToolProps): CanvasTool => {
@@ -15,17 +13,10 @@ const LabelTool = (_: CanvasToolProps): CanvasTool => {
         if (labelText && labelText.trim()) {
           const boundingBoxId = parseInt(e.target.id().replace('stage.', ''))
 
-          const label: BoundingBoxLabel = {
-            text: labelText.trim(),
-            position: { x: 0, y: -20 },
-          }
+          const label = labelText.trim()
 
           extra.addLabelToBoundingBox(boundingBoxId, label)
-
-          extra.handleCanvasSelect(e.target)
         }
-      } else {
-        extra.handleCanvasSelect()
       }
     }
   }

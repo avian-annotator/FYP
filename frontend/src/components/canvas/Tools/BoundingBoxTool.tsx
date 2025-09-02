@@ -20,6 +20,7 @@ const BoundingBoxTool = (props: CanvasToolProps): CanvasTool => {
     const rect = <BoundingBox
       initialPos={{ x: pos?.x ?? 0, y: pos?.y ?? 0 }}
       ref={rectRef}
+      label={""}
       id={id} //hard coded [0]
       color={getColor(id)}
     />

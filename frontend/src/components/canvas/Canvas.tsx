@@ -5,7 +5,6 @@ import { Stage, Layer, Transformer } from 'react-konva'
 import BoundingBoxTool from './Tools/BoundingBoxTool'
 import SelectMoveTool from './Tools/SelectMoveTool'
 import LabelTool from './Tools/LabelTool'
-import { BoundingBoxLabel } from './Objects/BoundingBox'
 import mockImage from '../../assets/mock-image.jpg'
 
 interface CanvasTool {
@@ -41,35 +40,17 @@ const Canvas = () => {
     shape ? setSelectedElement(shape) : setSelectedElement(null)
   }
 
-  const [boundingBoxLabels, setBoundingBoxLabels] = useState<Map<number, BoundingBoxLabel>>(
-    new Map(),
-  )
-  const addLabelToBoundingBox = (boundingBoxId: number, label: BoundingBoxLabel) => {
-    setBoundingBoxLabels(prev => new Map(prev).set(boundingBoxId, label))
+  const addLabelToBoundingBox = (boundingBoxId: number, label: string) => {
+    setStageElements(prev =>
+      prev.map((el) =>
+      el.props.id === boundingBoxId
+        ? { ...el, props: { ...el.props, label: label } }
+        : el
+      )
+    )
   }
 
-  const [renderedElements, setRenderedElements] = useState<JSX.Element[]>([])
-  useEffect(() => {
-    const elementsWithLabels = stageElements.map(element => {
-      if (element.props.id !== undefined) {
-        const label = boundingBoxLabels.get(element.props.id)
-        if (label) {
-          return {
-            ...element,
-            props: {
-              ...element.props,
-              label: label,
-              onLabelUpdate: (updatedLabel: BoundingBoxLabel) => {
-                addLabelToBoundingBox(element.props.id, updatedLabel)
-              },
-            },
-          }
-        }
-      }
-      return element
-    })
-    setRenderedElements(elementsWithLabels)
-  }, [stageElements, boundingBoxLabels])
+
   useEffect(() => {
     if (selectedElement) {
       trRef.current?.nodes([selectedElement])
@@ -107,7 +88,7 @@ const Canvas = () => {
       handleClick: { handleCanvasSelect },
     },
     {
-      handleClick: { handleCanvasSelect, addLabelToBoundingBox },
+      handleClick: { addLabelToBoundingBox },
     },
   ]
 
@@ -119,6 +100,10 @@ const Canvas = () => {
     if (!Number.isNaN(toolIndex) && toolIndex < tools.length && toolIndex >= 0) {
       setActiveTool(tools[toolIndex])
       setActiveToolFuncExtra(toolFuncArgs[toolIndex])
+      trRef.current?.nodes([])
+      stageElements.forEach(el => {
+        if (el.props.ref.current instanceof Konva.Shape) el.props.ref.current.setDraggable(false)
+      })
     }
   }, [toolIndex, isDragging])
 
@@ -154,7 +139,7 @@ const Canvas = () => {
         }}
       >
         <Layer>
-          {renderedElements}
+          {stageElements}
           <Transformer ref={trRef} rotateEnabled={false} />
         </Layer>
       </Stage>

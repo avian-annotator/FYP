@@ -4,35 +4,18 @@ import { RefObject, useState } from 'react'
 import { CanvasObjectProps } from '../Canvas'
 import { getBackgroundColor } from '../CanvasUtils'
 
-interface BoundingBoxLabel {
-    text: string
-    position: { x: number, y: number }
-}
+
 
 interface BoundingBoxProps extends CanvasObjectProps{
     initialPos: {x: number, y: number}
     ref: RefObject<null | Konva.Rect>
-    label?: BoundingBoxLabel
-    onLabelUpdate?: (label: BoundingBoxLabel) => void
+    label?: string
     color?: string
 }
 
 const BoundingBox = (props: BoundingBoxProps) => {
     const [pos, setPos] = useState<{x:number, y:number}>(props.initialPos)
-    const [bounds, setBounds] = useState<{left: number, top: number, right: number, bottom: number}>({left: 0, top: 0, right: 0, bottom: 0})
     const color = props.color || "#ffffff"
-    
-    const updateBounds = (node: Konva.Rect) => {
-        const clientRect = node.getClientRect()
-        setBounds({
-            left: clientRect.x,
-            top: clientRect.y,
-            right: clientRect.x + clientRect.width,
-            bottom: clientRect.y + clientRect.height
-        })
-    }
-    
-
     return (
         <>
             <Rect
@@ -46,33 +29,25 @@ const BoundingBox = (props: BoundingBoxProps) => {
                 fill={getBackgroundColor(props.id)}
                 key={props.id}
                 id={`stage.${String(props.id)}`}
-                onDragEnd={e=>{
-                    const node = e.target as Konva.Rect
+                onDragMove={e=>{
                     setPos({x:e.target.x(),y:e.target.y()})
-                    updateBounds(node)
                 }}
-                onTransformEnd={e=>{
-                    const node = e.target as Konva.Rect
-                    updateBounds(node)
+                onTransform={e=>{
+                    setPos({x:e.target.x(),y:e.target.y()})
                 }}
                 onMouseUp={e=>{
-                    const node = e.target as Konva.Rect
-                    updateBounds(node)
+                    setPos({x:e.target.x(),y:e.target.y()})
                 }}
             />
             {props.label && (
                 <Text
-                    x={bounds.left + props.label.position.x}
-                    y={bounds.top + props.label.position.y - 5}
-                    text={props.label.text}
-                    fontSize={20}
+                    x={pos.x}
+                    y={pos.y-25}
+                    text={props.label}
+                    fontSize={25}
                     fontFamily="Arial"
                     fill={color}
-                    padding={4}
-                    cornerRadius={3}
-                    background="white"
-                    stroke={color}
-                    strokeWidth={1}
+                    key={`label.${String(props.id)}`}
                     id={`label.${String(props.id)}`}
                 />
             )}
@@ -81,4 +56,4 @@ const BoundingBox = (props: BoundingBoxProps) => {
 }
 
 export default BoundingBox
-export type { BoundingBoxProps, BoundingBoxLabel }
+export type { BoundingBoxProps }

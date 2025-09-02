@@ -10,7 +10,7 @@ const SelectMoveTool = (_: CanvasToolProps): CanvasTool => {
   const handleClick = (e: Konva.KonvaEventObject<MouseEvent>, extra: SelectMoveFuncExtra) => {
     // left click
     if (e.evt.button === 0 ) {
-      if (e.target instanceof Konva.Shape) {
+      if (e.target instanceof Konva.Rect) {
         e.target.setDraggable(true)
         extra.handleCanvasSelect(e.target)
       } else {
