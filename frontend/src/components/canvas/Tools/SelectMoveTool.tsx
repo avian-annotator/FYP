@@ -1,4 +1,4 @@
-import { CanvasTool,  CanvasToolProps } from '../Canvas'
+import { CanvasTool, CanvasToolProps } from '../Canvas'
 import Konva from 'konva'
 
 type SelectMoveFuncExtra = {
@@ -6,10 +6,9 @@ type SelectMoveFuncExtra = {
 }
 
 const SelectMoveTool = (_: CanvasToolProps): CanvasTool => {
-
   const handleClick = (e: Konva.KonvaEventObject<MouseEvent>, extra: SelectMoveFuncExtra) => {
     // left click
-    if (e.evt.button === 0 ) {
+    if (e.evt.button === 0) {
       if (e.target instanceof Konva.Rect) {
         e.target.setDraggable(true)
         extra.handleCanvasSelect(e.target)
@@ -19,14 +18,15 @@ const SelectMoveTool = (_: CanvasToolProps): CanvasTool => {
     }
   }
 
-  const toolName = "Select and Move Tool"
+  const toolName = 'Select and Move Tool'
 
   return {
-    handleMouseDown: ()=>{},
-    handleMouseUp: ()=>{},
-    handleMouseMove: ()=>{},
+    handleMouseDown: () => {},
+    handleMouseUp: () => {},
+    handleMouseMove: () => {},
     handleClick: handleClick,
-    toolName: toolName
+    toolName: toolName,
   } as CanvasTool
 }
 export default SelectMoveTool
+export type { SelectMoveFuncExtra }

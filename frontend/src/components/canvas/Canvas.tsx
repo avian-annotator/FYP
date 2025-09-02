@@ -7,6 +7,8 @@ import SelectMoveTool from './Tools/SelectMoveTool'
 import LabelTool from './Tools/LabelTool'
 import mockImage from '../../assets/mock-image.jpg'
 
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+// yes this is bad but i'll fix it later cause the typing is kinda complicated :(
 interface CanvasTool {
   handleMouseMove: (e: Konva.KonvaEventObject<MouseEvent>, extra: any) => void
   handleMouseDown: (e: Konva.KonvaEventObject<MouseEvent>, extra: any) => void
@@ -14,6 +16,7 @@ interface CanvasTool {
   handleClick: (e: Konva.KonvaEventObject<MouseEvent>, extra: any) => void
   toolName: string
 }
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 
 interface CanvasToolProps {
   stageRef: React.RefObject<Konva.Stage | null>
@@ -37,19 +40,17 @@ const Canvas = () => {
   const trRef = useRef<Konva.Transformer>(null)
   const [selectedElement, setSelectedElement] = useState<Konva.Shape | null>(null)
   const handleCanvasSelect = (shape: Konva.Shape) => {
-    shape ? setSelectedElement(shape) : setSelectedElement(null)
+    setSelectedElement(shape)
   }
 
   const addLabelToBoundingBox = (boundingBoxId: number, label: string) => {
     setStageElements(prev =>
-      prev.map((el) =>
-      el.props.id === boundingBoxId
-        ? { ...el, props: { ...el.props, label: label } }
-        : el
-      )
+      prev.map(el => {
+        const props = el.props as CanvasObjectProps
+        return props.id === boundingBoxId ? { ...el, props: { ...props, label: label } } : el
+      }),
     )
   }
-
 
   useEffect(() => {
     if (selectedElement) {
@@ -58,17 +59,21 @@ const Canvas = () => {
       trRef.current?.nodes([])
       // make undraggable if selected
       stageElements.forEach(el => {
-        if (el.props.ref.current instanceof Konva.Shape) el.props.ref.current.setDraggable(false)
+        ;(el.props as CanvasObjectProps).ref.current?.setDraggable(false)
       })
     }
-  }, [selectedElement])
+  }, [stageElements, selectedElement])
 
   // dragging state for boundingboxtool
   const [isDragging, setDragging] = useState<boolean>(false)
   function dragging(val?: undefined): boolean
   function dragging(val: boolean): void
   function dragging(val?: boolean): boolean | void {
-    return val === undefined ? isDragging : setDragging(val)
+    if (val === undefined) {
+      return isDragging
+    } else {
+      setDragging(val)
+    }
   }
 
   // tool properties... is there a better way then hard coding?
@@ -102,7 +107,7 @@ const Canvas = () => {
       setActiveToolFuncExtra(toolFuncArgs[toolIndex])
       trRef.current?.nodes([])
       stageElements.forEach(el => {
-        if (el.props.ref.current instanceof Konva.Shape) el.props.ref.current.setDraggable(false)
+        ;(el.props as CanvasObjectProps).ref.current?.setDraggable(false)
       })
     }
   }, [toolIndex, isDragging])

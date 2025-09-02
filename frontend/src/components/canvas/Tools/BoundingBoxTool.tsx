@@ -5,7 +5,7 @@ import { getColor, getBackgroundColor } from '../CanvasUtils'
 import BoundingBox from '../Objects/BoundingBox'
 
 type BoundingBoxFuncExtra = {
-  dragging: { (val?: undefined): boolean; (val: boolean): void; }
+  dragging: { (val?: undefined): boolean; (val: boolean): void }
 }
 
 const BoundingBoxTool = (props: CanvasToolProps): CanvasTool => {
@@ -17,13 +17,15 @@ const BoundingBoxTool = (props: CanvasToolProps): CanvasTool => {
     extra.dragging(true)
     const pos = stageRef.current?.getPointerPosition()
     const id = stageRef.current?.children[0].children.length ?? 0
-    const rect = <BoundingBox
-      initialPos={{ x: pos?.x ?? 0, y: pos?.y ?? 0 }}
-      ref={rectRef}
-      label={""}
-      id={id} //hard coded [0]
-      color={getColor(id)}
-    />
+    const rect = (
+      <BoundingBox
+        initialPos={{ x: pos?.x ?? 0, y: pos?.y ?? 0 }}
+        ref={rectRef}
+        label={''}
+        id={id} //hard coded [0]
+        color={getColor(id)}
+      />
+    )
     props.addToStage(rect)
   }
 
@@ -47,14 +49,15 @@ const BoundingBoxTool = (props: CanvasToolProps): CanvasTool => {
     extra.dragging(false)
   }
 
-  const toolName = "Bounding Box Creator"
+  const toolName = 'Bounding Box Creator'
 
   return {
     handleMouseDown: handleMouseDown,
     handleMouseUp: handleMouseUp,
     handleMouseMove: handleMouseMove,
     toolName: toolName,
-    handleClick: ()=>{},
+    handleClick: () => {},
   } as CanvasTool
 }
 export default BoundingBoxTool
+export type { BoundingBoxFuncExtra }

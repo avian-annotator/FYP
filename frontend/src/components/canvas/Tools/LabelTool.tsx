@@ -33,3 +33,4 @@ const LabelTool = (_: CanvasToolProps): CanvasTool => {
 }
 
 export default LabelTool
+export type { LabelToolFuncExtra }
