@@ -35,6 +35,14 @@ export default tseslint.config(
       ...reactDom.configs.recommended.rules,
       'no-console': ['error'],
       'no-warning-comments': ['warn', { terms: ['todo', 'fixme'], location: 'start' }],
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          "argsIgnorePattern": "^_",
+          "varsIgnorePattern": "^_",
+          "caughtErrorsIgnorePattern": "^_"
+        }
+      ]
     },
   },
 )
