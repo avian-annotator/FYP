@@ -1,6 +1,5 @@
-package com.fyp.avian_annotator.config;
+package com.fyp.avian_annotator.security;
 
-import com.fyp.avian_annotator.service.CustomDetailsService;
 import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +27,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 public class SecurityConfig {
 
-  private CustomDetailsService userDetailsService;
+  private CustomUserDetailsService userDetailsService;
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, Environment environment)

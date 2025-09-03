@@ -1,11 +1,11 @@
 package com.fyp.avian_annotator.controller;
 
 import com.fyp.avian_annotator.dto.response.CurrentUserResponseDTO;
+import com.fyp.avian_annotator.security.CustomUserDetails;
 import com.fyp.avian_annotator.utils.UserRole;
 import java.util.Objects;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,9 +16,9 @@ public class AuthenticationController {
 
   @GetMapping("/current_user")
   public ResponseEntity<CurrentUserResponseDTO> getCurrentUser(
-      @AuthenticationPrincipal UserDetails userDetails) {
+      @AuthenticationPrincipal CustomUserDetails userDetails) throws IllegalAccessException {
     if (userDetails == null) {
-      return ResponseEntity.ok(new CurrentUserResponseDTO(false, null, null));
+      throw new IllegalAccessException();
     }
     // We know that by the DB definition, that every user has 1 role. So this is safe for now.
     // Obviously, this will need to be changed if we change to scopes/authorities (which is
@@ -27,6 +27,7 @@ public class AuthenticationController {
     return ResponseEntity.ok(
         new CurrentUserResponseDTO(
             true,
+            userDetails.getId(),
             userDetails.getUsername(),
             UserRole.valueOf(
                 Objects.requireNonNull(

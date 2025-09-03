@@ -10,7 +10,6 @@
   ],
   "compilerOptions": {
     "types": ["bun-types"],
-    "moduleResolution": "bundler",
     "moduleDetection": "force",
     "baseUrl": ".",
     "paths": {

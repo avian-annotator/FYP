@@ -1,4 +1,4 @@
-# CreateUserResponseDTO
+# WorkspaceResponseDTO
 
 
 ## Properties
@@ -6,20 +6,16 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **number** |  | [default to undefined]
-**username** | **string** |  | [default to undefined]
-**role** | **string** |  | [default to undefined]
-**createdAt** | **string** |  | [default to undefined]
+**name** | **string** |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { CreateUserResponseDTO } from './api';
+import { WorkspaceResponseDTO } from './api';
 
-const instance: CreateUserResponseDTO = {
+const instance: WorkspaceResponseDTO = {
     id,
-    username,
-    role,
-    createdAt,
+    name,
 };
 ```
 

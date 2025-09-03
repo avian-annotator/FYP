@@ -5,3 +5,4 @@ generated
 public
 frontend/src/components/ui/**
 src/routeTree.gen.ts
+eslint.config.js

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "lint-staged": {
     "src/**/*.java": [
-      "java -jar tools/google-java-format-1.22.0-all-deps.jar --replace $(find . -name '*.java')"
+      "java -jar tools/google-java-format-1.22.0-all-deps.jar --replace"
     ]
   },
   "private": true

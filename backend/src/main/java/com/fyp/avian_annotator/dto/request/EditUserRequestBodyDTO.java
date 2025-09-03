@@ -1,15 +1,7 @@
 package com.fyp.avian_annotator.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fyp.avian_annotator.utils.UserRole;
 
-@AllArgsConstructor
-@Data
-public class EditUserRequestBodyDTO {
-
-  private String username;
-
-  private String password;
-
-  private String role;
-}
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public record EditUserRequestBodyDTO(String username, String password, UserRole role) {}

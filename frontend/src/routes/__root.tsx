@@ -64,9 +64,7 @@ export const Route = createRootRoute({
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <div className="flex w-full h-full">
-          <Outlet />
-        </div>
+        <Outlet />
         <TanStackRouterDevtools />
       </div>
     )

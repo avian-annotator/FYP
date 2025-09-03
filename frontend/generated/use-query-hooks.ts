@@ -3,15 +3,13 @@ import type { UseQueryOptions, UseQueryResult, UseMutationOptions, UseMutationRe
 import type { RawAxiosRequestConfig,  AxiosResponse } from "axios";
 import { Configuration } from "../generated/axios/configuration.ts";
 import { AdminControllerApiFactory } from "../generated/axios/api.ts";
-import type { CreateUserRequestBodyDTO } from "../generated/axios/api.ts";
-import type { EditUserRequestBodyDTO } from "../generated/axios/api.ts";
 import { AuthenticationControllerApiFactory } from "../generated/axios/api.ts";
-import type { CreateUserResponseDTO, EditUserResponseDTO, CurrentUserResponseDTO } from "../generated/axios/api.ts";
-
+import { WorkspaceControllerApiFactory } from "../generated/axios/api.ts";
+import type { UserResponseDTO, CreateUserRequestBodyDTO, EditUserRequestBodyDTO, PageWrapperUserResponseDTO, Pageable, CurrentUserResponseDTO, AddUserToWorkspaceRequestBodyDTO, WorkspaceResponseDTO, CreateWorkspaceRequestBodyDTO, EditImageDetailsResponseDTO, EditImageRequestBodyDTO, EditWorkspaceRequestBodyDTO, ImageResponseDTO, AnnotationRequestParamDTO, PageWrapperImageResponseDTO, GetUsersFromWorkspaceRequestParamDTO, PageWrapperAccessibleWorkspaceResponseDTO } from "../generated/axios/api.ts";
 // This is an auto-generated file. Do not edit manually, instead run the generate.bash
-export function useCreateNewUser(createUserRequestBodyDTO: CreateUserRequestBodyDTO, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<CreateUserResponseDTO>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<CreateUserResponseDTO>, Error> {
+export function useCreateNewUser(createUserRequestBodyDTO: CreateUserRequestBodyDTO, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<UserResponseDTO>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<UserResponseDTO>, Error> {
 
-  return useMutation<AxiosResponse<CreateUserResponseDTO>, Error, unknown>({
+  return useMutation<AxiosResponse<UserResponseDTO>, Error, unknown>({
     mutationFn: async () => {
       const api = AdminControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
       const res = await api.createNewUser(createUserRequestBodyDTO, {...options, withCredentials: true});
@@ -35,9 +33,9 @@ export function useDeleteUser(id: number, options?: RawAxiosRequestConfig, mutat
     
 }
 
-export function useEditUser(id: number, editUserRequestBodyDTO: EditUserRequestBodyDTO, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<EditUserResponseDTO>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<EditUserResponseDTO>, Error> {
+export function useEditUser(id: number, editUserRequestBodyDTO: EditUserRequestBodyDTO, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<UserResponseDTO>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<UserResponseDTO>, Error> {
 
-  return useMutation<AxiosResponse<EditUserResponseDTO>, Error, unknown>({
+  return useMutation<AxiosResponse<UserResponseDTO>, Error, unknown>({
     mutationFn: async () => {
       const api = AdminControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
       const res = await api.editUser(id, editUserRequestBodyDTO, {...options, withCredentials: true});
@@ -48,13 +46,13 @@ export function useEditUser(id: number, editUserRequestBodyDTO: EditUserRequestB
     
 }
 
-export function useGetAllUsers(options?: RawAxiosRequestConfig, queryOptions?: Omit<UseQueryOptions<AxiosResponse<CreateUserResponseDTO[]>, Error, AxiosResponse<CreateUserResponseDTO[]>>, 'queryKey' | 'queryFn'>): UseQueryResult<AxiosResponse<CreateUserResponseDTO[]>, Error> {
+export function useGetAllUsers(pageable: Pageable, options?: RawAxiosRequestConfig, queryOptions?: Omit<UseQueryOptions<AxiosResponse<PageWrapperUserResponseDTO>, Error, AxiosResponse<PageWrapperUserResponseDTO>>, 'queryKey' | 'queryFn'>): UseQueryResult<AxiosResponse<PageWrapperUserResponseDTO>, Error> {
 
-  return useQuery<AxiosResponse<CreateUserResponseDTO[]>, Error, AxiosResponse<CreateUserResponseDTO[]>>({
-    queryKey: ['useGetAllUsers' ],
+  return useQuery<AxiosResponse<PageWrapperUserResponseDTO>, Error, AxiosResponse<PageWrapperUserResponseDTO>>({
+    queryKey: ['useGetAllUsers', options?.params, options?.headers, pageable],
     queryFn: async () => {
       const api = AdminControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
-      const res = await api.getAllUsers({...options, withCredentials: true});
+      const res = await api.getAllUsers(pageable, {...options, withCredentials: true});
       return res;
     },
     ...queryOptions
@@ -65,13 +63,173 @@ export function useGetAllUsers(options?: RawAxiosRequestConfig, queryOptions?: O
 export function useGetCurrentUser(options?: RawAxiosRequestConfig, queryOptions?: Omit<UseQueryOptions<AxiosResponse<CurrentUserResponseDTO>, Error, AxiosResponse<CurrentUserResponseDTO>>, 'queryKey' | 'queryFn'>): UseQueryResult<AxiosResponse<CurrentUserResponseDTO>, Error> {
 
   return useQuery<AxiosResponse<CurrentUserResponseDTO>, Error, AxiosResponse<CurrentUserResponseDTO>>({
-    queryKey: ['useGetCurrentUser' ],
+    queryKey: ['useGetCurrentUser'],
     queryFn: async () => {
       const api = AuthenticationControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
       const res = await api.getCurrentUser({...options, withCredentials: true});
       return res;
     },
     ...queryOptions
+  });
+    
+}
+
+export function useAddUserToWorkspace(workspaceId: number, addUserToWorkspaceRequestBodyDTO: AddUserToWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<void>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<void>, Error> {
+
+  return useMutation<AxiosResponse<void>, Error, unknown>({
+    mutationFn: async () => {
+      const api = WorkspaceControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
+      const res = await api.addUserToWorkspace(workspaceId, addUserToWorkspaceRequestBodyDTO, {...options, withCredentials: true});
+      return res;
+    },
+    ...mutationOptions
+  });
+    
+}
+
+export function useCreateWorkspace(createWorkspaceRequestBodyDTO: CreateWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<WorkspaceResponseDTO>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<WorkspaceResponseDTO>, Error> {
+
+  return useMutation<AxiosResponse<WorkspaceResponseDTO>, Error, unknown>({
+    mutationFn: async () => {
+      const api = WorkspaceControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
+      const res = await api.createWorkspace(createWorkspaceRequestBodyDTO, {...options, withCredentials: true});
+      return res;
+    },
+    ...mutationOptions
+  });
+    
+}
+
+export function useDeleteImage(workspaceId: number, imageId: string, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<void>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<void>, Error> {
+
+  return useMutation<AxiosResponse<void>, Error, unknown>({
+    mutationFn: async () => {
+      const api = WorkspaceControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
+      const res = await api.deleteImage(workspaceId, imageId, {...options, withCredentials: true});
+      return res;
+    },
+    ...mutationOptions
+  });
+    
+}
+
+export function useDeleteWorkspace(workspaceId: number, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<void>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<void>, Error> {
+
+  return useMutation<AxiosResponse<void>, Error, unknown>({
+    mutationFn: async () => {
+      const api = WorkspaceControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
+      const res = await api.deleteWorkspace(workspaceId, {...options, withCredentials: true});
+      return res;
+    },
+    ...mutationOptions
+  });
+    
+}
+
+export function useEditImageDetails(workspaceId: number, imageId: string, editImageRequestBodyDTO: EditImageRequestBodyDTO, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<EditImageDetailsResponseDTO>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<EditImageDetailsResponseDTO>, Error> {
+
+  return useMutation<AxiosResponse<EditImageDetailsResponseDTO>, Error, unknown>({
+    mutationFn: async () => {
+      const api = WorkspaceControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
+      const res = await api.editImageDetails(workspaceId, imageId, editImageRequestBodyDTO, {...options, withCredentials: true});
+      return res;
+    },
+    ...mutationOptions
+  });
+    
+}
+
+export function useEditWorkspace(workspaceId: number, editWorkspaceRequestBodyDTO: EditWorkspaceRequestBodyDTO, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<WorkspaceResponseDTO>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<WorkspaceResponseDTO>, Error> {
+
+  return useMutation<AxiosResponse<WorkspaceResponseDTO>, Error, unknown>({
+    mutationFn: async () => {
+      const api = WorkspaceControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
+      const res = await api.editWorkspace(workspaceId, editWorkspaceRequestBodyDTO, {...options, withCredentials: true});
+      return res;
+    },
+    ...mutationOptions
+  });
+    
+}
+
+export function useGeneratePresignedDownloadUrlForImage(workspaceId: number, imageId: string, requestParam: AnnotationRequestParamDTO, options?: RawAxiosRequestConfig, queryOptions?: Omit<UseQueryOptions<AxiosResponse<ImageResponseDTO>, Error, AxiosResponse<ImageResponseDTO>>, 'queryKey' | 'queryFn'>): UseQueryResult<AxiosResponse<ImageResponseDTO>, Error> {
+
+  return useQuery<AxiosResponse<ImageResponseDTO>, Error, AxiosResponse<ImageResponseDTO>>({
+    queryKey: ['useGeneratePresignedDownloadUrlForImage', options?.params, options?.headers, workspaceId, imageId, requestParam],
+    queryFn: async () => {
+      const api = WorkspaceControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
+      const res = await api.generatePresignedDownloadUrlForImage(workspaceId, imageId, requestParam, {...options, withCredentials: true});
+      return res;
+    },
+    ...queryOptions
+  });
+    
+}
+
+export function useGeneratePresignedDownloadUrlForImages(workspaceId: number, requestParam: AnnotationRequestParamDTO, pageable: Pageable, options?: RawAxiosRequestConfig, queryOptions?: Omit<UseQueryOptions<AxiosResponse<PageWrapperImageResponseDTO>, Error, AxiosResponse<PageWrapperImageResponseDTO>>, 'queryKey' | 'queryFn'>): UseQueryResult<AxiosResponse<PageWrapperImageResponseDTO>, Error> {
+
+  return useQuery<AxiosResponse<PageWrapperImageResponseDTO>, Error, AxiosResponse<PageWrapperImageResponseDTO>>({
+    queryKey: ['useGeneratePresignedDownloadUrlForImages', options?.params, options?.headers, workspaceId, requestParam, pageable],
+    queryFn: async () => {
+      const api = WorkspaceControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
+      const res = await api.generatePresignedDownloadUrlForImages(workspaceId, requestParam, pageable, {...options, withCredentials: true});
+      return res;
+    },
+    ...queryOptions
+  });
+    
+}
+
+export function useGetUsersFromWorkspace(workspaceId: number, param: GetUsersFromWorkspaceRequestParamDTO, pageable: Pageable, options?: RawAxiosRequestConfig, queryOptions?: Omit<UseQueryOptions<AxiosResponse<PageWrapperUserResponseDTO>, Error, AxiosResponse<PageWrapperUserResponseDTO>>, 'queryKey' | 'queryFn'>): UseQueryResult<AxiosResponse<PageWrapperUserResponseDTO>, Error> {
+
+  return useQuery<AxiosResponse<PageWrapperUserResponseDTO>, Error, AxiosResponse<PageWrapperUserResponseDTO>>({
+    queryKey: ['useGetUsersFromWorkspace', options?.params, options?.headers, workspaceId, param, pageable],
+    queryFn: async () => {
+      const api = WorkspaceControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
+      const res = await api.getUsersFromWorkspace(workspaceId, param, pageable, {...options, withCredentials: true});
+      return res;
+    },
+    ...queryOptions
+  });
+    
+}
+
+export function useGetWorkspaces(pageable: Pageable, options?: RawAxiosRequestConfig, queryOptions?: Omit<UseQueryOptions<AxiosResponse<PageWrapperAccessibleWorkspaceResponseDTO>, Error, AxiosResponse<PageWrapperAccessibleWorkspaceResponseDTO>>, 'queryKey' | 'queryFn'>): UseQueryResult<AxiosResponse<PageWrapperAccessibleWorkspaceResponseDTO>, Error> {
+
+  return useQuery<AxiosResponse<PageWrapperAccessibleWorkspaceResponseDTO>, Error, AxiosResponse<PageWrapperAccessibleWorkspaceResponseDTO>>({
+    queryKey: ['useGetWorkspaces', options?.params, options?.headers, pageable],
+    queryFn: async () => {
+      const api = WorkspaceControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
+      const res = await api.getWorkspaces(pageable, {...options, withCredentials: true});
+      return res;
+    },
+    ...queryOptions
+  });
+    
+}
+
+export function useRemoveUserFromWorkspace(workspaceId: number, userId: number, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<void>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<void>, Error> {
+
+  return useMutation<AxiosResponse<void>, Error, unknown>({
+    mutationFn: async () => {
+      const api = WorkspaceControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
+      const res = await api.removeUserFromWorkspace(workspaceId, userId, {...options, withCredentials: true});
+      return res;
+    },
+    ...mutationOptions
+  });
+    
+}
+
+export function useUploadImage(workspaceId: number, file: File, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<void>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<void>, Error> {
+
+  return useMutation<AxiosResponse<void>, Error, unknown>({
+    mutationFn: async () => {
+      const api = WorkspaceControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
+      const res = await api.uploadImage(workspaceId, file, {...options, withCredentials: true});
+      return res;
+    },
+    ...mutationOptions
   });
     
 }

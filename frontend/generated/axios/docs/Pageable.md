@@ -1,23 +1,23 @@
-# EditUserResponseDTO
+# Pageable
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **number** |  | [default to undefined]
-**username** | **string** |  | [default to undefined]
-**role** | **string** |  | [default to undefined]
+**page** | **number** |  | [optional] [default to undefined]
+**size** | **number** |  | [optional] [default to undefined]
+**sort** | **Array&lt;string&gt;** |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { EditUserResponseDTO } from './api';
+import { Pageable } from './api';
 
-const instance: EditUserResponseDTO = {
-    id,
-    username,
-    role,
+const instance: Pageable = {
+    page,
+    size,
+    sort,
 };
 ```
 
