@@ -1,8 +1,9 @@
 import { useParams } from '@tanstack/react-router'
 import { Route } from '../routes/workspaces/$workspaceId/annotate/$imageId'
-import { ToolSelectorSidebar, ToolId } from '@/components/workspace/ToolSelectorSidebar'
+import { ToolSelectorSidebar } from '@/components/workspace/ToolSelectorSidebar'
 import { useState } from 'react'
 import { useGeneratePresignedDownloadUrlForImage } from '../../generated'
+import { Canvas } from '@/components/canvas'
 
 type AnnotateWorkspaceParams = {
   workspaceId: number
@@ -11,7 +12,7 @@ type AnnotateWorkspaceParams = {
 
 export function AnnotateWorkspace() {
   const params: AnnotateWorkspaceParams = useParams({ from: Route.id })
-  const [active, setActive] = useState<ToolId>('select')
+  const [active, setActive] = useState<number>(0)
 
   const { data } = useGeneratePresignedDownloadUrlForImage(params.workspaceId, params.imageId, {
     includeAnnotations: true,
@@ -24,15 +25,10 @@ export function AnnotateWorkspace() {
         <ToolSelectorSidebar active={active} onSelect={setActive} />
       </div>
       <div className="flex items-center justify-center flex-col gap-1">
-        {' '}
         <p>
-          {' '}
           Workspace: {image?.workspaceId}, Image: {image?.fileName}
         </p>
-        <img src={image?.url}></img>
-        <p className="text-lg">
-          Currently selected: <span className="font-semibold">{active}</span>
-        </p>
+        {image?.url && <Canvas image={image.url} tool={active} />}
       </div>
     </div>
   )

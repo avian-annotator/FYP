@@ -5,7 +5,6 @@ import { Stage, Layer, Transformer } from 'react-konva'
 import BoundingBoxTool from './Tools/BoundingBoxTool'
 import SelectMoveTool from './Tools/SelectMoveTool'
 import LabelTool from './Tools/LabelTool'
-import mockImage from '../../assets/mock-image.jpg'
 
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 // yes this is bad but i'll fix it later cause the typing is kinda complicated :(
@@ -28,8 +27,13 @@ interface CanvasObjectProps {
   id: number
 }
 
+interface CanvasProps {
+  image: string
+  tool: number
+}
+
 // TODO:  function to change image
-const Canvas = () => {
+const Canvas = ({ image, tool }: CanvasProps) => {
   const stageRef = useRef<Konva.Stage>(null)
   const [stageElements, setStageElements] = useState<JSX.Element[]>([])
   const addToStage = (el: JSX.Element) => {
@@ -98,22 +102,10 @@ const Canvas = () => {
   ]
 
   // tool switcher
-  const [activeTool, setActiveTool] = useState<CanvasTool>(tools[0])
-  const [activeToolFuncExtra, setActiveToolFuncExtra] = useState<toolFuncArg>(toolFuncArgs[0])
-  const [toolIndex, setToolIndex] = useState<number>(0)
-  useEffect(() => {
-    if (!Number.isNaN(toolIndex) && toolIndex < tools.length && toolIndex >= 0) {
-      setActiveTool(tools[toolIndex])
-      setActiveToolFuncExtra(toolFuncArgs[toolIndex])
-      trRef.current?.nodes([])
-      stageElements.forEach(el => {
-        ;(el.props as CanvasObjectProps).ref.current?.setDraggable(false)
-      })
-    }
-  }, [toolIndex, isDragging])
+  const activeTool = tools[tool] ?? tools[0]
+  const activeToolFuncExtra: toolFuncArg = toolFuncArgs[tool] ?? {}
 
   // image loader
-  const currentImage = mockImage // props.image
   const imgRef = useRef<HTMLImageElement>(null)
   const [{ w: stageWidth, h: stageHeight }, setStageDim] = useState<{ w: number; h: number }>({
     w: 0,
@@ -124,44 +116,38 @@ const Canvas = () => {
   }
 
   return (
-    <div className="relative w-dvw h-dvh bg-[#f0f0f0] select-none border-gray-700 border-[0.2rem]">
-      <img className="absolute" src={currentImage} ref={imgRef} onLoad={handleImgLoad} />
-      <Stage
-        ref={stageRef}
-        width={stageWidth}
-        height={stageHeight}
-        onMouseDown={e => {
-          activeTool.handleMouseDown(e, activeToolFuncExtra.handleMouseDown)
-        }}
-        onMouseMove={e => {
-          activeTool.handleMouseMove(e, activeToolFuncExtra.handleMouseMove)
-        }}
-        onMouseUp={e => {
-          activeTool.handleMouseUp(e, activeToolFuncExtra.handleMouseUp)
-        }}
-        onClick={e => {
-          activeTool.handleClick(e, activeToolFuncExtra.handleClick)
-        }}
-      >
-        <Layer>
-          {stageElements}
-          <Transformer ref={trRef} rotateEnabled={false} />
-        </Layer>
-      </Stage>
-      <span className="absolute border-black border-[0.1rem] rounded-sm px-[0.4rem] z-10">
-        <input
-          className="w-[1rem] border-black border-[0.1rem] m-[0.1rem] text-center"
-          type="text"
-          onChange={e => {
-            setToolIndex(Number(e.target.value))
+    <div className=" bg-[#f0f0f0] select-none border-gray-700 border-[0.2rem] flex items-center justify-center">
+      <div className="relative">
+        <img className="absolute" src={image} ref={imgRef} onLoad={handleImgLoad} />
+        <Stage
+          ref={stageRef}
+          width={stageWidth}
+          height={stageHeight}
+          onMouseDown={e => {
+            activeTool.handleMouseDown(e, activeToolFuncExtra.handleMouseDown)
           }}
-        />
-        <span className="pl-[0.2rem]">
-          Using: {activeTool.toolName}
-          <br />
-          Enter a number from 0 to {tools.length - 1}
+          onMouseMove={e => {
+            activeTool.handleMouseMove(e, activeToolFuncExtra.handleMouseMove)
+          }}
+          onMouseUp={e => {
+            activeTool.handleMouseUp(e, activeToolFuncExtra.handleMouseUp)
+          }}
+          onClick={e => {
+            activeTool.handleClick(e, activeToolFuncExtra.handleClick)
+          }}
+        >
+          <Layer>
+            {stageElements}
+            <Transformer ref={trRef} rotateEnabled={false} />
+          </Layer>
+        </Stage>
+        <span className="absolute border-black border-[0.1rem] rounded-sm px-[0.4rem] z-10">
+          <span className="pl-[0.2rem]">
+            Using: {activeTool.toolName}
+            <br />
+          </span>
         </span>
-      </span>
+      </div>
     </div>
   )
 }

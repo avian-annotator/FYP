@@ -4,17 +4,15 @@ import { Pen, MousePointer, Box, ChevronsLeft, ChevronsRight } from 'lucide-reac
 import { cn } from '@/lib/utils'
 import { useState } from 'react'
 
-export type ToolId = 'draw' | 'select' | 'box'
-
 const tools = [
-  { id: '1', label: 'draw', icon: Pen },
-  { id: '2', label: 'select', icon: MousePointer },
-  { id: '3', label: 'bounding box', icon: Box },
+  { id: 2, label: 'label', icon: Pen },
+  { id: 1, label: 'select', icon: MousePointer },
+  { id: 0, label: 'bbox', icon: Box },
 ]
 
 interface ToolSelectorSidebarProps {
-  active: ToolId
-  onSelect: (id: ToolId) => void
+  active: number
+  onSelect: (id: number) => void
 }
 
 export function ToolSelectorSidebar({ active, onSelect }: ToolSelectorSidebarProps) {
@@ -48,7 +46,7 @@ export function ToolSelectorSidebar({ active, onSelect }: ToolSelectorSidebarPro
             variant={active === tool.id ? 'outline' : 'ghost'}
             className={cn('justify-start gap-2 w-full', collapsed && 'justify-center')}
             onClick={() => {
-              onSelect(tool.id as ToolId)
+              onSelect(tool.id)
             }}
           >
             <tool.icon className="h-4 w-4" />
