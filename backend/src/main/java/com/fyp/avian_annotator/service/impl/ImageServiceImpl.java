@@ -137,7 +137,7 @@ public class ImageServiceImpl implements ImageService {
 
     if (!Objects.equals(attachedWorkspace.getId(), workspaceId)
         || !Objects.equals(attachedWorkspace.getOwner().getId(), userId)) {
-      throw new NotAllowedException();
+      throw new NotAllowedException("Cannot remove owner from workspace");
     }
     return image;
   }
@@ -151,7 +151,7 @@ public class ImageServiceImpl implements ImageService {
     if (!Objects.equals(attachedWorkspace.getId(), workspaceId)
         || attachedWorkspace.getWorkspaceUsers().stream()
             .noneMatch(u -> Objects.equals(u.getUser().getId(), userId))) {
-      throw new NotAllowedException();
+      throw new NotAllowedException("Cannot remove owner from workspace");
     }
     return image;
   }
@@ -160,7 +160,7 @@ public class ImageServiceImpl implements ImageService {
     Workspace workspace =
         workspaceRepository
             .findByIdAndWorkspaceUsers_UserId(workspaceId, userId)
-            .orElseThrow(NotAllowedException::new);
+            .orElseThrow(() -> new NotAllowedException("Cannot remove owner from workspace"));
 
     return imageRepository.findImageByWorkspaceId(workspace.getId(), pageable);
   }

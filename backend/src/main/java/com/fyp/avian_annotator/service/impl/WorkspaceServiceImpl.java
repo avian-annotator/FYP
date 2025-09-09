@@ -116,6 +116,9 @@ public class WorkspaceServiceImpl implements WorkspaceService {
 
     validateOwnership(workspace, sessionUser);
     try {
+      if (Objects.equals(workspace.getOwner().getId(), toRemoveUserId)) {
+        throw new NotAllowedException("Cannot remove owner from workspace");
+      }
       workspaceUserRepository.deleteById(new WorkspaceUserId(workspaceId, toRemoveUserId));
     } catch (EmptyResultDataAccessException e) {
       throw new UserNotFoundException(toRemoveUserId);
@@ -155,7 +158,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     boolean alreadyAssociated =
         workspaceUserRepository.existsById(new WorkspaceUserId(workspaceId, toAddUser.getId()));
     if (alreadyAssociated) {
-      throw new NotAllowedException();
+      throw new NotAllowedException("Cannot remove owner from workspace");
     }
   }
 
