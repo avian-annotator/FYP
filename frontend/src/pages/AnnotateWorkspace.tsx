@@ -20,15 +20,16 @@ export function AnnotateWorkspace() {
   const image = data?.data
 
   return (
-    <div className="h-screen w-screen">
-      <div className="flex justify-end pt-2 p-1">
-        <ToolSelectorSidebar active={active} onSelect={setActive} />
-      </div>
-      <div className="flex items-center justify-center flex-col gap-1">
-        <p>
-          Workspace: {image?.workspaceId}, Image: {image?.fileName}
-        </p>
-        {image?.url && <Canvas image={image.url} tool={active} />}
+    <div className="flex h-screen items-center justify-center">
+      <div className="relative flex flex-col items-center">
+        <div className="flex flex-col items-center gap-4">
+          <p>Currently editing: {image?.fileName}</p>
+          {image?.url && <Canvas image={image.url} tool={active} />}
+        </div>
+
+        <div className="absolute left-full top-10 ml-2 flex flex-col justify-center">
+          <ToolSelectorSidebar active={active} onSelect={setActive} />
+        </div>
       </div>
     </div>
   )

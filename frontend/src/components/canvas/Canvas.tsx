@@ -112,13 +112,24 @@ const Canvas = ({ image, tool }: CanvasProps) => {
     h: 0,
   })
   const handleImgLoad = (e: SyntheticEvent<HTMLImageElement>) => {
-    setStageDim({ w: e.currentTarget.naturalWidth, h: e.currentTarget.naturalHeight })
+    const { naturalWidth, naturalHeight } = e.currentTarget
+
+    const scale = 450 / naturalWidth
+    const scaledHeight = naturalHeight * scale
+
+    setStageDim({ w: 450, h: scaledHeight })
   }
 
   return (
     <div className=" bg-[#f0f0f0] select-none border-gray-700 border-[0.2rem] flex items-center justify-center">
       <div className="relative">
-        <img className="absolute" src={image} ref={imgRef} onLoad={handleImgLoad} />
+        <img
+          className="absolute"
+          src={image}
+          width={stageWidth}
+          ref={imgRef}
+          onLoad={handleImgLoad}
+        />
         <Stage
           ref={stageRef}
           width={stageWidth}
@@ -141,12 +152,6 @@ const Canvas = ({ image, tool }: CanvasProps) => {
             <Transformer ref={trRef} rotateEnabled={false} />
           </Layer>
         </Stage>
-        <span className="absolute border-black border-[0.1rem] rounded-sm px-[0.4rem] z-10">
-          <span className="pl-[0.2rem]">
-            Using: {activeTool.toolName}
-            <br />
-          </span>
-        </span>
       </div>
     </div>
   )
