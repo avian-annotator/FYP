@@ -7,7 +7,7 @@ import { useState } from 'react'
 const tools = [
   { id: 2, label: 'label', icon: Pen },
   { id: 1, label: 'select', icon: MousePointer },
-  { id: 0, label: 'bbox', icon: Box },
+  { id: 0, label: 'bounding box', icon: Box },
 ]
 
 interface ToolSelectorSidebarProps {
