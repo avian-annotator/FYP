@@ -11,4 +11,4 @@
 .idea
 
 
-/localstack/s3
+/localstack/s3/**
