@@ -9,8 +9,8 @@ type CanvasState = {
 
 type UserState = {
   userId: number
-  currentSelectionId?: number
-  cursorPosition?: Position
+  currentSelectionId: number | undefined
+  cursorPosition: Position
   isDragging: boolean
 }
 
@@ -28,7 +28,7 @@ type Position = {
 }
 
 const initalCanvasState = {
-  userState: [{ userId: 0, isDragging: false }],
+  userState: [],
   canvasElements: [],
 } as CanvasState
 
@@ -39,7 +39,7 @@ type CanvasAction =
   | { type: 'addLabel'; id: number; label: string }
   | { type: 'setSelected'; userId: number; id: number }
   | { type: 'clearSelected'; userId: number }
-  | { type: 'addUser'; userId: number }
+  | { type: 'addUser'; userId: number } // NOT IMPLEMENTED
   | { type: 'removeUser'; userId: number } // NOT IMPLEMENTED
 
 function canvasReducer(p: CanvasState, action: CanvasAction) {
@@ -75,14 +75,6 @@ function canvasReducer(p: CanvasState, action: CanvasAction) {
         userState: p.userState.map(el =>
           el.userId === action.userId ? { ...el, isDragging: action.isDragging } : el,
         ),
-      }
-    case 'addUser':
-      return {
-        ...p,
-        userState:
-          p.userState.find(user => user.userId) === undefined
-            ? p.userState.concat({ userId: action.userId, isDragging: false })
-            : p.userState,
       }
     default:
       throw new Error()
