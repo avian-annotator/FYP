@@ -1,30 +1,23 @@
-import { SyntheticEvent, useEffect, useRef, useState, RefObject } from 'react'
-import { JSX } from 'react/jsx-runtime'
+import { SyntheticEvent, useEffect, useRef, useState, useReducer } from 'react'
 import Konva from 'konva'
 import { Stage, Layer, Transformer } from 'react-konva'
 import BoundingBoxTool from './Tools/BoundingBoxTool'
 import SelectMoveTool from './Tools/SelectMoveTool'
 import LabelTool from './Tools/LabelTool'
+import CanvasState, { canvasReducer, initalCanvasState, CanvasAction } from './CanvasState'
 
-/* eslint-disable  @typescript-eslint/no-explicit-any */
-// yes this is bad but i'll fix it later cause the typing is kinda complicated :(
 interface CanvasTool {
-  handleMouseMove: (e: Konva.KonvaEventObject<MouseEvent>, extra: any) => void
-  handleMouseDown: (e: Konva.KonvaEventObject<MouseEvent>, extra: any) => void
-  handleMouseUp: (e: Konva.KonvaEventObject<MouseEvent>, extra: any) => void
-  handleClick: (e: Konva.KonvaEventObject<MouseEvent>, extra: any) => void
+  handleMouseMove: (e: Konva.KonvaEventObject<MouseEvent>) => void
+  handleMouseDown: (e: Konva.KonvaEventObject<MouseEvent>) => void
+  handleMouseUp: (e: Konva.KonvaEventObject<MouseEvent>) => void
+  handleClick: (e: Konva.KonvaEventObject<MouseEvent>) => void
   toolName: string
 }
-/* eslint-disable  @typescript-eslint/no-explicit-any */
 
 interface CanvasToolProps {
   stageRef: React.RefObject<Konva.Stage | null>
-  addToStage: (el: JSX.Element) => void
-}
-
-interface CanvasObjectProps {
-  ref: RefObject<null | Konva.Shape>
-  id: number
+  canvasState: CanvasState
+  canvasDispatch: React.ActionDispatch<[action: CanvasAction]>
 }
 
 interface CanvasProps {
@@ -32,78 +25,37 @@ interface CanvasProps {
   tool: number
 }
 
+// Need way to have instanced user ids
+const userId = 0
 // TODO:  function to change image
 const Canvas = ({ image, tool }: CanvasProps) => {
   const stageRef = useRef<Konva.Stage>(null)
-  const [stageElements, setStageElements] = useState<JSX.Element[]>([])
-  const addToStage = (el: JSX.Element) => {
-    setStageElements(p => p.concat(el))
-  }
+  const [canvasState, canvasDispatch] = useReducer(canvasReducer, initalCanvasState)
 
   // transformer for selectmovetool
   const trRef = useRef<Konva.Transformer>(null)
-  const [selectedElement, setSelectedElement] = useState<Konva.Shape | null>(null)
-  const handleCanvasSelect = (shape: Konva.Shape) => {
-    setSelectedElement(shape)
-  }
-
-  const addLabelToBoundingBox = (boundingBoxId: number, label: string) => {
-    setStageElements(prev =>
-      prev.map(el => {
-        const props = el.props as CanvasObjectProps
-        return props.id === boundingBoxId ? { ...el, props: { ...props, label: label } } : el
-      }),
-    )
-  }
 
   useEffect(() => {
-    if (selectedElement) {
-      trRef.current?.nodes([selectedElement])
+    const selectionId = canvasState.userState.find(
+      user => user.userId === userId,
+    )?.currentSelectionId
+    const currentSelection = canvasState.canvasElements.find(el => el.props.id === selectionId)
+    if (currentSelection !== undefined && currentSelection instanceof Konva.Node) {
+      trRef.current?.nodes([currentSelection])
     } else {
       trRef.current?.nodes([])
       // make undraggable if selected
-      stageElements.forEach(el => {
-        ;(el.props as CanvasObjectProps).ref.current?.setDraggable(false)
-      })
+      canvasState.canvasElements.forEach(el => el.props.ref.current?.setDraggable(false))
     }
-  }, [stageElements, selectedElement])
-
-  // dragging state for boundingboxtool
-  const [isDragging, setDragging] = useState<boolean>(false)
-  function dragging(val?: undefined): boolean
-  function dragging(val: boolean): void
-  function dragging(val?: boolean): boolean | void {
-    if (val === undefined) {
-      return isDragging
-    } else {
-      setDragging(val)
-    }
-  }
-
-  // tool properties... is there a better way then hard coding?
-  const tools: CanvasTool[] = [
-    BoundingBoxTool({ stageRef, addToStage }),
-    SelectMoveTool({ stageRef, addToStage }),
-    LabelTool({ stageRef, addToStage }),
-  ]
-  type toolFuncArg = { [_ in keyof CanvasTool]?: Record<string, any> }
-  const toolFuncArgs = [
-    {
-      handleMouseDown: { dragging },
-      handleMouseUp: { dragging },
-      handleMouseMove: { dragging },
-    },
-    {
-      handleClick: { handleCanvasSelect },
-    },
-    {
-      handleClick: { addLabelToBoundingBox },
-    },
-  ]
+  }, [canvasState])
 
   // tool switcher
+  const tools: CanvasTool[] = [
+    BoundingBoxTool({ stageRef, canvasState, canvasDispatch }),
+    SelectMoveTool({ stageRef, canvasState, canvasDispatch }),
+    LabelTool({ stageRef, canvasState, canvasDispatch }),
+  ]
   const activeTool = tools[tool] ?? tools[0]
-  const activeToolFuncExtra: toolFuncArg = toolFuncArgs[tool] ?? {}
 
   // image loader
   const imgRef = useRef<HTMLImageElement>(null)
@@ -135,20 +87,20 @@ const Canvas = ({ image, tool }: CanvasProps) => {
           width={stageWidth}
           height={stageHeight}
           onMouseDown={e => {
-            activeTool.handleMouseDown(e, activeToolFuncExtra.handleMouseDown)
+            activeTool.handleMouseDown(e)
           }}
           onMouseMove={e => {
-            activeTool.handleMouseMove(e, activeToolFuncExtra.handleMouseMove)
+            activeTool.handleMouseMove(e)
           }}
           onMouseUp={e => {
-            activeTool.handleMouseUp(e, activeToolFuncExtra.handleMouseUp)
+            activeTool.handleMouseUp(e)
           }}
           onClick={e => {
-            activeTool.handleClick(e, activeToolFuncExtra.handleClick)
+            activeTool.handleClick(e)
           }}
         >
           <Layer>
-            {stageElements}
+            {canvasState.canvasElements}
             <Transformer ref={trRef} rotateEnabled={false} />
           </Layer>
         </Stage>
@@ -159,4 +111,4 @@ const Canvas = ({ image, tool }: CanvasProps) => {
 
 export default Canvas
 
-export type { CanvasTool, CanvasToolProps, CanvasObjectProps }
+export type { CanvasTool, CanvasToolProps }

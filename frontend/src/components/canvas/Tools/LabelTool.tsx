@@ -1,12 +1,8 @@
 import { CanvasTool, CanvasToolProps } from '../Canvas'
 import Konva from 'konva'
 
-type LabelToolFuncExtra = {
-  addLabelToBoundingBox: (boundingBoxId: number, label: string) => void
-}
-
-const LabelTool = (_: CanvasToolProps): CanvasTool => {
-  const handleClick = (e: Konva.KonvaEventObject<MouseEvent>, extra: LabelToolFuncExtra) => {
+const LabelTool = (props: CanvasToolProps): CanvasTool => {
+  const handleClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
     if (e.evt.button === 0) {
       if (e.target instanceof Konva.Rect && e.target.id().startsWith('stage.')) {
         const labelText = prompt('Enter label text:')
@@ -15,7 +11,7 @@ const LabelTool = (_: CanvasToolProps): CanvasTool => {
 
           const label = labelText.trim()
 
-          extra.addLabelToBoundingBox(boundingBoxId, label)
+          props.canvasDispatch({ type: 'addLabel', id: boundingBoxId, label: label })
         }
       }
     }
@@ -33,4 +29,3 @@ const LabelTool = (_: CanvasToolProps): CanvasTool => {
 }
 
 export default LabelTool
-export type { LabelToolFuncExtra }

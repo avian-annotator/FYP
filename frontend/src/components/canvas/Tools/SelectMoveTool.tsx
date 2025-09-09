@@ -1,19 +1,20 @@
 import { CanvasTool, CanvasToolProps } from '../Canvas'
 import Konva from 'konva'
 
-type SelectMoveFuncExtra = {
-  handleCanvasSelect: (shape?: Konva.Shape) => void
-}
-
-const SelectMoveTool = (_: CanvasToolProps): CanvasTool => {
-  const handleClick = (e: Konva.KonvaEventObject<MouseEvent>, extra: SelectMoveFuncExtra) => {
+const userId = 0
+const SelectMoveTool = (props: CanvasToolProps): CanvasTool => {
+  const handleClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
     // left click
     if (e.evt.button === 0) {
-      if (e.target instanceof Konva.Rect) {
+      if (e.target instanceof Konva.Node) {
         e.target.setDraggable(true)
-        extra.handleCanvasSelect(e.target)
+        props.canvasDispatch({
+          type: 'setSelected',
+          id: Number(e.currentTarget.id().split('.')[1]),
+          userId: userId,
+        })
       } else {
-        extra.handleCanvasSelect()
+        props.canvasDispatch({ type: 'clearSelected', userId: userId })
       }
     }
   }
@@ -29,4 +30,3 @@ const SelectMoveTool = (_: CanvasToolProps): CanvasTool => {
   } as CanvasTool
 }
 export default SelectMoveTool
-export type { SelectMoveFuncExtra }
