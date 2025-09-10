@@ -48,7 +48,7 @@ const BoundingBox = (props: BoundingBoxProps) => {
           id={`label.${String(props.id)}`}
         />
       )}
-    </Rect>
+    </>
   )
 }
 
