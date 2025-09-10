@@ -98,18 +98,10 @@ const Canvas = ({ image, tool }: CanvasProps) => {
           ref={stageRef}
           width={stageWidth}
           height={stageHeight}
-          onMouseDown={e => {
-            activeTool.handleMouseDown(e)
-          }}
-          onMouseMove={e => {
-            activeTool.handleMouseMove(e)
-          }}
-          onMouseUp={e => {
-            activeTool.handleMouseUp(e)
-          }}
-          onClick={e => {
-            activeTool.handleClick(e)
-          }}
+          onMouseDown={activeTool.handleMouseDown}
+          onMouseMove={activeTool.handleMouseMove}
+          onMouseUp={activeTool.handleMouseUp}
+          onClick={activeTool.handleClick}
         >
           <Layer>
             {canvasState.canvasElements}
