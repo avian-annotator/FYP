@@ -4,10 +4,10 @@ import Konva from 'konva'
 const LabelTool = (props: CanvasToolProps): CanvasTool => {
   const handleClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
     if (e.evt.button === 0) {
-      if (e.target instanceof Konva.Rect && e.target.id().startsWith('stage.')) {
+      if (e.target instanceof Konva.Shape) {
         const labelText = prompt('Enter label text:')
         if (labelText && labelText.trim()) {
-          const boundingBoxId = parseInt(e.target.id().replace('stage.', ''))
+          const boundingBoxId = Number(e.target.id().split('.')[1]) //TODO: Make a function for this that the interface implements for any canvas object rect or otherwise
 
           const label = labelText.trim()
 

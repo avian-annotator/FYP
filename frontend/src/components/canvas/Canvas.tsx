@@ -40,8 +40,9 @@ const Canvas = ({ image, tool }: CanvasProps) => {
       user => user.userId === userId,
     )?.currentSelectionId
     const currentSelection = canvasState.canvasElements.find(el => el.props.id === selectionId)
-    if (currentSelection !== undefined && currentSelection instanceof Konva.Node) {
-      trRef.current?.nodes([currentSelection])
+    const canvasShape = currentSelection?.props.ref.current
+    if (canvasShape !== undefined && canvasShape instanceof Konva.Shape) {
+      trRef.current?.nodes([canvasShape])
     } else {
       trRef.current?.nodes([])
       // make undraggable if selected
@@ -86,18 +87,10 @@ const Canvas = ({ image, tool }: CanvasProps) => {
           ref={stageRef}
           width={stageWidth}
           height={stageHeight}
-          onMouseDown={e => {
-            activeTool.handleMouseDown(e)
-          }}
-          onMouseMove={e => {
-            activeTool.handleMouseMove(e)
-          }}
-          onMouseUp={e => {
-            activeTool.handleMouseUp(e)
-          }}
-          onClick={e => {
-            activeTool.handleClick(e)
-          }}
+          onMouseDown={activeTool.handleMouseDown}
+          onMouseMove={activeTool.handleMouseMove}
+          onMouseUp={activeTool.handleMouseUp}
+          onClick={activeTool.handleClick}
         >
           <Layer>
             {canvasState.canvasElements}

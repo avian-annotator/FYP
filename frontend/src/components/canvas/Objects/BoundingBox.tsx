@@ -14,27 +14,28 @@ const BoundingBox = (props: BoundingBoxProps) => {
   const [pos, setPos] = useState<{ x: number; y: number }>(props.initialPos)
   const color = props.color || '#ffffff'
   return (
-    <Rect
-      x={pos.x}
-      y={pos.y}
-      width={0}
-      height={0}
-      ref={props.ref}
-      stroke={color}
-      strokeWidth={2}
-      fill={getBackgroundColor(props.id)}
-      key={props.id}
-      id={`rect.${String(props.id)}`}
-      onDragMove={e => {
-        setPos({ x: e.target.x(), y: e.target.y() })
-      }}
-      onTransform={e => {
-        setPos({ x: e.target.x(), y: e.target.y() })
-      }}
-      onMouseUp={e => {
-        setPos({ x: e.target.x(), y: e.target.y() })
-      }}
-    >
+    <>
+      <Rect
+        x={pos.x}
+        y={pos.y}
+        width={0}
+        height={0}
+        ref={props.ref}
+        stroke={color}
+        strokeWidth={2}
+        fill={getBackgroundColor(props.id)}
+        key={props.id}
+        id={`rect.${String(props.id)}`}
+        onDragMove={e => {
+          setPos({ x: e.target.x(), y: e.target.y() })
+        }}
+        onTransform={e => {
+          setPos({ x: e.target.x(), y: e.target.y() })
+        }}
+        onMouseUp={e => {
+          setPos({ x: e.target.x(), y: e.target.y() })
+        }}
+      />
       {props.label && (
         <Text
           x={pos.x}
@@ -47,7 +48,7 @@ const BoundingBox = (props: BoundingBoxProps) => {
           id={`label.${String(props.id)}`}
         />
       )}
-    </Rect>
+    </>
   )
 }
 

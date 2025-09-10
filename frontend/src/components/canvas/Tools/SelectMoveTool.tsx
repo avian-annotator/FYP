@@ -6,13 +6,13 @@ const SelectMoveTool = (props: CanvasToolProps): CanvasTool => {
   const handleClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
     // left click
     if (e.evt.button === 0) {
-      if (e.target instanceof Konva.Node) {
-        e.target.setDraggable(true)
+      if (e.target instanceof Konva.Shape) {
         props.canvasDispatch({
           type: 'setSelected',
-          id: Number(e.currentTarget.id().split('.')[1]),
+          id: Number(e.target.id().split('.')[1]), //TODO: Make a function for this that the interface implements for any canvas object rect or otherwise
           userId: userId,
         })
+        e.target.setDraggable(true)
       } else {
         props.canvasDispatch({ type: 'clearSelected', userId: userId })
       }
