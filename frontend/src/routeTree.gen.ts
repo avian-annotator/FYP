@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as MeRouteImport } from './routes/me'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as CanvasRouteImport } from './routes/canvas'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WorkspacesIndexRouteImport } from './routes/workspaces/index'
@@ -30,6 +31,11 @@ const MeRoute = MeRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CanvasRoute = CanvasRouteImport.update({
+  id: '/canvas',
+  path: '/canvas',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -90,6 +96,7 @@ const WorkspacesWorkspaceIdAnnotateImageIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/canvas': typeof CanvasRoute
   '/login': typeof LoginRouteWithChildren
   '/me': typeof MeRouteWithChildren
   '/admin/': typeof AdminIndexRoute
@@ -103,6 +110,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/canvas': typeof CanvasRoute
   '/admin': typeof AdminIndexRoute
   '/login': typeof LoginIndexRoute
   '/me': typeof MeIndexRoute
@@ -116,6 +124,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/canvas': typeof CanvasRoute
   '/login': typeof LoginRouteWithChildren
   '/me': typeof MeRouteWithChildren
   '/admin/': typeof AdminIndexRoute
@@ -132,6 +141,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/canvas'
     | '/login'
     | '/me'
     | '/admin/'
@@ -145,6 +155,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/canvas'
     | '/admin'
     | '/login'
     | '/me'
@@ -157,6 +168,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/canvas'
     | '/login'
     | '/me'
     | '/admin/'
@@ -172,6 +184,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
+  CanvasRoute: typeof CanvasRoute
   LoginRoute: typeof LoginRouteWithChildren
   MeRoute: typeof MeRouteWithChildren
   WorkspacesIndexRoute: typeof WorkspacesIndexRoute
@@ -194,6 +207,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/canvas': {
+      id: '/canvas'
+      path: '/canvas'
+      fullPath: '/canvas'
+      preLoaderRoute: typeof CanvasRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -317,6 +337,7 @@ const WorkspacesWorkspaceIdAnnotateRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
+  CanvasRoute: CanvasRoute,
   LoginRoute: LoginRouteWithChildren,
   MeRoute: MeRouteWithChildren,
   WorkspacesIndexRoute: WorkspacesIndexRoute,

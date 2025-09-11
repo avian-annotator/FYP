@@ -4,6 +4,7 @@ import { Stage, Layer, Transformer } from 'react-konva'
 import BoundingBoxTool from './Tools/BoundingBoxTool'
 import SelectMoveTool from './Tools/SelectMoveTool'
 import LabelTool from './Tools/LabelTool'
+import KeypointsTool from './Tools/KeypointsTool'
 import CanvasState, { canvasReducer, initalCanvasState, CanvasAction } from './CanvasState'
 
 interface CanvasTool {
@@ -55,6 +56,7 @@ const Canvas = ({ image, tool }: CanvasProps) => {
     BoundingBoxTool({ stageRef, canvasState, canvasDispatch }),
     SelectMoveTool({ stageRef, canvasState, canvasDispatch }),
     LabelTool({ stageRef, canvasState, canvasDispatch }),
+    KeypointsTool({ stageRef, canvasState, canvasDispatch }),
   ]
   const activeTool = tools[tool] ?? tools[0]
 
