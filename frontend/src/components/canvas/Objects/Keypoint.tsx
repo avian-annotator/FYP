@@ -1,8 +1,7 @@
 import Konva from 'konva'
 import { Circle } from 'react-konva'
-import { RefObject, useState } from 'react'
+import { RefObject } from 'react'
 import { CanvasElementProps } from '../CanvasState'
-import { getColor } from '../CanvasUtils'
 
 interface KeypointProps extends CanvasElementProps {
   initialPos: { x: number; y: number }
@@ -13,8 +12,8 @@ interface KeypointProps extends CanvasElementProps {
 }
 
 const Keypoint = (props: KeypointProps) => {
-  const [pos, setPos] = useState<{ x: number; y: number }>(props.initialPos)
-  const color = props.color || getColor(props.id)
+  const pos = props.initialPos
+  const color = props.color
   const radius = props.radius ?? 5
 
   return (
@@ -27,17 +26,6 @@ const Keypoint = (props: KeypointProps) => {
       fill={color}
       key={props.id}
       id={`point.${String(props.id)}`}
-      draggable
-      onDragMove={e => {
-        const { x, y } = e.target.position()
-        setPos({ x, y })
-        props.onMove?.(x, y)
-      }}
-      onMouseUp={e => {
-        const { x, y } = e.target.position()
-        setPos({ x, y })
-        props.onMove?.(x, y)
-      }}
     />
   )
 }
