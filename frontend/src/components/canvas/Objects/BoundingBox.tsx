@@ -1,13 +1,12 @@
 import Konva from 'konva'
 import { Rect, Text } from 'react-konva'
 import { RefObject, useState } from 'react'
-import { CanvasObjectProps } from '../Canvas'
+import { CanvasElementProps } from '../CanvasState'
 import { getBackgroundColor } from '../CanvasUtils'
 
-interface BoundingBoxProps extends CanvasObjectProps {
+interface BoundingBoxProps extends CanvasElementProps {
   initialPos: { x: number; y: number }
   ref: RefObject<null | Konva.Rect>
-  label?: string
   color?: string
 }
 
@@ -26,7 +25,7 @@ const BoundingBox = (props: BoundingBoxProps) => {
         strokeWidth={2}
         fill={getBackgroundColor(props.id)}
         key={props.id}
-        id={`stage.${String(props.id)}`}
+        id={`rect.${String(props.id)}`}
         onDragMove={e => {
           setPos({ x: e.target.x(), y: e.target.y() })
         }}
