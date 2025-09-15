@@ -50,13 +50,14 @@ export function AnnotateWorkspace() {
 
     publish({ annotationAction: 'JOIN', userId: 1, objectId: '1', objectType: 'IMAGE' })
 
-    const topic$ = rxStomp
-      .watch(`/topic/workspace/${workspaceId}/image/${imageId}/annotate`)
-      .subscribe(msg => {})
+    const topicObservable$ = rxStomp.watch(
+      `/topic/workspace/${workspaceId}/image/${imageId}/annotate`,
+    )
+    const topicSubscription = topicObservable$.subscribe(msg => {})
 
     return () => {
+      topicSubscription.unsubscribe()
       void rxStomp.deactivate()
-      topic$.unsubscribe()
     }
 
     // Runs only once on mount, so don't need any dep arrays. They're also static anyways
