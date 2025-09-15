@@ -7,9 +7,6 @@ import { Canvas } from '@/components/canvas'
 import { useEffect, useRef } from 'react'
 import { RxStomp, RxStompConfig } from '@stomp/rx-stomp'
 
-type AnnotateWorkspaceParams = {
-  workspaceId: number
-  imageId: string
 interface AnnotatePayload {
   // THIS is just a placeholder for now
   annotationAction: string
@@ -22,11 +19,10 @@ export function AnnotateWorkspace() {
   const { workspaceId, imageId } = useParams({ from: Route.id })
   const [active, setActive] = useState<number>(0)
 
-  const { data } = useGeneratePresignedDownloadUrlForImage(workspaceId, imageId, {
+  const { data } = useGeneratePresignedDownloadUrlForImage(Number(workspaceId), imageId, {
     includeAnnotations: true,
   })
   const image = data?.data
-  const { workspaceId, imageId } = useParams({ from: Route.id })
 
   const rxStompRef = useRef(new RxStomp())
   const rxStomp = rxStompRef.current
@@ -53,7 +49,13 @@ export function AnnotateWorkspace() {
     const topicObservable$ = rxStomp.watch(
       `/topic/workspace/${workspaceId}/image/${imageId}/annotate`,
     )
-    const topicSubscription = topicObservable$.subscribe(msg => {})
+    const topicSubscription = topicObservable$
+      .subscribe
+      //   msg => {
+      //   // console.log(msg.body)
+
+      // }
+      ()
 
     return () => {
       topicSubscription.unsubscribe()
