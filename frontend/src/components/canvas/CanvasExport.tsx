@@ -18,6 +18,8 @@ type cocoCategory = {
   id: number
   name: string
   supercategory: string
+  keypoints: string[]
+  skeleton: number[][]
 }
 
 type cocoImage = {
@@ -32,11 +34,14 @@ type cocoImage = {
 type cocoAnnotation = {
   id: number
   image_id: number
+  file_name: string
   category_id: number
   bbox: number[] // length = 4
   area: number
   segmentation: number[][] // array of numbers(length=2)
   iscrowd: number
+  keypoints: number[]
+  num_keypoints: number
 }
 
 type cocoLicense = {
