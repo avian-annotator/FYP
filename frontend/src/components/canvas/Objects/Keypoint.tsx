@@ -1,5 +1,5 @@
 import Konva from 'konva'
-import { Circle } from 'react-konva'
+import { Circle, Text } from 'react-konva'
 import { RefObject, useState } from 'react'
 import { CanvasElementProps } from '../CanvasState'
 
@@ -15,24 +15,38 @@ const Keypoint = (props: KeypointProps) => {
   const color = 'red'
 
   return (
-    <Circle
-      x={pos.x}
-      y={pos.y}
-      radius={7}
-      ref={props.ref}
-      stroke={color}
-      fill={color}
-      key={props.id}
-      id={`point.${String(props.id)}`}
-      onDragMove={e => {
-        setPos({ x: e.target.x(), y: e.target.y() })
-        props.onMove?.(e.target.x(), e.target.y())
-      }}
-      onMouseUp={e => {
-        setPos({ x: e.target.x(), y: e.target.y() })
-        props.onMove?.(e.target.x(), e.target.y())
-      }}
-    />
+    <>
+      <Circle
+        x={pos.x}
+        y={pos.y}
+        radius={7}
+        ref={props.ref}
+        stroke={color}
+        fill={color}
+        key={props.id}
+        id={`point.${String(props.id)}`}
+        onDragMove={e => {
+          setPos({ x: e.target.x(), y: e.target.y() })
+          props.onMove?.(e.target.x(), e.target.y())
+        }}
+        onMouseUp={e => {
+          setPos({ x: e.target.x(), y: e.target.y() })
+          props.onMove?.(e.target.x(), e.target.y())
+        }}
+      />
+      {props.label && (
+        <Text
+          x={pos.x}
+          y={pos.y - 25}
+          text={props.label}
+          fontSize={25}
+          fontFamily="Arial"
+          fill={color}
+          key={`label.${String(props.id)}`}
+          id={`label.${String(props.id)}`}
+        />
+      )}
+    </>
   )
 }
 

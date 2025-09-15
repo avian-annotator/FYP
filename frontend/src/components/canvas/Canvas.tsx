@@ -47,6 +47,8 @@ const Canvas = ({ image, tool }: CanvasProps) => {
         //so keypoints are not resized
         trRef.current?.resizeEnabled(false)
         trRef.current?.nodes([canvasShape])
+      } else if (canvasShape instanceof Konva.Line) {
+        trRef.current?.resizeEnabled(false)
       } else {
         trRef.current?.nodes([canvasShape])
         trRef.current?.resizeEnabled(true)
