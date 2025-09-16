@@ -5,16 +5,11 @@ import { useState } from 'react'
 import { useGeneratePresignedDownloadUrlForImage } from '../../generated'
 import { Canvas } from '@/components/canvas'
 
-type AnnotateWorkspaceParams = {
-  workspaceId: number
-  imageId: string
-}
-
 export function AnnotateWorkspace() {
-  const params: AnnotateWorkspaceParams = useParams({ from: Route.id })
+  const { workspaceId, imageId } = useParams({ from: Route.id })
   const [active, setActive] = useState<number>(0)
 
-  const { data } = useGeneratePresignedDownloadUrlForImage(params.workspaceId, params.imageId, {
+  const { data } = useGeneratePresignedDownloadUrlForImage(Number(workspaceId), imageId, {
     includeAnnotations: true,
   })
   const image = data?.data
