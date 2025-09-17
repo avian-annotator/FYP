@@ -18,7 +18,7 @@ export function Admin() {
   const { page } = Route.useSearch()
   const navigate = Route.useNavigate()
 
-  const { data, error } = useGetAllUsers({ page, size: 4 })
+  const { data, error } = useGetAllUsers({ page, size: 5 })
 
   const users = data?.data.content === undefined ? [] : data.data.content
   const totalPages = data?.data.totalPages === undefined ? 0 : data.data.totalPages
@@ -54,6 +54,7 @@ export function Admin() {
               <p className="text-gray-500">No users found</p>
             )}
           </div>
+          <div style={{ margin: '10px' }}></div>
           {/* Pagination */}
           <Pagination>
             <PaginationContent>
@@ -74,7 +75,7 @@ export function Admin() {
                       handlePageChange(i)
                     }}
                   >
-                    {i}
+                    {i + 1}
                   </PaginationLink>
                 </PaginationItem>
               ))}

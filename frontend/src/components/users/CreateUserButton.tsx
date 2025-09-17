@@ -57,6 +57,7 @@ export function CreateUserButton() {
         <form onSubmit={onSubmit}>
           <label className="block mb-2 text-sm font-medium text-gray-700">User</label>
           <input
+            style={{ border: '2px solid black', borderRadius: '5px' }}
             username="username"
             onChange={e => {
               setUsername(e.target.value)
@@ -64,6 +65,7 @@ export function CreateUserButton() {
           />
           <label className="block mb-2 text-sm font-medium text-gray-700">Password</label>
           <input
+            style={{ border: '2px solid black', borderRadius: '5px' }}
             password="password"
             onChange={e => {
               setPassword(e.target.value)
