@@ -1,7 +1,7 @@
 import { useState, useRef, ChangeEvent } from 'react'
 import { Button } from '../ui/button'
-import { useUploadImage } from '../../../generated'
-//TODO add multiple file upload
+import { useUploadMultipleImages } from '@/lib/utils'
+
 export function ImageUploadButton({
   workspaceId,
   onUploadSuccess,
@@ -9,35 +9,27 @@ export function ImageUploadButton({
   workspaceId: number
   onUploadSuccess: () => void
 }) {
-  const dummyFile = new File([], 'dummy.txt')
-  const [selectedFile, setSelectedFile] = useState<File>(dummyFile)
-  const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
-  //TOOD: fix the upload image hook
-  const { mutate } = useUploadImage(workspaceId, selectedFile)
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    setSelectedFile(file)
-    setIsUploading(true)
+  const { mutateAsync } = useUploadMultipleImages(workspaceId)
+
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? [])
+    if (files.length === 0) return
+
     setError(null)
 
-    mutate(
-      {},
-      {
-        onSuccess: () => {
-          onUploadSuccess()
-          setSelectedFile(dummyFile)
-          setIsUploading(false)
-        },
-        onError: err => {
-          setError(err.message || 'Upload failed')
-          setIsUploading(false)
-        },
-      },
-    )
+    try {
+      await Promise.all(files.map(file => mutateAsync({ file })))
+      onUploadSuccess()
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message)
+      } else {
+        setError(String(err))
+      }
+    }
   }
 
   const handleButtonClick = () => {
@@ -53,12 +45,11 @@ export function ImageUploadButton({
         ref={fileInputRef}
         type="file"
         accept="image/*"
-        onChange={handleFileChange}
+        multiple
+        onChange={void handleFileChange}
         style={{ display: 'none' }}
       />
-      <Button onClick={handleButtonClick} disabled={isUploading}>
-        Upload Image
-      </Button>
+      <Button onClick={handleButtonClick}>Upload Image</Button>
       {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   )
