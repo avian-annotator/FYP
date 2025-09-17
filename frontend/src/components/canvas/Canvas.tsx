@@ -4,6 +4,7 @@ import { Stage, Layer, Transformer } from 'react-konva'
 import BoundingBoxTool from './Tools/BoundingBoxTool'
 import SelectMoveTool from './Tools/SelectMoveTool'
 import LabelTool from './Tools/LabelTool'
+import KeypointsTool from './Tools/KeypointsTool'
 import CanvasState, { canvasReducer, initalCanvasState, CanvasAction } from './CanvasState'
 
 interface CanvasTool {
@@ -42,7 +43,16 @@ const Canvas = ({ image, tool }: CanvasProps) => {
     const currentSelection = canvasState.canvasElements.find(el => el.props.id === selectionId)
     const canvasShape = currentSelection?.props.ref.current
     if (canvasShape !== undefined && canvasShape instanceof Konva.Shape) {
-      trRef.current?.nodes([canvasShape])
+      if (canvasShape instanceof Konva.Circle) {
+        //so keypoints are not resized
+        trRef.current?.resizeEnabled(false)
+        trRef.current?.nodes([canvasShape])
+      } else if (canvasShape instanceof Konva.Line) {
+        trRef.current?.resizeEnabled(false)
+      } else {
+        trRef.current?.nodes([canvasShape])
+        trRef.current?.resizeEnabled(true)
+      }
     } else {
       trRef.current?.nodes([])
       // make undraggable if selected
@@ -55,6 +65,7 @@ const Canvas = ({ image, tool }: CanvasProps) => {
     BoundingBoxTool({ stageRef, canvasState, canvasDispatch }),
     SelectMoveTool({ stageRef, canvasState, canvasDispatch }),
     LabelTool({ stageRef, canvasState, canvasDispatch }),
+    KeypointsTool({ stageRef, canvasState, canvasDispatch }),
   ]
   const activeTool = tools[tool] ?? tools[0]
 
