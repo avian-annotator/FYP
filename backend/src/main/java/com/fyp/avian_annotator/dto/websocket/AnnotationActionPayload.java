@@ -1,3 +1,4 @@
 package com.fyp.avian_annotator.dto.websocket;
 
-public record AnnotationActionPayload(String annotationAction, Long userId) {}
+public record AnnotationActionPayload(
+    String annotationAction, Long userId, String objectId, String objectType) {}
