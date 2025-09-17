@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { Pen, MousePointer, Box, ChevronsLeft, ChevronsRight } from 'lucide-react'
+import { Pen, MousePointer, Box, ChevronsLeft, ChevronsRight, Spline } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { useState } from 'react'
@@ -8,6 +8,7 @@ const tools = [
   { id: 2, label: 'label', icon: Pen },
   { id: 1, label: 'select', icon: MousePointer },
   { id: 0, label: 'bounding box', icon: Box },
+  { id: 3, label: 'keypoints', icon: Spline },
 ]
 
 interface ToolSelectorSidebarProps {
