@@ -40,7 +40,7 @@ export const Route = createRootRoute({
                   </DropdownMenuItem>
                   {userDetails?.role === 'ADMIN' && (
                     <DropdownMenuItem asChild>
-                      <Link to="/admin" classname="">
+                      <Link to="/admin" className="">
                         Admin
                       </Link>
                     </DropdownMenuItem>
