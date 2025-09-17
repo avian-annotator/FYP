@@ -40,6 +40,8 @@ export default function UserCard({ user, workspaceId }: UserCardProps) {
   )
 
   const { mutate } = workspaceId == -1 ? deleteUser : removeUser
+  const isDeleting = workspaceId == -1
+
   return (
     <div className="flex justify-between items-center bg-gray-100 p-3 rounded-md shadow-sm">
       <div className="flex h-5 items-center space-x-3 m-0">
@@ -51,13 +53,15 @@ export default function UserCard({ user, workspaceId }: UserCardProps) {
       <div className="flex space-x-2">
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="destructive">remove</Button>
+            <Button variant="destructive">{isDeleting ? 'delete' : 'remove'}</Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Are you sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This will remove this user from the workspace
+                {isDeleting
+                  ? 'This will delete this user from Avian Annotator'
+                  : 'This will remove this user from the workspace'}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <div className="flex justify-end space-x-2">
@@ -68,7 +72,7 @@ export default function UserCard({ user, workspaceId }: UserCardProps) {
                   mutate(undefined)
                 }}
               >
-                Yes, remove them
+                {isDeleting ? 'Yes, delete them' : 'Yes, remove them'}
               </AlertDialogAction>
             </div>
           </AlertDialogContent>

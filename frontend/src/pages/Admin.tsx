@@ -49,7 +49,7 @@ export function Admin() {
           {/* Users */}
           <div className="space-y-2">
             {users.length > 0 ? (
-              users.map(usr => <UserCard key={usr.id} user={usr} />)
+              users.map(usr => <UserCard key={usr.id} user={usr} workspaceId={-1} />)
             ) : (
               <p className="text-gray-500">No users found</p>
             )}
