@@ -20,8 +20,7 @@ export function useUploadMultipleImages(
   return useMutation<AxiosResponse<void>, Error, { file: File }>({
     mutationFn: async ({ file }) => {
       const api = WorkspaceControllerApiFactory(
-        //eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }),
+        new Configuration({ basePath: import.meta.env.VITE_BACKEND_URL as string }),
       )
       const res = await api.uploadImage(workspaceId, file, {
         ...options,
