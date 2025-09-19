@@ -1,4 +1,3 @@
-import { Route } from '../routes/admin/'
 import UserCard from '@/components/users/UserCard'
 import { Skeleton } from '@/components/ui/skeleton'
 
@@ -13,10 +12,10 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination'
-
+import { useSearch, useNavigate } from '@tanstack/react-router'
 export function Admin() {
-  const { page } = Route.useSearch()
-  const navigate = Route.useNavigate()
+  const { page } = useSearch({ from: '/admin/' })
+  const navigate = useNavigate({ from: '/admin/' })
 
   const { data, error } = useGetAllUsers({ page, size: 5 })
 
