@@ -11,6 +11,7 @@ import {
 } from '../ui/alert-dialog'
 import { useDeleteUser, useRemoveUserFromWorkspace, UserResponseDTO } from '../../../generated'
 import { Separator } from '../ui/separator'
+import { useAuth } from '../../auth'
 
 type UserCardProps = {
   user: UserResponseDTO
@@ -19,6 +20,8 @@ type UserCardProps = {
 
 export default function UserCard({ user, workspaceId }: UserCardProps) {
   /** Idea here is this can be reused for the admin page */
+  const { userDetails } = useAuth()
+
   const deleteUser = useDeleteUser(
     user.id,
     {},
@@ -42,6 +45,9 @@ export default function UserCard({ user, workspaceId }: UserCardProps) {
   const { mutate } = workspaceId == -1 ? deleteUser : removeUser
   const isDeleting = workspaceId == -1
 
+  const isCurrAdmin = userDetails?.id === user.id
+  const isDeleteCurrAdmin = isDeleting && isCurrAdmin
+
   return (
     <div className="flex justify-between items-center bg-gray-100 p-3 rounded-md shadow-sm">
       <div className="flex h-5 items-center space-x-3 m-0">
@@ -57,23 +63,31 @@ export default function UserCard({ user, workspaceId }: UserCardProps) {
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogTitle>
+                {isDeleteCurrAdmin ? 'You may not delete your own admin account' : 'Are you sure?'}
+              </AlertDialogTitle>
               <AlertDialogDescription>
-                {isDeleting
-                  ? 'This will delete this user from Avian Annotator'
-                  : 'This will remove this user from the workspace'}
+                {isDeleteCurrAdmin
+                  ? ''
+                  : isDeleting
+                    ? 'This will delete this user from Avian Annotator'
+                    : 'This will remove this user from the workspace'}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <div className="flex justify-end space-x-2">
-              <AlertDialogCancel className="btn">Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                className="bg-red-500 text-white"
-                onClick={() => {
-                  mutate(undefined)
-                }}
-              >
-                {isDeleting ? 'Yes, delete them' : 'Yes, remove them'}
-              </AlertDialogAction>
+              <AlertDialogCancel className="btn">
+                {isDeleteCurrAdmin ? 'Return' : 'Cancel'}
+              </AlertDialogCancel>
+              {!isDeleteCurrAdmin && (
+                <AlertDialogAction
+                  className="bg-red-500 text-white"
+                  onClick={() => {
+                    mutate(undefined)
+                  }}
+                >
+                  {isDeleting ? 'Yes, delete them' : 'Yes, remove them'}
+                </AlertDialogAction>
+              )}
             </div>
           </AlertDialogContent>
         </AlertDialog>
