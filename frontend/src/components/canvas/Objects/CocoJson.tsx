@@ -49,12 +49,16 @@ type cocoAnnotationKeypoint = cocoAnnotationBase & {
 }
 
 type cocoAnnotationCaption = {
-  id: number,
-  image_id: number,
+  id: number
+  image_id: number
   caption: string
 }
 
-type cocoAnnotation = cocoAnnotationBase | cocoAnnotationPolygon | cocoAnnotationKeypoint | cocoAnnotationCaption
+type cocoAnnotation =
+  | cocoAnnotationBase
+  | cocoAnnotationPolygon
+  | cocoAnnotationKeypoint
+  | cocoAnnotationCaption
 
 type cocoPolygon = number[][]
 type cocoRLE = {

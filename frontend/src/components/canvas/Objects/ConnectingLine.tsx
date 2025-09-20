@@ -5,6 +5,8 @@ import { CanvasElementProps } from '../CanvasState'
 
 interface ConnectingLineProps extends CanvasElementProps {
   points: { x: number; y: number }[]
+  startId: number
+  endId: number
   ref: RefObject<null | Konva.Line>
   color?: string
 }
