@@ -1,4 +1,4 @@
-import { SyntheticEvent, useEffect, useRef, useState, useReducer } from 'react'
+import { SyntheticEvent, useEffect, useRef, useState, useReducer, useImperativeHandle } from 'react'
 import Konva from 'konva'
 import { Stage, Layer, Transformer } from 'react-konva'
 import BoundingBoxTool from './Tools/BoundingBoxTool'
@@ -21,6 +21,10 @@ interface CanvasToolProps {
   canvasDispatch: React.ActionDispatch<[action: CanvasAction]>
 }
 
+export interface CanvasStateHandle {
+  getState: () => CanvasState
+}
+
 interface CanvasProps {
   image: string
   tool: number
@@ -29,12 +33,20 @@ interface CanvasProps {
 // Need way to have instanced user ids
 const userId = 0
 // TODO:  function to change image
-const Canvas = ({ image, tool }: CanvasProps) => {
+const Canvas = ({
+  ref,
+  image,
+  tool,
+}: CanvasProps & { ref?: React.RefObject<CanvasStateHandle | null> }) => {
   const stageRef = useRef<Konva.Stage>(null)
   const [canvasState, canvasDispatch] = useReducer(canvasReducer, initalCanvasState)
 
   // transformer for selectmovetool
   const trRef = useRef<Konva.Transformer>(null)
+
+  useImperativeHandle(ref, () => ({
+    getState: () => canvasState,
+  }))
 
   useEffect(() => {
     const selectionId = canvasState.userState.find(

@@ -7,6 +7,9 @@ import { Canvas } from '@/components/canvas'
 import { useEffect, useRef } from 'react'
 import { RxStomp, RxStompConfig } from '@stomp/rx-stomp'
 import { useAuth } from '@/auth'
+import { CanvasStateHandle } from '@/components/canvas/Canvas'
+import CanvasExport from '@/components/canvas/CanvasExport'
+import { Button } from '@/components/ui/button'
 
 interface AnnotatePayload {
   // THIS is just a placeholder for now
@@ -14,6 +17,7 @@ interface AnnotatePayload {
   userId: number
   objectId: string
   objectType: string
+  data?: string
 }
 
 // interface PresencePayload {
@@ -28,6 +32,7 @@ export function AnnotateWorkspace() {
   const { workspaceId, imageId } = useParams({ from: Route.id })
   const [active, setActive] = useState<number>(0)
   const auth = useAuth()
+  const canvasStateRef = useRef<CanvasStateHandle>(null)
 
   const { data } = useGeneratePresignedDownloadUrlForImage(Number(workspaceId), imageId, {
     includeAnnotations: true,
@@ -69,7 +74,7 @@ export function AnnotateWorkspace() {
     publishAnnotationActions({
       annotationAction: 'JOIN',
       userId: auth.userDetails.id,
-      objectId: '1',
+      objectId: imageId,
       objectType: 'IMAGE',
     })
 
@@ -108,9 +113,27 @@ export function AnnotateWorkspace() {
       <div className="relative flex flex-col items-center">
         <div className="flex flex-col items-center gap-4">
           <p>Currently editing: {image?.fileName}</p>
-          {image?.url && <Canvas image={image.url} tool={active} />}
+          {image?.url && <Canvas ref={canvasStateRef} image={image.url} tool={active} />}
+          <Button
+            onClick={() => {
+              if (canvasStateRef.current) {
+                const state = canvasStateRef.current.getState()
+                const cocoJson = CanvasExport(state, 'COCOJSON')
+                //eslint-disable-next-line no-console -- for testing
+                console.log(JSON.parse(cocoJson))
+                publishAnnotationActions({
+                  annotationAction: 'SAVE', //TODO: fully integrate
+                  userId: auth.userDetails?.id ?? 0,
+                  objectId: '1',
+                  objectType: 'IMAGE',
+                  data: cocoJson,
+                })
+              }
+            }}
+          >
+            Save Annotations
+          </Button>
         </div>
-
         <div className="absolute left-full top-10 ml-2 flex flex-col justify-center">
           <ToolSelectorSidebar active={active} onSelect={setActive} />
         </div>
