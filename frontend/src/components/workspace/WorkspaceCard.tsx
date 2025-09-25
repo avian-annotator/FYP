@@ -28,7 +28,7 @@ export default function WorkspaceCard({ workspace }: Props) {
     },
   )
   return (
-    <div className="flex justify-between items-center bg-gray-100 p-3 rounded-md shadow-sm">
+    <div className="flex justify-between items-center bg-gray-100 p-3 rounded-md shadow-sm dark:bg-slate-900">
       <div>
         <span className="font-medium">{workspace.name}</span>
       </div>
@@ -43,7 +43,7 @@ export default function WorkspaceCard({ workspace }: Props) {
         </Button>
         <Button
           variant="outline"
-          className="bg-orange-400 text-white"
+          className="bg-orange-400 text-white dark:text-orange-400"
           onClick={() => {
             void navigate({ to: `/workspaces/${String(workspace.id)}/users` })
           }}
