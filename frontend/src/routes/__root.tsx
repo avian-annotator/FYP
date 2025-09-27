@@ -12,7 +12,7 @@ import {
 
 export const Route = createRootRoute({
   component: function BaseLayout() {
-    const { isAuthenticated } = useAuth()
+    const { isAuthenticated, userDetails } = useAuth()
     const mutation = useLogout()
 
     return (
@@ -38,6 +38,13 @@ export const Route = createRootRoute({
                       Profile
                     </Link>
                   </DropdownMenuItem>
+                  {userDetails?.role === 'ADMIN' && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin" className="">
+                        Admin
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <button
