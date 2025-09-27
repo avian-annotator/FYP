@@ -46,7 +46,9 @@ export function ImageUploadButton({
         type="file"
         accept="image/*"
         multiple
-        onChange={() => void handleFileChange}
+        onChange={e => {
+          void handleFileChange(e)
+        }}
         style={{ display: 'none' }}
       />
       <Button onClick={handleButtonClick}>Upload Image</Button>
