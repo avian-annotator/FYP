@@ -8,7 +8,6 @@ import { useEffect, useRef } from 'react'
 import { RxStomp, RxStompConfig } from '@stomp/rx-stomp'
 import { useAuth } from '@/auth'
 import { CanvasStateHandle } from '@/components/canvas/Canvas'
-import CanvasExport from '@/components/canvas/CanvasExport'
 import { Button } from '@/components/ui/button'
 
 interface AnnotatePayload {
@@ -114,25 +113,7 @@ export function AnnotateWorkspace() {
         <div className="flex flex-col items-center gap-4">
           <p>Currently editing: {image?.fileName}</p>
           {image?.url && <Canvas ref={canvasStateRef} image={image.url} tool={active} />}
-          <Button
-            onClick={() => {
-              if (canvasStateRef.current) {
-                const state = canvasStateRef.current.getState()
-                const cocoJson = CanvasExport(state, 'COCOJSON')
-                //eslint-disable-next-line no-console -- for testing
-                console.log(JSON.parse(cocoJson))
-                publishAnnotationActions({
-                  annotationAction: 'SAVE', //TODO: fully integrate
-                  userId: auth.userDetails?.id ?? 0,
-                  objectId: '1',
-                  objectType: 'IMAGE',
-                  data: cocoJson,
-                })
-              }
-            }}
-          >
-            Save Annotations
-          </Button>
+          <Button>Save Annotations</Button>
         </div>
         <div className="absolute left-full top-10 ml-2 flex flex-col justify-center">
           <ToolSelectorSidebar active={active} onSelect={setActive} />
