@@ -49,7 +49,7 @@ export default function UserCard({ user, workspaceId }: UserCardProps) {
   const isDeleteCurrAdmin = isDeleting && isCurrAdmin
 
   return (
-    <div className="flex justify-between items-center bg-gray-100 p-3 rounded-md shadow-sm">
+    <div className="flex justify-between items-center bg-gray-100 p-3 rounded-md shadow-sm dark:bg-slate-900">
       <div className="flex h-5 items-center space-x-3 m-0">
         <span className="font-medium">Username: {user.username}</span>
         <Separator orientation="vertical" className=" bg-gray-400" />
