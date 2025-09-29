@@ -1,6 +1,9 @@
 import { UseMutationOptions, UseMutationResult, useMutation } from '@tanstack/react-query'
 import { clsx, type ClassValue } from 'clsx'
-import { WorkspaceControllerApiFactory } from '../../generated/axios/api.ts'
+import {
+  AddUserToWorkspaceRequestBodyDTO,
+  WorkspaceControllerApiFactory,
+} from '../../generated/axios/api.ts'
 import { Configuration } from '../../generated/axios/configuration'
 import { twMerge } from 'tailwind-merge'
 import { RawAxiosRequestConfig, AxiosResponse } from 'axios'
@@ -23,6 +26,29 @@ export function useUploadMultipleImages(
         new Configuration({ basePath: import.meta.env.VITE_BACKEND_URL as string }),
       )
       const res = await api.uploadImage(workspaceId, file, {
+        ...options,
+        withCredentials: true,
+      })
+      return res
+    },
+    ...mutationOptions,
+  })
+}
+
+export function useAddUserToWorkspace(
+  workspaceId: number,
+  options?: RawAxiosRequestConfig,
+  mutationOptions?: Omit<
+    UseMutationOptions<AxiosResponse<void>, Error, AddUserToWorkspaceRequestBodyDTO>,
+    'mutationFn'
+  >,
+): UseMutationResult<AxiosResponse<void>, Error, AddUserToWorkspaceRequestBodyDTO> {
+  return useMutation<AxiosResponse<void>, Error, AddUserToWorkspaceRequestBodyDTO>({
+    mutationFn: async (body: AddUserToWorkspaceRequestBodyDTO) => {
+      const api = WorkspaceControllerApiFactory(
+        new Configuration({ basePath: import.meta.env.VITE_BACKEND_URL as string }),
+      )
+      const res = await api.addUserToWorkspace(workspaceId, body, {
         ...options,
         withCredentials: true,
       })
