@@ -1,5 +1,6 @@
 import Konva from 'konva'
 import React, { RefObject } from 'react'
+import { AnnotatePayload } from '@/annotate/useAnnotate'
 // currently selected objects OR cursor position
 // objects being created
 type CanvasState = {
