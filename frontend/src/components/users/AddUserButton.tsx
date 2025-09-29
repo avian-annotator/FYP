@@ -30,7 +30,6 @@ export function AddUserButton({ workspace }: { workspace: number }) {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-
     setError(null)
     mutation.mutate(undefined, {
       onSuccess: () => {

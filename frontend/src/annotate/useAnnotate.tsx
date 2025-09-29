@@ -2,12 +2,10 @@ import { useAuth } from '@/auth'
 import { RxStomp, RxStompConfig } from '@stomp/rx-stomp'
 import { useRef, useEffect } from 'react'
 
-interface AnnotatePayload {
-  // THIS is just a placeholder for now
-  annotationAction: string
+export interface AnnotatePayload {
+  actionType: string
   userId: number
-  objectId: string
-  objectType: string
+  action: string
 }
 
 // interface PresencePayload {
@@ -31,6 +29,8 @@ export const useAnnotate = ({ workspaceId, imageId, onReceiveAnnotation }: UseAn
   const rxStomp = rxStompRef.current
 
   const publishAnnotationActions = (message: AnnotatePayload) => {
+    if (!auth.userDetails) return
+    message.userId = auth.userDetails.id
     rxStomp.publish({
       destination: `/app/workspace/${workspaceId}/image/${imageId}/annotate`,
       body: JSON.stringify(message),
@@ -39,6 +39,7 @@ export const useAnnotate = ({ workspaceId, imageId, onReceiveAnnotation }: UseAn
 
   useEffect(() => {
     if (!auth.userDetails) return
+    const userDetails = auth.userDetails
 
     const rxStompConfig: RxStompConfig = {
       brokerURL: `${import.meta.env.VITE_WEBSOCKET_URL as string}/ws`,
@@ -52,13 +53,19 @@ export const useAnnotate = ({ workspaceId, imageId, onReceiveAnnotation }: UseAn
     rxStomp.activate()
 
     const joinMessage: AnnotatePayload = {
-      annotationAction: 'JOIN',
-      userId: auth.userDetails.id,
-      objectId: '1',
-      objectType: 'IMAGE',
+      action: '{}',
+      actionType: 'join',
+      userId: userDetails.id,
+    }
+
+    const leaveMessage: AnnotatePayload = {
+      actionType: 'leave',
+      action: '{}',
+      userId: userDetails.id,
     }
 
     const connectedSub = rxStomp.connected$.subscribe(() => {
+      JSON.stringify(joinMessage)
       publishAnnotationActions(joinMessage)
     })
 
@@ -66,7 +73,10 @@ export const useAnnotate = ({ workspaceId, imageId, onReceiveAnnotation }: UseAn
       .watch(`/topic/workspace/${workspaceId}/image/${imageId}/annotate`)
       .subscribe(msg => {
         const message = JSON.parse(msg.body) as AnnotatePayload
-        onReceiveAnnotation(message)
+        // Only call onReceiveAnnotation if the message is NOT from this client
+        if (message.userId !== userDetails.id) {
+          onReceiveAnnotation(message)
+        }
       })
 
     const presenceSub = rxStomp
@@ -74,13 +84,19 @@ export const useAnnotate = ({ workspaceId, imageId, onReceiveAnnotation }: UseAn
       .subscribe(msg => {
         // optional
       })
-
-    return () => {
+    const handleBeforeUnload = () => {
+      publishAnnotationActions(leaveMessage)
       connectedSub.unsubscribe()
       annotateSub.unsubscribe()
       presenceSub.unsubscribe()
       void rxStomp.deactivate()
     }
-  }, [])
+    window.addEventListener('beforeunload', handleBeforeUnload)
+
+    return () => {
+      handleBeforeUnload()
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+    }
+  }, [auth.userDetails])
   return { publishAnnotationActions }
 }
