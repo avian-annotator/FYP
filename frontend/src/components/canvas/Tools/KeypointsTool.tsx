@@ -40,6 +40,8 @@ const KeypointsTool = (props: CanvasToolProps): CanvasTool => {
         <ConnectingLine
           ref={linesRef.current[id]}
           key={id}
+          startId={startPoint.id}
+          endId={endPoint.id}
           id={1000 + i}
           points={[
             { x: startPoint.x, y: startPoint.y },
@@ -74,6 +76,8 @@ const KeypointsTool = (props: CanvasToolProps): CanvasTool => {
         <ConnectingLine
           key={'temp-line'}
           id={998} //hard coded id for temp line
+          startId={clickedPoint.id}
+          endId={-1}
           ref={tempLineRef}
           points={[
             { x: clickedPoint.x, y: clickedPoint.y },
