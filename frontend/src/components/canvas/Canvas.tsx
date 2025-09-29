@@ -6,6 +6,8 @@ import SelectMoveTool from './Tools/SelectMoveTool'
 import LabelTool from './Tools/LabelTool'
 import KeypointsTool from './Tools/KeypointsTool'
 import CanvasState, { canvasReducer, initalCanvasState, CanvasAction } from './CanvasState'
+import { useAnnotate } from '@/annotate/useAnnotate'
+import { Button } from '../ui/button'
 
 interface CanvasTool {
   handleMouseMove: (e: Konva.KonvaEventObject<MouseEvent>) => void
@@ -28,6 +30,8 @@ export interface CanvasStateHandle {
 interface CanvasProps {
   image: string
   tool: number
+  workspaceId: string
+  imageId: string
 }
 
 // Need way to have instanced user ids
@@ -36,10 +40,18 @@ const userId = 0
 const Canvas = ({
   ref,
   image,
+  workspaceId,
+  imageId,
   tool,
 }: CanvasProps & { ref?: React.RefObject<CanvasStateHandle | null> }) => {
   const stageRef = useRef<Konva.Stage>(null)
   const [canvasState, canvasDispatch] = useReducer(canvasReducer, initalCanvasState)
+
+  const { publishAnnotationActions } = useAnnotate({
+    workspaceId,
+    imageId,
+    onReceiveAnnotation: _ => {},
+  })
 
   // transformer for selectmovetool
   const trRef = useRef<Konva.Transformer>(null)
@@ -98,6 +110,18 @@ const Canvas = ({
 
   return (
     <div className=" bg-[#f0f0f0] select-none border-gray-700 border-[0.2rem] flex items-center justify-center">
+      <Button
+        onClick={() => {
+          publishAnnotationActions({
+            annotationAction: 'TEST',
+            userId,
+            objectId: '1',
+            objectType: 'IMAGE',
+          })
+        }}
+      >
+        sdfsdf
+      </Button>
       <div className="relative">
         <img
           className="absolute"
@@ -106,6 +130,7 @@ const Canvas = ({
           ref={imgRef}
           onLoad={handleImgLoad}
         />
+
         <Stage
           ref={stageRef}
           width={stageWidth}
