@@ -1,13 +1,22 @@
 import { SyntheticEvent, useEffect, useRef, useState, useReducer, useImperativeHandle } from 'react'
 import Konva from 'konva'
-import { Stage, Layer, Transformer } from 'react-konva'
+import { Stage, Layer, Transformer, Rect, Circle, Line } from 'react-konva'
 import BoundingBoxTool from './Tools/BoundingBoxTool'
 import SelectMoveTool from './Tools/SelectMoveTool'
 import LabelTool from './Tools/LabelTool'
 import KeypointsTool from './Tools/KeypointsTool'
-import CanvasState, { canvasReducer, initalCanvasState, CanvasAction } from './CanvasState'
+import CanvasState, {
+  canvasReducer,
+  initalCanvasState,
+  CanvasAction,
+  CanvasElement,
+} from './CanvasState'
 import { useAnnotate } from '@/annotate/useAnnotate'
 import { useAuth } from '@/auth/useAuth'
+import * as Y from 'yjs'
+
+export const ydoc = new Y.Doc()
+export const yCanvasElements = ydoc.getArray<CanvasElement>('canvasElements')
 
 interface CanvasTool {
   handleMouseMove: (e: Konva.KonvaEventObject<MouseEvent>) => void
@@ -78,35 +87,10 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
   // transformer for selectmovetool
   const trRef = useRef<Konva.Transformer>(null)
 
-
-  useEffect(() => {
-    const selectionId = canvasState.userState.find(
-      user => user.userId === userId,
-    )?.currentSelectionId
-    const currentSelection = canvasState.canvasElements.find(el => el.props.id === selectionId)
-    const canvasShape = currentSelection?.props.ref.current
-    if (canvasShape !== undefined && canvasShape instanceof Konva.Shape) {
-      if (canvasShape instanceof Konva.Circle) {
-        //so keypoints are not resized
-        trRef.current?.resizeEnabled(false)
-        trRef.current?.nodes([canvasShape])
-      } else if (canvasShape instanceof Konva.Line) {
-        trRef.current?.resizeEnabled(false)
-      } else {
-        trRef.current?.nodes([canvasShape])
-        trRef.current?.resizeEnabled(true)
-      }
-    } else {
-      trRef.current?.nodes([])
-      // make undraggable if selected
-      canvasState.canvasElements.forEach(el => el.props.ref.current?.setDraggable(false))
-    }
-  }, [canvasState])
-
   // tool switcheruserId
   const tools: CanvasTool[] = [
     BoundingBoxTool({ stageRef, canvasState, canvasDispatch }),
-    SelectMoveTool({ stageRef, canvasState, canvasDispatch }),
+    SelectMoveTool({ stageRef, canvasState, canvasDispatch}),
     LabelTool({ stageRef, canvasState, canvasDispatch }),
     KeypointsTool({ stageRef, canvasState, canvasDispatch }),
   ]
@@ -125,6 +109,72 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
     const scaledHeight = naturalHeight * scale
 
     setStageDim({ w: 450, h: scaledHeight })
+  }
+  const elementRefs = useRef<Record<number, Konva.Node | null>>({})
+
+  useEffect(() => {
+    const selectionId = Number(canvasState.userState.find(
+      user => user.userId === userId,
+    )?.currentSelectionId)
+
+    const selectedNode = selectionId ? elementRefs.current[selectionId] : null
+
+
+    if (selectedNode) {
+      trRef.current?.nodes([selectedNode])
+      trRef.current?.resizeEnabled(
+        selectedNode.getClassName() !== 'Circle' && selectedNode.getClassName() !== 'Line',
+      )
+       trRef.current?.getLayer()?.batchDraw();
+    } else {
+      trRef.current?.nodes([])
+       trRef.current?.getLayer()?.batchDraw();
+    }
+  }, [canvasState.userState, elementRefs.current])
+
+
+  const renderShape = (el: CanvasElement) => {
+    const props = {
+      ...el.props,
+      key: el.id,
+      id: el.id.toString(),
+      onDragEnd: (e: Konva.KonvaEventObject<MouseEvent>) => {
+        canvasDispatch({
+          type: 'updateElement',
+          id: el.id,
+          props: { ...el.props, x: e.target.x(), y: e.target.y() },
+        })
+      },
+      onTransformEnd: (e: Konva.KonvaEventObject<MouseEvent>) => {
+        const node = e.target
+        canvasDispatch({
+          type: 'updateElement',
+          id: el.id,
+          props: {
+            ...el.props,
+            x: node.x(),
+            y: node.y(),
+            width: node.width() * node.scaleX(),
+            height: node.height() * node.scaleY(),
+          },
+        })
+        node.scaleX(1)
+        node.scaleY(1)
+      },
+      ref: (node: Konva.Rect | Konva.Circle | Konva.Line | null) => {
+        elementRefs.current[el.id] = node
+      },
+    }
+    switch (el.type) {
+      case 'rectangle':
+        return <Rect {...props} />
+      case 'circle':
+        return <Circle {...props} />
+      case 'line':
+        return <Line {...props} />
+      default:
+        return null
+    }
   }
 
   return (
@@ -145,10 +195,19 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
           onMouseDown={activeTool.handleMouseDown}
           onMouseMove={activeTool.handleMouseMove}
           onMouseUp={activeTool.handleMouseUp}
-          onClick={activeTool.handleClick}
+          onClick={e =>  {if (e.target instanceof Konva.Shape) {
+      const id = Number(e.target.id());
+       canvasDispatch({type: 'setDragging', userId, isDragging:true})
+        canvasDispatch({ type: 'setSelected', id, userId });
+        e.target.draggable(true)
+           } else {
+    canvasDispatch({type: 'setDragging', userId, isDragging:false})
+      canvasDispatch({ type: 'clearSelected', userId });
+    }
+  }}
         >
           <Layer>
-            {canvasState.canvasElements}
+            {canvasState.canvasElements.map(el => renderShape(el))}
             <Transformer ref={trRef} rotateEnabled={false} />
           </Layer>
         </Stage>

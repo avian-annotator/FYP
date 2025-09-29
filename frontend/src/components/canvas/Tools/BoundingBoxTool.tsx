@@ -3,6 +3,7 @@ import { CanvasTool, CanvasToolProps } from '../Canvas'
 import Konva from 'konva'
 import { getColor, getBackgroundColor } from '../CanvasUtils'
 import BoundingBox from '../Objects/BoundingBox'
+import { CanvasElement } from '../CanvasState'
 
 const userId = 0
 
@@ -13,46 +14,51 @@ const BoundingBoxTool = (props: CanvasToolProps): CanvasTool => {
     // create konva rectangle
     props.canvasDispatch({ type: 'setDragging', userId: userId, isDragging: true })
 
-    // eslint-disable-next-line react-x/no-create-ref
-    const currRef = createRef<Konva.Rect>()
+     
     const pos = stageRef.current?.getPointerPosition()
+    if (!pos) return
+
     const id = stageRef.current?.children[0].children.length ?? 0 //hard coded [0]
-    const rect = (
-      <BoundingBox
-        initialPos={{ x: pos?.x ?? 0, y: pos?.y ?? 0 }}
-        ref={currRef}
-        id={id}
-        color={getColor(id)}
-      />
-    )
+
+    const rect: CanvasElement = {
+      id,
+      type: 'rectangle',
+      props: {
+        x: pos.x,
+        y: pos.y,
+        width: 0,
+        height: 0,
+        stroke: getColor(id),
+        strokeWidth: 2,
+        fill: getBackgroundColor(id),
+      },
+    }
     props.canvasDispatch({ type: 'setSelected', userId: userId, id: id })
     props.canvasDispatch({ type: 'addElement', element: rect })
+    props.canvasDispatch({ type: 'setDragging', userId: id, isDragging: true })
   }
 
   const handleMouseMove = (_: Konva.KonvaEventObject<MouseEvent>) => {
     // scale the konva rectangle
-    const pos = stageRef.current?.getPointerPosition()
-    const user = props.canvasState.userState.find(user => user.userId === userId)
-    const rectRef = props.canvasState.canvasElements.find(
-      el => el.props.id === user?.currentSelectionId,
-    )?.props.ref
-    if (user?.isDragging && rectRef?.current) {
-      rectRef.current.width((pos?.x ?? 0) - rectRef.current.x())
-      rectRef.current.height((pos?.y ?? 0) - rectRef.current.y())
+    const pos = props.stageRef.current?.getPointerPosition()
+    const user = props.canvasState.userState.find(u => u.userId === userId)
+    const element = props.canvasState.canvasElements.find(el => el.id === user?.currentSelectionId)
+
+    if (user?.isDragging && element) {
+      props.canvasDispatch({
+        type: 'updateElement',
+        id: element.id,
+        props: {
+          ...element.props,
+          width: (pos?.x ?? 0) - element.props.x,
+          height: (pos?.y ?? 0) - element.props.y,
+        },
+      })
     }
   }
 
   const handleMouseUp = (_: Konva.KonvaEventObject<MouseEvent>) => {
     // stop scaling and add colour
-    const user = props.canvasState.userState.find(user => user.userId === userId)
-    const rectRef = props.canvasState.canvasElements.find(
-      el => el.props.id === user?.currentSelectionId,
-    )?.props.ref
-    if (user?.isDragging && rectRef?.current) {
-      const id = Number(rectRef.current.id().slice(5))
-      rectRef.current.fill(getBackgroundColor(id))
-      rectRef.current.stroke(getColor(id))
-    }
     props.canvasDispatch({ type: 'setDragging', userId: userId, isDragging: false })
     props.canvasDispatch({ type: 'clearSelected', userId: userId })
   }
@@ -64,7 +70,6 @@ const BoundingBoxTool = (props: CanvasToolProps): CanvasTool => {
     handleMouseUp: handleMouseUp,
     handleMouseMove: handleMouseMove,
     toolName: toolName,
-    handleClick: () => {},
   } as CanvasTool
 }
 export default BoundingBoxTool

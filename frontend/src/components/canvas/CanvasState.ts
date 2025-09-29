@@ -21,7 +21,11 @@ interface CanvasElementProps {
   label?: string
 }
 
-type CanvasElement = React.ReactElement<CanvasElementProps>
+type CanvasElement = {
+  id: number
+  type: 'rectangle' | 'circle' | 'line'
+  props: Record<string, any> //konva props
+}
 
 type Position = {
   x: number
@@ -36,6 +40,7 @@ const initalCanvasState = {
 type CanvasAction =
   | { type: 'addElement'; element: CanvasElement }
   | { type: 'removeElement'; id: number }
+  | { type: 'updateElement'; id: number; props: Partial<Record<string, any>> }
   | { type: 'setDragging'; userId: number; isDragging: boolean }
   | { type: 'addLabel'; id: number; label: string }
   | { type: 'setSelected'; userId: number; id: number }
@@ -50,28 +55,47 @@ function canvasReducer(p: CanvasState, action: CanvasAction) {
   switch (action.type) {
     case 'addElement':
       return { ...p, canvasElements: [...p.canvasElements, action.element] }
+    case 'updateElement':
+      return {
+        ...p,
+        canvasElements: p.canvasElements.map(el =>
+          el.id === action.id ? { ...el, props: { ...el.props, ...action.props } } : el,
+        ),
+      }
     case 'removeElement':
-      return { ...p, canvasElements: p.canvasElements.filter(el => el.props.id !== action.id) }
+      return { ...p, canvasElements: p.canvasElements.filter(el => el.id !== action.id) }
     case 'addLabel':
       return {
         ...p,
         canvasElements: p.canvasElements.map(el =>
-          el.props.id === action.id ? React.cloneElement(el, { label: action.label }) : el,
+          el.id === action.id ? { ...el, label: action.label } : el,
         ),
       }
     case 'setSelected':
+      const hasUser = p.userState.some(user => user.userId === action.userId)
       return {
         ...p,
-        userState: p.userState.map(el =>
-          el.userId === action.userId ? { ...el, currentSelectionId: action.id } : el,
-        ),
+        userState: hasUser
+          ? p.userState.map(user =>
+              user.userId === action.userId ? { ...user, currentSelectionId: action.id } : user,
+            )
+          : [
+              ...p.userState,
+              { userId: action.userId, currentSelectionId: action.id, isDragging: false },
+            ],
       }
     case 'clearSelected':
+      const hasUserClear = p.userState.some(user => user.userId === action.userId)
       return {
         ...p,
-        userState: p.userState.map(el =>
-          el.userId === action.userId ? { ...el, currentSelectionId: undefined } : el,
-        ),
+        userState: hasUserClear
+          ? p.userState.map(user =>
+              user.userId === action.userId ? { ...user, currentSelectionId: undefined } : user,
+            )
+          : [
+              ...p.userState,
+              { userId: action.userId, currentSelectionId: undefined, isDragging: false },
+            ],
       }
     case 'setDragging':
       return {
