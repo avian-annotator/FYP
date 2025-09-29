@@ -35,13 +35,7 @@ interface CanvasProps {
 }
 
 // TODO:  function to change image
-const Canvas = ({
-  ref,
-  image,
-  workspaceId,
-  imageId,
-  tool,
-}: CanvasProps & { ref?: React.RefObject<CanvasStateHandle | null> }) => {
+const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
   const stageRef = useRef<Konva.Stage>(null)
   const { publishAnnotationActions } = useAnnotate({
     workspaceId,
@@ -84,9 +78,6 @@ const Canvas = ({
   // transformer for selectmovetool
   const trRef = useRef<Konva.Transformer>(null)
 
-  useImperativeHandle(ref, () => ({
-    getState: () => canvasState,
-  }))
 
   useEffect(() => {
     const selectionId = canvasState.userState.find(
