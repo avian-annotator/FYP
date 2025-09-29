@@ -19,11 +19,8 @@ const SelectMoveTool = (props: CanvasToolProps): CanvasTool => {
     }
   };
   const handleClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
-    console.log("test3")
     if (e.target instanceof Konva.Shape) {
-      console.log(e.target.id + "test4")
       const id = Number(e.target.id())
-      console.log(id + "test2")
       props.canvasDispatch({ type: 'setSelected', id, userId: userId })
       e.target.draggable(true)
     } else {
