@@ -46,7 +46,7 @@ export function AddUserButton({ workspace }: { workspace: number }) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          className="mt-4 text-green-600 bg-green-100 hover:bg-green-200"
+          className="mt-4 text-green-600 bg-green-100 hover:bg-green-200 dark:bg-green-950"
           variant="ghost"
           onClick={() => {
             mutation.reset()

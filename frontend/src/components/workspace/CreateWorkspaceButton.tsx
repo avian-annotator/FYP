@@ -45,7 +45,10 @@ export function CreateWorkspaceButton() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="mt-4 text-green-600 bg-green-100 hover:bg-green-200" variant="ghost">
+        <Button
+          className="mt-4 text-green-600 bg-green-100 hover:bg-green-200 dark:bg-green-950"
+          variant="ghost"
+        >
           Create new Workspace?
         </Button>
       </DialogTrigger>

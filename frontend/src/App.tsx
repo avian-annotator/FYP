@@ -5,6 +5,7 @@ import { AuthProvider } from './auth'
 import { router } from './router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useAuth } from './auth/useAuth'
+import { ThemeProvider } from './components/canvas/ThemeProvider'
 
 function InnerApp() {
   const auth = useAuth()
@@ -16,7 +17,9 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <InnerApp />
+        <ThemeProvider>
+          <InnerApp />
+        </ThemeProvider>
       </AuthProvider>
     </QueryClientProvider>
   )

@@ -9,6 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { DarkModeToggle } from '@/components/canvas/DarkModeToggle'
 
 export const Route = createRootRoute({
   component: function BaseLayout() {
@@ -17,6 +18,9 @@ export const Route = createRootRoute({
 
     return (
       <div className="flex items-center justify-center min-h-screen">
+        <div className="absolute top-1 right-1 m-4">
+          <DarkModeToggle></DarkModeToggle>
+        </div>
         <div className="absolute top-1 left-1 m-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

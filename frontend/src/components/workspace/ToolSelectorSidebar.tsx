@@ -22,7 +22,7 @@ export function ToolSelectorSidebar({ active, onSelect }: ToolSelectorSidebarPro
   return (
     <aside
       className={cn(
-        'flex flex-col bg-gray-200 border-r transition-all duration-300 rounded',
+        'flex flex-col bg-gray-200 border-r transition-all duration-300 rounded dark:bg-gray-800',
         collapsed ? 'w-16' : 'w-40',
       )}
     >
