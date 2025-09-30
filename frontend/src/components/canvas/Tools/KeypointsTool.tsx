@@ -3,63 +3,34 @@ import { CanvasTool, CanvasToolProps } from '../Canvas'
 import Konva from 'konva'
 import Keypoint from '../Objects/Keypoint'
 import ConnectingLine from '../Objects/ConnectingLine'
-import { getColor } from '../CanvasUtils'
+import { getBackgroundColor, getColor } from '../CanvasUtils'
+import { CanvasElement } from '../CanvasState'
 interface Edge {
   startId: number
   endId: number
 }
 
+const userId = 0
+
 const KeypointsTool = (props: CanvasToolProps): CanvasTool => {
   const stageRef = props.stageRef
-  const tempLineRef = useRef<Konva.Line>(null)
-
-  const linesRef = useRef<Record<number, React.RefObject<Konva.Line | null> | undefined>>({})
-  const pointsRef = useRef<Record<number, React.RefObject<Konva.Circle | null> | undefined>>({})
 
   const [points, setPoints] = useState<{ id: number; x: number; y: number }[]>([])
-  const [edges, setEdges] = useState<Edge[]>([])
   const [draggingEdge, setDraggingEdge] = useState<{
     startId: number
     x: number
     y: number
   } | null>(null)
 
-  //helper to render lines
-  useEffect(() => {
-    const edgeElements = edges.map((edge, i) => {
-      const startPoint = points.find(p => p.id === edge.startId)
-      const endPoint = points.find(p => p.id === edge.endId)
-
-      if (!startPoint || !endPoint) return null
-      const id = 1000 + i
-
-      // eslint-disable-next-line react-x/no-create-ref
-      linesRef.current[id] ??= createRef<Konva.Line>()
-      props.canvasDispatch({ type: 'removeElement', id: id })
-      return (
-        <ConnectingLine
-          ref={linesRef.current[id]}
-          key={id}
-          startId={startPoint.id}
-          endId={endPoint.id}
-          id={1000 + i}
-          points={[
-            { x: startPoint.x, y: startPoint.y },
-            { x: endPoint.x, y: endPoint.y },
-          ]}
-          color="red"
-        />
-      )
-    })
-    edgeElements
-      .filter(edge => edge != null)
-      .forEach(edge => {
-        props.canvasDispatch({ type: 'addElement', element: edge })
-      })
-  }, [edges, points])
-
   //helper to get point at position
+
   const getPointAtPos = (x: number, y: number) => {
+    console.log(
+      x,
+      y,
+      'point',
+      points.find(p => Math.hypot(p.x - x, p.y - y) < 10),
+    )
     return points.find(p => Math.hypot(p.x - x, p.y - y) < 10)
   }
 
@@ -71,40 +42,34 @@ const KeypointsTool = (props: CanvasToolProps): CanvasTool => {
     //if clicked on a point, start dragging an edge
     if (clickedPoint) {
       setDraggingEdge({ startId: clickedPoint.id, x: clickedPoint.x, y: clickedPoint.y })
+      props.canvasDispatch({ type: 'removeElement', id: 998 })
       //temp line to visualise
-      const tempLine = (
-        <ConnectingLine
-          key={'temp-line'}
-          id={998} //hard coded id for temp line
-          startId={clickedPoint.id}
-          endId={-1}
-          ref={tempLineRef}
-          points={[
-            { x: clickedPoint.x, y: clickedPoint.y },
-            { x: pos.x, y: pos.y },
-          ]}
-          color="blue"
-        />
-      )
+      const tempLine: CanvasElement = {
+        id: 998, // hard coded id for temp line
+        type: 'line',
+        props: {
+          points: [clickedPoint.x, clickedPoint.y, pos.x, pos.y],
+
+          color: 'blue',
+        },
+      }
+      console.log(JSON.stringify(tempLine))
       props.canvasDispatch({ type: 'addElement', element: tempLine })
     } else {
       //if not clicked on a line, add a new point
       const id = points.length + 20
       const newPoint = { id, x: pos.x, y: pos.y }
-      // eslint-disable-next-line react-x/no-create-ref
-      const pointRef = createRef<Konva.Circle>()
-      pointsRef.current[id] = pointRef
-      const keypoint = (
-        <Keypoint
-          id={id}
-          ref={pointRef}
-          initialPos={{ x: pos.x, y: pos.y }}
-          color={getColor(id)}
-          onMove={(x, y) => {
-            setPoints(prev => prev.map(p => (p.id === id ? { ...p, x, y } : p)))
-          }}
-        />
-      )
+
+      const keypoint: CanvasElement = {
+        id,
+        type: 'circle',
+        props: {
+          x: pos.x,
+          y: pos.y,
+          radius:5,
+          fill: 'red',
+        },
+      }
       props.canvasDispatch({ type: 'addElement', element: keypoint })
       setPoints(prev => [...prev, newPoint])
     }
@@ -114,35 +79,62 @@ const KeypointsTool = (props: CanvasToolProps): CanvasTool => {
     if (!draggingEdge) return
     const pos = stageRef.current?.getPointerPosition()
     if (!pos) return
+    const user = props.canvasState.userState.find(u => u.userId === userId)
+    const templine = props.canvasState.canvasElements.find(e => e.id === 998)
 
     setDraggingEdge(prev => (prev ? { ...prev, x: pos.x, y: pos.y } : null))
 
     // Temporary line follows mouse
-    const startPoint = points.find(p => p.id === draggingEdge.startId)
-    if (!startPoint || !tempLineRef.current) return
+    const startPoint = props.canvasState.canvasElements.find(el => el.type === 'circle' && el.id === draggingEdge.startId)
+    if (!startPoint) return
 
-    tempLineRef.current.points([startPoint.x, startPoint.y, pos.x, pos.y])
+    if (templine) {
+      props.canvasDispatch({
+        type: 'updateElement',
+        id: 998,
+        props: {
+          points: [startPoint.props.x, startPoint.props.y, pos.x, pos.y],
+          stroke: 'blue',
+          strokeWidth: 2,
+        },
+      })
+    }
   }
 
   const handleMouseUp = (_: Konva.KonvaEventObject<MouseEvent>) => {
+    console.log(JSON.stringify(props.canvasState.canvasElements))
     if (!draggingEdge) return
     const pos = stageRef.current?.getPointerPosition()
     if (!pos) return
 
+    props.canvasDispatch({ type: 'removeElement', id: 998 })
     const targetPoint = getPointAtPos(pos.x, pos.y)
 
-    if (targetPoint && targetPoint.id !== draggingEdge.startId) {
-      setEdges(prev => [...prev, { startId: draggingEdge.startId, endId: targetPoint.id }])
+  
+    if (targetPoint) {
+    const startPoint = props.canvasState.canvasElements.find(el => el.type === 'circle' && el.id === draggingEdge.startId)
+    const endPoint = props.canvasState.canvasElements.find(el => el.type === 'circle' && el.id === targetPoint.id)
+    if(startPoint && endPoint){
+    const line: CanvasElement = {
+          id:stageRef.current?.children[0].children.length ?? 0,
+          type: 'line',
+          props: {
+            points: [startPoint.props.x, startPoint.props.y, endPoint.props.x, endPoint.props.y],
+            stroke: 'red',
+            strokeWidth: 2,
+          },
+        }
+      props.canvasDispatch({ type: 'addElement', element: line })
+      setDraggingEdge(null)
+      props.canvasDispatch({ type: 'removeElement', id: 998 })}
     }
-
-    if (tempLineRef.current) {
-      tempLineRef.current.destroy()
-      props.canvasDispatch({ type: 'removeElement', id: 998 })
-    }
-    setDraggingEdge(null)
   }
 
   const handleClick = (_: Konva.KonvaEventObject<MouseEvent>) => {}
+
+  const handleDragging = () => {
+    
+  }
 
   const toolName = 'Keypoint Tool'
 
