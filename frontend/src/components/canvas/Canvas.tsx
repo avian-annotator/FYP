@@ -1,4 +1,4 @@
-import { SyntheticEvent, useEffect, useRef, useState, useReducer, useImperativeHandle } from 'react'
+import { SyntheticEvent, useEffect, useRef, useState, useReducer } from 'react'
 import Konva from 'konva'
 import { Stage, Layer, Transformer, Rect, Circle, Line } from 'react-konva'
 import BoundingBoxTool from './Tools/BoundingBoxTool'
@@ -6,13 +6,14 @@ import SelectMoveTool from './Tools/SelectMoveTool'
 import LabelTool from './Tools/LabelTool'
 import KeypointsTool from './Tools/KeypointsTool'
 import CanvasState, {
-  canvasReducer,
-  initalCanvasState,
   CanvasAction,
   CanvasElement,
+  createCanvasState,
+  yjsDispatch,
 } from './CanvasState'
 import { useAnnotate } from '@/annotate/useAnnotate'
 import { useAuth } from '@/auth/useAuth'
+import * as Y from 'yjs'
 
 interface CanvasTool {
   handleMouseMove: (e: Konva.KonvaEventObject<MouseEvent>) => void
@@ -41,7 +42,11 @@ interface CanvasProps {
 
 // TODO:  function to change image
 const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
+  const initialYdoc = new Y.Doc()
+  const [canvasState, setCanvasState] = useState<CanvasState>(() => createCanvasState(initialYdoc))
+
   const stageRef = useRef<Konva.Stage>(null)
+
   const { publishAnnotationActions } = useAnnotate({
     workspaceId,
     imageId,
@@ -53,26 +58,13 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
         message.actionType !== 'join' &&
         message.actionType !== 'leave'
       ) {
-        localDispatch(action)
+        canvasDispatch(action)
       }
     },
   })
 
-  const userId = useAuth().userDetails?.id ?? 0
-
-  // Create a custom dispatch function that will publish actions to other users
-  const [canvasState, localDispatch] = useReducer(
-    (state: CanvasState, action: CanvasAction) => canvasReducer(state, action),
-    initalCanvasState,
-  )
-
   const canvasDispatch = (action: CanvasAction) => {
-    // First dispatch locally
-    //
-    // TODO: remove this
-    if (action.type === 'addElement') return
-    localDispatch(action)
-    // Then publish to other users
+    yjsDispatch(canvasState, action)
     publishAnnotationActions({
       userId,
       action: JSON.stringify(action),
@@ -80,9 +72,22 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
     })
   }
 
+  const userId = useAuth().userDetails?.id ?? 0
+
   // transformer for selectmovetool
   const trRef = useRef<Konva.Transformer>(null)
 
+  useEffect(() => {
+    const onChange = () => {
+      setStageDim(prev => ({ ...prev }))
+    } // force re-render
+    canvasState.canvasElements.observeDeep(onChange)
+    canvasState.userState.observeDeep(onChange)
+    return () => {
+      canvasState.canvasElements.unobserveDeep(onChange)
+      canvasState.userState.unobserveDeep(onChange)
+    }
+  }, [canvasState])
   // tool switcheruserId
   const tools: CanvasTool[] = [
     BoundingBoxTool({ stageRef, canvasState, canvasDispatch }),
@@ -110,7 +115,8 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
 
   useEffect(() => {
     const selectionId = Number(
-      canvasState.userState.find(user => user.userId === userId)?.currentSelectionId,
+      canvasState.userState.toArray().find((user: { userId: number }) => user.userId === userId)
+        ?.currentSelectionId,
     )
 
     const selectedNode = selectionId ? elementRefs.current[selectionId] : null
@@ -155,13 +161,15 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
           })
 
           // Update all connected lines immediately
-          const connectedLines = canvasState.canvasElements.filter(
-            elem => elem.type === 'line' && (elem.startId === el.id || elem.endId === el.id),
-          )
+          const connectedLines = canvasState.canvasElements
+            .toArray()
+            .filter(
+              elem => elem.type === 'line' && (elem.startId === el.id || elem.endId === el.id),
+            )
 
           connectedLines.forEach(line => {
-            const start = canvasState.canvasElements.find(p => p.id === line.startId)
-            const end = canvasState.canvasElements.find(p => p.id === line.endId)
+            const start = canvasState.canvasElements.toArray().find(p => p.id === line.startId)
+            const end = canvasState.canvasElements.toArray().find(p => p.id === line.endId)
 
             if (start && end) {
               canvasDispatch({

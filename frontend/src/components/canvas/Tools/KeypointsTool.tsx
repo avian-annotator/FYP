@@ -12,7 +12,7 @@ const KeypointsTool = (props: CanvasToolProps): CanvasTool => {
     y: number
   } | null>(null)
 
-  const points = props.canvasState.canvasElements.filter(e => e.type === 'circle')
+  const points = props.canvasState.canvasElements.toArray().filter(e => e.type === 'circle')
 
   //helper to get point at position
   const getPointAtPos = (x: number, y: number) => {
@@ -64,14 +64,14 @@ const KeypointsTool = (props: CanvasToolProps): CanvasTool => {
     if (!draggingEdge) return
     const pos = stageRef.current?.getPointerPosition()
     if (!pos) return
-    const templine = props.canvasState.canvasElements.find(e => e.id === 998)
+    const templine = props.canvasState.canvasElements.toArray().find(e => e.id === 998)
 
     setDraggingEdge(prev => (prev ? { ...prev, x: pos.x, y: pos.y } : null))
 
     // Temporary line follows mouse
-    const startPoint = props.canvasState.canvasElements.find(
-      el => el.type === 'circle' && el.id === draggingEdge.startId,
-    )
+    const startPoint = props.canvasState.canvasElements
+      .toArray()
+      .find(el => el.type === 'circle' && el.id === draggingEdge.startId)
     if (!startPoint) return
 
     if (templine) {
@@ -97,12 +97,12 @@ const KeypointsTool = (props: CanvasToolProps): CanvasTool => {
 
     if (targetPoint) {
       const id = props.canvasState.canvasElements.length + 1
-      const startPoint = props.canvasState.canvasElements.find(
-        el => el.type === 'circle' && el.id === draggingEdge.startId,
-      )
-      const endPoint = props.canvasState.canvasElements.find(
-        el => el.type === 'circle' && el.id === targetPoint.id,
-      )
+      const startPoint = props.canvasState.canvasElements
+        .toArray()
+        .find(el => el.type === 'circle' && el.id === draggingEdge.startId)
+      const endPoint = props.canvasState.canvasElements
+        .toArray()
+        .find(el => el.type === 'circle' && el.id === targetPoint.id)
       if (startPoint && endPoint) {
         const line: CanvasElement = {
           id: id,
