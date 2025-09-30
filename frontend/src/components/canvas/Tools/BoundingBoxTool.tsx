@@ -17,7 +17,7 @@ const BoundingBoxTool = (props: CanvasToolProps): CanvasTool => {
     const pos = stageRef.current?.getPointerPosition()
     if (!pos) return
 
-    const id = stageRef.current?.children[0].children.length ?? 0 //hard coded [0]
+    const id = props.canvasState.canvasElements.length + 100
 
     const rect: CanvasElement = {
       id,

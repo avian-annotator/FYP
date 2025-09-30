@@ -1,8 +1,7 @@
 import Konva from 'konva'
-import React, { RefObject } from 'react'
-import { AnnotatePayload } from '@/annotate/useAnnotate'
-// currently selected objects OR cursor position
-// objects being created
+import { RefObject } from 'react'
+import * as Y from 'yjs'
+
 type CanvasState = {
   userState: UserState[]
   canvasElements: CanvasElement[]
@@ -24,7 +23,11 @@ interface CanvasElementProps {
 type CanvasElement = {
   id: number
   type: 'rectangle' | 'circle' | 'line'
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   props: Record<string, any> //konva props
+  startId?: number //for edges
+  endId?: number
 }
 
 type Position = {
@@ -40,6 +43,7 @@ const initalCanvasState = {
 type CanvasAction =
   | { type: 'addElement'; element: CanvasElement }
   | { type: 'removeElement'; id: number }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   | { type: 'updateElement'; id: number; props: Partial<Record<string, any>> }
   | { type: 'setDragging'; userId: number; isDragging: boolean }
   | { type: 'addLabel'; id: number; label: string }
@@ -53,25 +57,29 @@ type CanvasAction =
 function canvasReducer(p: CanvasState, action: CanvasAction) {
   // Don't publish if this is coming from websocket (handled in Canvas.tsx)
   switch (action.type) {
-    case 'addElement':
+    case 'addElement': {
       return { ...p, canvasElements: [...p.canvasElements, action.element] }
-    case 'updateElement':
+    }
+    case 'updateElement': {
       return {
         ...p,
         canvasElements: p.canvasElements.map(el =>
           el.id === action.id ? { ...el, props: { ...el.props, ...action.props } } : el,
         ),
       }
-    case 'removeElement':
+    }
+    case 'removeElement': {
       return { ...p, canvasElements: p.canvasElements.filter(el => el.id !== action.id) }
-    case 'addLabel':
+    }
+    case 'addLabel': {
       return {
         ...p,
         canvasElements: p.canvasElements.map(el =>
           el.id === action.id ? { ...el, label: action.label } : el,
         ),
       }
-    case 'setSelected':
+    }
+    case 'setSelected': {
       const hasUser = p.userState.some(user => user.userId === action.userId)
       return {
         ...p,
@@ -84,7 +92,8 @@ function canvasReducer(p: CanvasState, action: CanvasAction) {
               { userId: action.userId, currentSelectionId: action.id, isDragging: false },
             ],
       }
-    case 'clearSelected':
+    }
+    case 'clearSelected': {
       const hasUserClear = p.userState.some(user => user.userId === action.userId)
       return {
         ...p,
@@ -97,26 +106,29 @@ function canvasReducer(p: CanvasState, action: CanvasAction) {
               { userId: action.userId, currentSelectionId: undefined, isDragging: false },
             ],
       }
-    case 'setDragging':
+    }
+    case 'setDragging': {
       return {
         ...p,
         userState: p.userState.map(el =>
           el.userId === action.userId ? { ...el, isDragging: action.isDragging } : el,
         ),
       }
-    case 'addUser':
+    }
+    case 'addUser': {
       return {
         ...p,
         userState:
           p.userState.find(user => user.userId) === undefined
             ? p.userState.concat({ userId: action.userId, isDragging: false })
             : p.userState,
-      }
+      }}
     case 'join':
       return p
     case 'leave':
       return p
-    default:
+    
+      default:
       throw new Error()
   }
 }
