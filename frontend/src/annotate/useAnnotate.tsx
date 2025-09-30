@@ -81,7 +81,7 @@ export const useAnnotate = ({ workspaceId, imageId, onReceiveAnnotation }: UseAn
 
     const presenceSub = rxStomp
       .watch(`/topic/workspace/${workspaceId}/image/${imageId}/presence`)
-      .subscribe(msg => {
+      .subscribe(_ => {
         // optional
       })
     const handleBeforeUnload = () => {

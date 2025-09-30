@@ -4,7 +4,6 @@ import { ToolSelectorSidebar } from '@/components/workspace/ToolSelectorSidebar'
 import { useRef, useState } from 'react'
 import { useGeneratePresignedDownloadUrlForImage } from '../../generated'
 import { Canvas } from '@/components/canvas'
-import { useAuth } from '@/auth'
 import { CanvasStateHandle } from '@/components/canvas/Canvas'
 import { Button } from '@/components/ui/button'
 
