@@ -18,13 +18,6 @@ export function AnnotateWorkspace() {
   })
   const image = data?.data
 
-  // const publishAnnotationPresence = (message: PresencePayload) => {
-  //   rxStomp.publish({
-  //     destination: `/app/workspace/${workspaceId}/image/${imageId}/presence`,
-  //     body: JSON.stringify(message),
-  //   })
-  // }
-
   return (
     <div className="flex h-screen items-center justify-center">
       <div className="relative flex flex-col items-center">
