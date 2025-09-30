@@ -40,8 +40,10 @@ const BoundingBoxTool = (props: CanvasToolProps): CanvasTool => {
   const handleMouseMove = (_: Konva.KonvaEventObject<MouseEvent>) => {
     // scale the konva rectangle
     const pos = props.stageRef.current?.getPointerPosition()
-    const user = props.canvasState.userState.find(u => u.userId === userId)
-    const element = props.canvasState.canvasElements.find(el => el.id === user?.currentSelectionId)
+    const user = props.canvasState.userState.toArray().find(u => u.userId === userId)
+    const element = props.canvasState.canvasElements
+      .toArray()
+      .find(el => el.id === user?.currentSelectionId)
 
     if (user?.isDragging && element) {
       props.canvasDispatch({

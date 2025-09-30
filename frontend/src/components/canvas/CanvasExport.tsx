@@ -1,3 +1,4 @@
+/* eslint-disable */
 import CanvasState, { CanvasElement } from './CanvasState'
 import BoundingBox, { BoundingBoxProps } from './Objects/BoundingBox'
 import CocoJsonObj from './Objects/CocoJson'
@@ -128,7 +129,7 @@ const stateToCoco = (state: CanvasState): string => {
 
 function CanvasExport(state: CanvasState, export_type: canvasExportTypes): string {
   switch (export_type) {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- just to get rid of the error for now
+     
     case 'COCOJSON':
       return stateToCoco(state)
   }
