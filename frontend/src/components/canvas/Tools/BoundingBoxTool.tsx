@@ -14,7 +14,6 @@ const BoundingBoxTool = (props: CanvasToolProps): CanvasTool => {
     // create konva rectangle
     props.canvasDispatch({ type: 'setDragging', userId: userId, isDragging: true })
 
-     
     const pos = stageRef.current?.getPointerPosition()
     if (!pos) return
 
