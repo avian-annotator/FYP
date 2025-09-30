@@ -90,7 +90,7 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
   // tool switcheruserId
   const tools: CanvasTool[] = [
     BoundingBoxTool({ stageRef, canvasState, canvasDispatch }),
-    SelectMoveTool({ stageRef, canvasState, canvasDispatch}),
+    SelectMoveTool({ stageRef, canvasState, canvasDispatch }),
     LabelTool({ stageRef, canvasState, canvasDispatch }),
     KeypointsTool({ stageRef, canvasState, canvasDispatch }),
   ]
@@ -113,25 +113,23 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
   const elementRefs = useRef<Record<number, Konva.Node | null>>({})
 
   useEffect(() => {
-    const selectionId = Number(canvasState.userState.find(
-      user => user.userId === userId,
-    )?.currentSelectionId)
+    const selectionId = Number(
+      canvasState.userState.find(user => user.userId === userId)?.currentSelectionId,
+    )
 
     const selectedNode = selectionId ? elementRefs.current[selectionId] : null
-
 
     if (selectedNode) {
       trRef.current?.nodes([selectedNode])
       trRef.current?.resizeEnabled(
         selectedNode.getClassName() !== 'Circle' && selectedNode.getClassName() !== 'Line',
       )
-       trRef.current?.getLayer()?.batchDraw();
+      trRef.current?.getLayer()?.batchDraw()
     } else {
       trRef.current?.nodes([])
-       trRef.current?.getLayer()?.batchDraw();
+      trRef.current?.getLayer()?.batchDraw()
     }
   }, [canvasState.userState, elementRefs.current])
-
 
   const renderShape = (el: CanvasElement) => {
     const props = {
@@ -195,16 +193,17 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
           onMouseDown={activeTool.handleMouseDown}
           onMouseMove={activeTool.handleMouseMove}
           onMouseUp={activeTool.handleMouseUp}
-          onClick={e =>  {if (e.target instanceof Konva.Shape) {
-      const id = Number(e.target.id());
-       canvasDispatch({type: 'setDragging', userId, isDragging:true})
-        canvasDispatch({ type: 'setSelected', id, userId });
-        e.target.draggable(true)
-           } else {
-    canvasDispatch({type: 'setDragging', userId, isDragging:false})
-      canvasDispatch({ type: 'clearSelected', userId });
-    }
-  }}
+          onClick={e => {
+            if (e.target instanceof Konva.Shape) {
+              const id = Number(e.target.id())
+              canvasDispatch({ type: 'setDragging', userId, isDragging: true })
+              canvasDispatch({ type: 'setSelected', id, userId })
+              e.target.draggable(true)
+            } else {
+              canvasDispatch({ type: 'setDragging', userId, isDragging: false })
+              canvasDispatch({ type: 'clearSelected', userId })
+            }
+          }}
         >
           <Layer>
             {canvasState.canvasElements.map(el => renderShape(el))}
