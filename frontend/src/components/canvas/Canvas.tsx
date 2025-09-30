@@ -13,10 +13,6 @@ import CanvasState, {
 } from './CanvasState'
 import { useAnnotate } from '@/annotate/useAnnotate'
 import { useAuth } from '@/auth/useAuth'
-import * as Y from 'yjs'
-
-export const ydoc = new Y.Doc()
-export const yCanvasElements = ydoc.getArray<CanvasElement>('canvasElements')
 
 interface CanvasTool {
   handleMouseMove: (e: Konva.KonvaEventObject<MouseEvent>) => void
@@ -132,32 +128,68 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
   }, [canvasState.userState, elementRefs.current])
 
   const renderShape = (el: CanvasElement) => {
+    // select and move logic moved inside the render because it wasn't working in the tool. i know this is very annoying
     const props = {
       ...el.props,
       key: el.id,
       id: el.id.toString(),
-      onDragEnd: (e: Konva.KonvaEventObject<MouseEvent>) => {
-        canvasDispatch({
-          type: 'updateElement',
-          id: el.id,
-          props: { ...el.props, x: e.target.x(), y: e.target.y() },
-        })
+      onDragMove: (e: Konva.KonvaEventObject<MouseEvent>) => {
+        if (el.type === 'rectangle') {
+          canvasDispatch({
+            type: 'updateElement',
+            id: el.id,
+            props: {
+              ...el.props,
+              x: e.target.x(),
+              y: e.target.y(),
+            },
+          })
+        }
+        if (el.type === 'circle') {
+          const newX = e.target.x()
+          const newY = e.target.y()
+          canvasDispatch({
+            type: 'updateElement',
+            id: el.id,
+            props: { ...el.props, x: newX, y: newY },
+          })
+
+          // Update all connected lines immediately
+          const connectedLines = canvasState.canvasElements.filter(
+            elem => elem.type === 'line' && (elem.startId === el.id || elem.endId === el.id),
+          )
+
+          connectedLines.forEach(line => {
+            const start = canvasState.canvasElements.find(p => p.id === line.startId)
+            const end = canvasState.canvasElements.find(p => p.id === line.endId)
+
+            if (start && end) {
+              canvasDispatch({
+                type: 'updateElement',
+                id: line.id,
+                props: {
+                  ...line.props,
+                  points: [start.props.x, start.props.y, end.props.x, end.props.y],
+                },
+              })
+            }
+          })
+        }
       },
-      onTransformEnd: (e: Konva.KonvaEventObject<MouseEvent>) => {
-        const node = e.target
+      onTransform: (e: Konva.KonvaEventObject<MouseEvent>) => {
         canvasDispatch({
           type: 'updateElement',
           id: el.id,
           props: {
             ...el.props,
-            x: node.x(),
-            y: node.y(),
-            width: node.width() * node.scaleX(),
-            height: node.height() * node.scaleY(),
+            x: e.target.x(),
+            y: e.target.y(),
+            width: e.target.width() * e.target.scaleX(),
+            height: e.target.height() * e.target.scaleY(),
           },
         })
-        node.scaleX(1)
-        node.scaleY(1)
+        e.target.scaleX(1)
+        e.target.scaleY(1)
       },
       ref: (node: Konva.Rect | Konva.Circle | Konva.Line | null) => {
         elementRefs.current[el.id] = node
