@@ -8,33 +8,32 @@ import {
   DialogFooter,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import {
-  useAddUserToWorkspace,
-  AddUserToWorkspaceRequestBodyDTO,
-  useGetUsersFromWorkspace,
-} from '../../../generated'
+import { AddUserToWorkspaceRequestBodyDTO, useGetUsersFromWorkspace } from '../../../generated'
+import { useAddUserToWorkspace } from '@/lib/utils'
 
 export function AddUserButton({ workspace }: { workspace: number }) {
   const [open, setOpen] = useState(false)
-  const [id, setId] = useState(0)
+  const [id, setId] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   const { data } = useGetUsersFromWorkspace(workspace, { excludeExisting: true }, {})
   const users = data?.data.content === undefined ? [] : data.data.content
 
-  const addUserToWorkspaceRequestBodyDTO: AddUserToWorkspaceRequestBodyDTO = {
-    userId: id,
-  }
-
-  const mutation = useAddUserToWorkspace(workspace, addUserToWorkspaceRequestBodyDTO)
+  const mutation = useAddUserToWorkspace(workspace)
 
   const onSubmit = (e: React.FormEvent) => {
+    if (id === null) return
+    const addUserToWorkspaceRequestBodyDTO: AddUserToWorkspaceRequestBodyDTO = {
+      userId: id,
+    }
+
     e.preventDefault()
 
     setError(null)
-    mutation.mutate(undefined, {
+    mutation.mutate(addUserToWorkspaceRequestBodyDTO, {
       onSuccess: () => {
         window.location.reload()
+        mutation.reset()
         setOpen(false)
         setId(0)
         setError(null)
@@ -62,7 +61,7 @@ export function AddUserButton({ workspace }: { workspace: number }) {
         <form onSubmit={onSubmit}>
           <label className="block mb-2 text-sm font-medium text-gray-700">User</label>
           <select
-            value={id}
+            value={Number(id)}
             onChange={e => {
               setId(Number(e.target.value))
             }}
