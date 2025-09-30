@@ -41,8 +41,11 @@ type CanvasAction =
   | { type: 'clearSelected'; userId: number }
   | { type: 'addUser'; userId: number }
   | { type: 'removeUser'; userId: number } // NOT IMPLEMENTED
+  | { type: 'join' }
+  | { type: 'leave' }
 
 function canvasReducer(p: CanvasState, action: CanvasAction) {
+  // Don't publish if this is coming from websocket (handled in Canvas.tsx)
   switch (action.type) {
     case 'addElement':
       return { ...p, canvasElements: [...p.canvasElements, action.element] }
@@ -84,6 +87,10 @@ function canvasReducer(p: CanvasState, action: CanvasAction) {
             ? p.userState.concat({ userId: action.userId, isDragging: false })
             : p.userState,
       }
+    case 'join':
+      return p
+    case 'leave':
+      return p
     default:
       throw new Error()
   }

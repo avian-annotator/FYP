@@ -28,7 +28,6 @@ export function AddUserButton({ workspace }: { workspace: number }) {
     }
 
     e.preventDefault()
-
     setError(null)
     mutation.mutate(addUserToWorkspaceRequestBodyDTO, {
       onSuccess: () => {

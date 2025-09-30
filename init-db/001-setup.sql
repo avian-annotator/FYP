@@ -14,6 +14,10 @@ INSERT INTO app_user (username, password_hash, role)
 VALUES ('admin', '$2a$12$1SoHD/cCD9a4Zyxdr1kx3u3AGDD1HKqOsph3KVI42Uo8A/U9DaN62', 'ADMIN')
 ON CONFLICT (username) DO NOTHING;
 
+INSERT INTO app_user (username, password_hash, role)
+VALUES ('WEBSOCKET', '$2a$12$tTjervTuguQUONivLwJtNO8xkl8ANV4bN4lP5ozHsYXSE1yT6BLcK', 'ADMIN')
+ON CONFLICT (username) DO NOTHING;
+
 -- Create the workspace table
 CREATE TABLE IF NOT EXISTS workspace (
     id BIGSERIAL PRIMARY KEY,

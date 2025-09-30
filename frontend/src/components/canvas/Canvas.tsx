@@ -6,6 +6,8 @@ import SelectMoveTool from './Tools/SelectMoveTool'
 import LabelTool from './Tools/LabelTool'
 import KeypointsTool from './Tools/KeypointsTool'
 import CanvasState, { canvasReducer, initalCanvasState, CanvasAction } from './CanvasState'
+import { useAnnotate } from '@/annotate/useAnnotate'
+import { useAuth } from '@/auth/useAuth'
 
 interface CanvasTool {
   handleMouseMove: (e: Konva.KonvaEventObject<MouseEvent>) => void
@@ -28,18 +30,56 @@ export interface CanvasStateHandle {
 interface CanvasProps {
   image: string
   tool: number
+  workspaceId: string
+  imageId: string
 }
 
-// Need way to have instanced user ids
-const userId = 0
 // TODO:  function to change image
 const Canvas = ({
   ref,
   image,
+  workspaceId,
+  imageId,
   tool,
 }: CanvasProps & { ref?: React.RefObject<CanvasStateHandle | null> }) => {
   const stageRef = useRef<Konva.Stage>(null)
-  const [canvasState, canvasDispatch] = useReducer(canvasReducer, initalCanvasState)
+  const { publishAnnotationActions } = useAnnotate({
+    workspaceId,
+    imageId,
+    onReceiveAnnotation: message => {
+      const action = JSON.parse(message.action) as CanvasAction
+      // console.log('action')
+      if (
+        message.userId !== userId &&
+        message.actionType !== 'join' &&
+        message.actionType !== 'leave'
+      ) {
+        localDispatch(action)
+      }
+    },
+  })
+
+  const userId = useAuth().userDetails?.id ?? 0
+
+  // Create a custom dispatch function that will publish actions to other users
+  const [canvasState, localDispatch] = useReducer(
+    (state: CanvasState, action: CanvasAction) => canvasReducer(state, action),
+    initalCanvasState,
+  )
+
+  const canvasDispatch = (action: CanvasAction) => {
+    // First dispatch locally
+    //
+    // TODO: remove this
+    if (action.type === 'addElement') return
+    localDispatch(action)
+    // Then publish to other users
+    publishAnnotationActions({
+      userId,
+      action: JSON.stringify(action),
+      actionType: action.type,
+    })
+  }
 
   // transformer for selectmovetool
   const trRef = useRef<Konva.Transformer>(null)
@@ -72,7 +112,7 @@ const Canvas = ({
     }
   }, [canvasState])
 
-  // tool switcher
+  // tool switcheruserId
   const tools: CanvasTool[] = [
     BoundingBoxTool({ stageRef, canvasState, canvasDispatch }),
     SelectMoveTool({ stageRef, canvasState, canvasDispatch }),
@@ -106,6 +146,7 @@ const Canvas = ({
           ref={imgRef}
           onLoad={handleImgLoad}
         />
+
         <Stage
           ref={stageRef}
           width={stageWidth}
