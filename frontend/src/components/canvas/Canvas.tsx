@@ -133,7 +133,6 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
     // select and move logic moved inside the render because it wasn't working in the tool. i know this is very annoying
     const props = {
       ...el.props,
-      key: el.id,
       id: el.id.toString(),
       onDragMove: (e: Konva.KonvaEventObject<MouseEvent>) => {
         if (el.type === 'rectangle') {
@@ -203,11 +202,11 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
     }
     switch (el.type) {
       case 'rectangle':
-        return <Rect {...props} />
+        return <Rect key={el.id} {...props} />
       case 'circle':
-        return <Circle {...props} />
+        return <Circle key={el.id} {...props} />
       case 'line':
-        return <Line {...props} />
+        return <Line key={el.id} {...props} />
       default:
         return null
     }
