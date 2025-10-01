@@ -46,6 +46,7 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
   const [canvasState, setCanvasState] = useState<CanvasState>(() => createCanvasState(initialYdoc))
 
   const stageRef = useRef<Konva.Stage>(null)
+  const userId = useAuth().userDetails?.id ?? 0
 
   const { publishAnnotationActions } = useAnnotate({
     workspaceId,
@@ -71,8 +72,6 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
       actionType: action.type,
     })
   }
-
-  const userId = useAuth().userDetails?.id ?? 0
 
   // transformer for selectmovetool
   const trRef = useRef<Konva.Transformer>(null)
@@ -112,7 +111,6 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
     setStageDim({ w: 450, h: scaledHeight })
   }
   const elementRefs = useRef<Record<number, Konva.Node | null>>({})
-
   useEffect(() => {
     const selectionId = Number(
       canvasState.userState.toArray().find((user: { userId: number }) => user.userId === userId)
@@ -126,12 +124,14 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
       trRef.current?.resizeEnabled(
         selectedNode.getClassName() !== 'Circle' && selectedNode.getClassName() !== 'Line',
       )
-      trRef.current?.getLayer()?.batchDraw()
     } else {
       trRef.current?.nodes([])
-      trRef.current?.getLayer()?.batchDraw()
     }
-  }, [canvasState.userState, elementRefs.current])
+    trRef.current?.getLayer()?.batchDraw()
+  }, [
+    userId,
+    ...canvasState.userState.toArray().map(u => u.currentSelectionId), // explicit dependency
+  ])
 
   const renderShape = (el: CanvasElement) => {
     // select and move logic moved inside the render because it wasn't working in the tool. i know this is very annoying
@@ -200,7 +200,9 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
         e.target.scaleY(1)
       },
       ref: (node: Konva.Rect | Konva.Circle | Konva.Line | null) => {
-        elementRefs.current[el.id] = node
+        if (node) {
+          elementRefs.current[el.id] = node
+        }
       },
     }
     switch (el.type) {

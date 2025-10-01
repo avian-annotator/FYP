@@ -1,9 +1,6 @@
 /* eslint-disable */
-import CanvasState, { CanvasElement } from './CanvasState'
-import BoundingBox, { BoundingBoxProps } from './Objects/BoundingBox'
+import CanvasState from './CanvasState'
 import CocoJsonObj from './Objects/CocoJson'
-import ConnectingLine, { ConnectingLineProps } from './Objects/ConnectingLine'
-import Keypoint, { KeypointProps } from './Objects/Keypoint'
 
 const VERSION = '1,0'
 const DESCRIPTION = 'Exported from Avian Annotator'
@@ -18,22 +15,15 @@ function getKeypointAnnotation(state: CanvasState): {
   lines: [number, number][]
   keypointLabels: string[]
 } {
-  const keypointElements = state.canvasElements.filter(
-    (el: CanvasElement): el is React.ReactElement<KeypointProps> => el.type === Keypoint,
-  )
-  const lineElements = state.canvasElements.filter(
-    (el: CanvasElement): el is React.ReactElement<ConnectingLineProps> =>
-      el.type === ConnectingLine,
-  )
+  const keypointElements = state.canvasElements.toArray().filter(el => el.type === 'circle')
+  const lineElements = state.canvasElements.toArray().filter(el => el.type === 'line')
 
   const keypoints: number[] = []
   const keypointLabels: string[] = []
 
   keypointElements.forEach(el => {
-    const c = el.props.ref.current
-    if (!c) return
     keypointLabels.push(el.props.label ?? String(el.props.id)) //either label or id if not labelled
-    keypoints.push(c.x(), c.y(), 2) // 2 is visible, all keypoints are visible automatically
+    keypoints.push(el.props.x(), el.props.y(), 2) // 2 is visible, all keypoints are visible automatically
   })
 
   const lines: [number, number][] = lineElements.map(line => {
@@ -51,21 +41,20 @@ const stateToCoco = (state: CanvasState): string => {
   const { keypoints, lines, keypointLabels } = getKeypointAnnotation(state)
 
   const bboxAnnotations = state.canvasElements
-    .filter(
-      (el: CanvasElement): el is React.ReactElement<BoundingBoxProps> => el.type === BoundingBox,
-    )
+    .toArray()
+    .filter(el => el.type === 'rectangle')
     .map(el => {
       return {
         id: el.props.id,
         image_id: 0,
         category_id: 1,
         bbox: [
-          el.props.ref.current?.x() ?? 0,
-          el.props.ref.current?.y() ?? 0,
-          el.props.ref.current?.width() ?? 0,
-          el.props.ref.current?.height() ?? 0,
+          el.props.x ?? 0,
+          el.props.y() ?? 0,
+          el.props.width ?? 0,
+          el.props.ref.height ?? 0,
         ] as [number, number, number, number],
-        area: (el.props.ref.current?.width() ?? 0) * (el.props.ref.current?.height() ?? 0),
+        area: (el.props.width() ?? 0) * (el.props.height() ?? 0),
         iscrowd: 0 as const,
       }
     })
@@ -129,7 +118,6 @@ const stateToCoco = (state: CanvasState): string => {
 
 function CanvasExport(state: CanvasState, export_type: canvasExportTypes): string {
   switch (export_type) {
-     
     case 'COCOJSON':
       return stateToCoco(state)
   }
