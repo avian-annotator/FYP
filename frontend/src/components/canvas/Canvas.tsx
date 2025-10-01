@@ -42,9 +42,8 @@ interface CanvasProps {
 
 // TODO:  function to change image
 const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
-  const initialYdoc = new Y.Doc()
-  const [canvasState, setCanvasState] = useState<CanvasState>(() => createCanvasState(initialYdoc))
-
+  const initialYdoc = new Y.Doc() // sidecar load here
+  const canvasState = useRef<CanvasState>(createCanvasState(initialYdoc)).current
   const stageRef = useRef<Konva.Stage>(null)
   const userId = useAuth().userDetails?.id ?? 0
 
@@ -128,10 +127,7 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
       trRef.current?.nodes([])
     }
     trRef.current?.getLayer()?.batchDraw()
-  }, [
-    userId,
-    ...canvasState.userState.toArray().map(u => u.currentSelectionId), // explicit dependency
-  ])
+  }, [[userId, canvasState.userState]])
 
   const renderShape = (el: CanvasElement) => {
     // select and move logic moved inside the render because it wasn't working in the tool. i know this is very annoying
