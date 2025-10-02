@@ -1,11 +1,12 @@
 import { useAuth } from '@/auth'
+import { CanvasAction } from '@/components/canvas/CanvasState'
 import { RxStomp, RxStompConfig } from '@stomp/rx-stomp'
 import { useRef, useEffect } from 'react'
 
 export interface AnnotatePayload {
   actionType: string
   userId: number
-  action: string
+  action: CanvasAction
 }
 
 // interface PresencePayload {
@@ -53,14 +54,14 @@ export const useAnnotate = ({ workspaceId, imageId, onReceiveAnnotation }: UseAn
     rxStomp.activate()
 
     const joinMessage: AnnotatePayload = {
-      action: '{}',
+      action: { type: 'join' },
       actionType: 'join',
       userId: userDetails.id,
     }
 
     const leaveMessage: AnnotatePayload = {
       actionType: 'leave',
-      action: '{}',
+      action: { type: 'leave' },
       userId: userDetails.id,
     }
 

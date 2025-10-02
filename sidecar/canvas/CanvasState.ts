@@ -1,5 +1,3 @@
-import Konva from 'konva'
-import { RefObject } from 'react'
 import * as Y from 'yjs'
 
 type UserState = {
@@ -10,7 +8,7 @@ type UserState = {
 }
 
 interface CanvasElementProps {
-  ref: RefObject<null | Konva.Shape>
+  ref: unknown
   id: number
 }
 
@@ -67,7 +65,7 @@ type CanvasAction =
   | { type: 'clearSelected'; userId: number }
   | { type: 'addUser'; userId: number }
   | { type: 'removeUser'; userId: number } // NOT IMPLEMENTED
-  | { type: 'join' }
+  | { type: 'join'; update: string }
   | { type: 'leave' }
   | { type: 'update'; update: string }
 
@@ -85,7 +83,10 @@ export function yjsDispatch(canvasState: CanvasState, action: CanvasAction) {
       if (index >= 0) {
         const element = {
           ...canvasElements.get(index),
-          props: { ...canvasElements.get(index).props, ...action.props },
+          props: {
+            ...canvasElements.get(index).props,
+            ...action.props,
+          },
         }
         canvasElements.delete(index, 1)
         canvasElements.insert(index, [element])
@@ -102,7 +103,10 @@ export function yjsDispatch(canvasState: CanvasState, action: CanvasAction) {
     case 'addLabel': {
       const index = canvasElements.toArray().findIndex(el => el.id === action.id)
       if (index >= 0) {
-        const element = { ...canvasElements.get(index), label: action.label }
+        const element = {
+          ...canvasElements.get(index),
+          label: action.label,
+        }
         canvasElements.delete(index, 1)
         canvasElements.insert(index, [element])
       }
@@ -112,12 +116,19 @@ export function yjsDispatch(canvasState: CanvasState, action: CanvasAction) {
     case 'setSelected': {
       const index = userState.toArray().findIndex(u => u.userId === action.userId)
       if (index >= 0) {
-        const user = { ...userState.get(index), currentSelectionId: action.id }
+        const user = {
+          ...userState.get(index),
+          currentSelectionId: action.id,
+        }
         userState.delete(index, 1)
         userState.insert(index, [user])
       } else {
         userState.push([
-          { userId: action.userId, currentSelectionId: action.id, isDragging: false },
+          {
+            userId: action.userId,
+            currentSelectionId: action.id,
+            isDragging: false,
+          },
         ])
       }
       break
@@ -126,12 +137,19 @@ export function yjsDispatch(canvasState: CanvasState, action: CanvasAction) {
     case 'clearSelected': {
       const index = userState.toArray().findIndex(u => u.userId === action.userId)
       if (index >= 0) {
-        const user = { ...userState.get(index), currentSelectionId: undefined }
+        const user = {
+          ...userState.get(index),
+          currentSelectionId: undefined,
+        }
         userState.delete(index, 1)
         userState.insert(index, [user])
       } else {
         userState.push([
-          { userId: action.userId, currentSelectionId: undefined, isDragging: false },
+          {
+            userId: action.userId,
+            currentSelectionId: undefined,
+            isDragging: false,
+          },
         ])
       }
       break
@@ -140,7 +158,10 @@ export function yjsDispatch(canvasState: CanvasState, action: CanvasAction) {
     case 'setDragging': {
       const index = userState.toArray().findIndex(u => u.userId === action.userId)
       if (index >= 0) {
-        const user = { ...userState.get(index), isDragging: action.isDragging }
+        const user = {
+          ...userState.get(index),
+          isDragging: action.isDragging,
+        }
         userState.delete(index, 1)
         userState.insert(index, [user])
       } else {
@@ -156,18 +177,18 @@ export function yjsDispatch(canvasState: CanvasState, action: CanvasAction) {
     }
 
     case 'join': {
-      // Presence shit probably
+      //TODO: sort this out properly
+      // Presence shit
+      const yUpdate = Uint8Array.from(JSON.parse(action.update) as number[])
+      Y.applyUpdate(canvasState.ydoc, yUpdate)
       break
     }
 
     case 'update': {
-      const yUpdate = Uint8Array.from(JSON.parse(action.update) as number[])
-      Y.applyUpdate(canvasState.ydoc, yUpdate)
       break
     }
   }
 }
 
-export default CanvasState
 export type { UserState, CanvasElement, Position, CanvasAction, CanvasElementProps }
 export {}

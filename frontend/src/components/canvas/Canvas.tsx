@@ -1,6 +1,6 @@
 import { SyntheticEvent, useEffect, useRef, useState, useReducer } from 'react'
 import Konva from 'konva'
-import { Stage, Layer, Transformer, Rect, Circle, Line , Text, Group} from 'react-konva'
+import { Stage, Layer, Transformer, Rect, Circle, Line, Text, Group } from 'react-konva'
 import BoundingBoxTool from './Tools/BoundingBoxTool'
 import SelectMoveTool from './Tools/SelectMoveTool'
 import LabelTool from './Tools/LabelTool'
@@ -26,7 +26,7 @@ interface CanvasTool {
 interface CanvasToolProps {
   stageRef: React.RefObject<Konva.Stage | null>
   canvasState: CanvasState
-  canvasDispatch: React.ActionDispatch<[action: CanvasAction]>
+  canvasDispatch: (action: CanvasAction) => void
 }
 
 export interface CanvasStateHandle {
@@ -50,13 +50,10 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
     workspaceId,
     imageId,
     onReceiveAnnotation: message => {
-      const action = JSON.parse(message.action) as CanvasAction
+      const action = message.action
       // console.log('action')
-      if (
-        message.userId !== userId &&
-        message.actionType !== 'join' &&
-        message.actionType !== 'leave'
-      ) {
+      // TODO: message.actionType is the same as action.type, so we should stick with action.type
+      if (message.actionType !== 'join' && message.actionType !== 'leave') {
         yjsDispatch(canvasState, action)
       }
     },
@@ -66,7 +63,7 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
     yjsDispatch(canvasState, action)
     publishAnnotationActions({
       userId,
-      action: JSON.stringify(action),
+      action: action,
       actionType: action.type,
     })
   }
@@ -199,49 +196,51 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
         }
       },
     }
-   const shapeElement = (() => {
-    switch (el.type) {
-      case "rectangle":
-        return  <>
-          <Rect key={el.id} {...props} />
-          {el.label && (
-            <Text
-              x={el.props.x}
-              y={(el.props.y ?? 0) - 25} // above the shape
-              text={el.label}
-              fontSize={16}
-              fill={el.props.color}
-              key={`label.${el.id}`}
-              id={`label.${el.id}`}
-            />
-          )}
+    const shapeElement = (() => {
+      switch (el.type) {
+        case 'rectangle':
+          return (
+            <>
+              <Rect key={el.id} {...props} />
+              {el.label && (
+                <Text
+                  x={el.props.x}
+                  y={(el.props.y ?? 0) - 25} // above the shape
+                  text={el.label}
+                  fontSize={16}
+                  fill={el.props.color}
+                  key={`label.${el.id}`}
+                  id={`label.${el.id}`}
+                />
+              )}
+            </>
+          )
+        case 'circle':
+          return <Circle {...props} />
+        case 'line':
+          return <Line {...props} />
+        default:
+          return null
+      }
+    })()
+
+    // If label exists, render it in a group with the shape
+    if (el.label) {
+      return (
+        <>
+          {shapeElement}
+          <Text
+            text={el.props.label}
+            x={el.props.x}
+            y={el.props.y - 25}
+            fontSize={14}
+            fill={el.props.color}
+          />
         </>
-      case "circle":
-        return <Circle {...props} />;
-      case "line":
-        return <Line {...props} />;
-      default:
-        return null;
+      )
     }
-  })();
 
-  // If label exists, render it in a group with the shape
-  if (el.label) {
-    return (
-      <>
-        {shapeElement}
-        <Text
-          text={el.props.label}
-          x={el.props.x}
-          y={el.props.y - 25}
-          fontSize={14}
-          fill={el.props.color}
-        />
-      </>
-    );
-  }
-
-  return shapeElement;
+    return shapeElement
   }
 
   return (
@@ -281,7 +280,6 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
                   const shapeId = Number(e.target.id())
                   const label = labelText.trim()
                   canvasDispatch({ type: 'addLabel', id: shapeId, label: label })
-
                 }
               }
             }
