@@ -1,6 +1,6 @@
 import { SyntheticEvent, useEffect, useRef, useState, useReducer } from 'react'
 import Konva from 'konva'
-import { Stage, Layer, Transformer, Rect, Circle, Line } from 'react-konva'
+import { Stage, Layer, Transformer, Rect, Circle, Line , Text, Group} from 'react-konva'
 import BoundingBoxTool from './Tools/BoundingBoxTool'
 import SelectMoveTool from './Tools/SelectMoveTool'
 import LabelTool from './Tools/LabelTool'
@@ -199,16 +199,49 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
         }
       },
     }
+   const shapeElement = (() => {
     switch (el.type) {
-      case 'rectangle':
-        return <Rect key={el.id} {...props} />
-      case 'circle':
-        return <Circle key={el.id} {...props} />
-      case 'line':
-        return <Line key={el.id} {...props} />
+      case "rectangle":
+        return  <>
+          <Rect key={el.id} {...props} />
+          {el.label && (
+            <Text
+              x={el.props.x}
+              y={(el.props.y ?? 0) - 25} // above the shape
+              text={el.label}
+              fontSize={16}
+              fill={el.props.color}
+              key={`label.${el.id}`}
+              id={`label.${el.id}`}
+            />
+          )}
+        </>
+      case "circle":
+        return <Circle {...props} />;
+      case "line":
+        return <Line {...props} />;
       default:
-        return null
+        return null;
     }
+  })();
+
+  // If label exists, render it in a group with the shape
+  if (el.label) {
+    return (
+      <>
+        {shapeElement}
+        <Text
+          text={el.props.label}
+          x={el.props.x}
+          y={el.props.y - 25}
+          fontSize={14}
+          fill={el.props.color}
+        />
+      </>
+    );
+  }
+
+  return shapeElement;
   }
 
   return (
@@ -245,9 +278,10 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
               if (e.target instanceof Konva.Shape) {
                 const labelText = prompt('Enter label text:')
                 if (labelText && labelText.trim()) {
-                  const shapeId = Number(e.target.id().split('.')[1])
+                  const shapeId = Number(e.target.id())
                   const label = labelText.trim()
                   canvasDispatch({ type: 'addLabel', id: shapeId, label: label })
+
                 }
               }
             }
