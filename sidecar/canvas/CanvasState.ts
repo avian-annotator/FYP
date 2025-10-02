@@ -177,14 +177,12 @@ export function yjsDispatch(canvasState: CanvasState, action: CanvasAction) {
     }
 
     case 'join': {
-      //TODO: sort this out properly
-      // Presence shit
-      const yUpdate = Uint8Array.from(JSON.parse(action.update) as number[])
-      Y.applyUpdate(canvasState.ydoc, yUpdate)
+      // Presence shit probably
       break
     }
 
     case 'update': {
+      console.error('should never receive an update message')
       break
     }
   }

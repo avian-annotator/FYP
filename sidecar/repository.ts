@@ -26,13 +26,27 @@ export const updateYjsFromDB = async ({ client, imageId, ydoc }: UpdateYjsFromDB
   const res = await client.query('SELECT annotations FROM image i WHERE i.bucket_identifier = $1', [
     imageId,
   ])
+  console.log('trying to update local yjs from db')
 
-  const binary = res.rows[0].annotations as Buffer // BYTEA comes back as Buffer
-  Y.applyUpdate(ydoc, binary)
+  if (
+    res.rows.length > 0 &&
+    res.rows[0].annotations instanceof Buffer &&
+    res.rows[0].annotations.length > 0
+  ) {
+    const binary = res.rows[0].annotations as Buffer
+    const uint8Array = new Uint8Array(binary)
+    Y.applyUpdate(ydoc, uint8Array)
+    console.log('successful update')
+  } else {
+    console.log('No valid annotations found in DB, skipping Yjs update.')
+  }
+
   return ydoc
 }
 
 export const saveYjsToDB = async ({ client, imageId, ydoc }: SaveYjsToDBProps) => {
+  console.log('saving yjs to db')
+  console.log(ydoc)
   const binary = Y.encodeStateAsUpdate(ydoc)
   await client.query('UPDATE image SET annotations = $1 WHERE bucket_identifier = $2', [
     binary,

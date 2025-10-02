@@ -34,6 +34,7 @@ services:
         container_name: sidecar_app
         depends_on:
             - backend
+            - postgres
         env_file:
             - ./sidecar/.env
             - ./sidecar/.env.local

@@ -1,6 +1,7 @@
 import Konva from 'konva'
 import { RefObject } from 'react'
 import * as Y from 'yjs'
+import { Buffer } from 'buffer'
 
 type UserState = {
   userId: number
@@ -161,8 +162,8 @@ export function yjsDispatch(canvasState: CanvasState, action: CanvasAction) {
     }
 
     case 'update': {
-      const yUpdate = Uint8Array.from(JSON.parse(action.update) as number[])
-      Y.applyUpdate(canvasState.ydoc, yUpdate)
+      //const yUpdate = Buffer.from(action.update, 'base64')
+      //Y.applyUpdate(canvasState.ydoc, yUpdate)
       break
     }
   }

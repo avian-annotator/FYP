@@ -19,7 +19,12 @@ const client = new Client({
 
 const SIDECAR_ID = -1
 
-await client.connect()
+try {
+  await client.connect()
+  console.log('Postgres client connected successfully!')
+} catch (err) {
+  console.error('Failed to connect to Postgres:', err)
+}
 
 const app = express()
 const port = 3000
@@ -27,7 +32,7 @@ const port = 3000
 export interface AnnotatePayload {
   actionType: string
   userId: number
-  action: CanvasAction
+  action: string
 }
 
 export interface Session {
@@ -39,6 +44,8 @@ const sessionClients: Record<string, Session> = {}
 let sessionCookie: string | undefined
 
 app.post('/session/workspace/:workspaceId/image/:imageId', (req, res) => {
+  console.log('START')
+
   const { workspaceId, imageId } = req.params
   const key = `${workspaceId}/${imageId}`
 
@@ -58,7 +65,6 @@ app.post('/session/workspace/:workspaceId/image/:imageId', (req, res) => {
     heartbeatIncoming: 0,
     heartbeatOutgoing: 0,
     reconnectDelay: 5000,
-    debug: msg => console.log(msg),
   }
 
   rxStomp.configure(rxStompConfig)
@@ -67,26 +73,27 @@ app.post('/session/workspace/:workspaceId/image/:imageId', (req, res) => {
   const canvasState = createCanvasState()
   const ydoc = canvasState.ydoc
   sessionClients[key] = { ws: rxStomp, ydoc }
-
   rxStomp.connected$.subscribe(() => {
     updateYjsFromDB({ client, imageId, ydoc }).then(() => {
       console.log(`STOMP client connected for ${key}`)
     })
 
     rxStomp.watch(`/topic/workspace/${workspaceId}/image/${imageId}/annotate`).subscribe(msg => {
-      console.log(`Message for ${key}: ${msg.body}`)
       const message = JSON.parse(msg.body) satisfies AnnotatePayload
       if (message.actionType === 'join') {
-        // Serialise BYTEA to base64 for JSON, so that it can be sent over STOMP efficiently
+        const yjsUpdate = Y.encodeStateAsUpdate(ydoc)
+
+        const base64Update = Buffer.from(yjsUpdate).toString('base64')
         const action = {
           type: 'update',
-          update: btoa(String.fromCharCode(...Array.from(Y.encodeStateAsUpdate(ydoc)))),
-        } satisfies CanvasAction
+          update: base64Update,
+        }
+
         publishAnnotationActions({
           message: {
             actionType: 'update',
             userId: SIDECAR_ID,
-            action: action,
+            action: JSON.stringify(action),
           },
           rxStomp,
           workspaceId,
@@ -116,6 +123,7 @@ app.post('/session/workspace/:workspaceId/image/:imageId', (req, res) => {
 })
 
 app.delete('/session/workspace/:workspaceId/image/:imageId', (req, res) => {
+  console.log('ends')
   const { workspaceId, imageId } = req.params
   const key = `${workspaceId}/${imageId}`
 
