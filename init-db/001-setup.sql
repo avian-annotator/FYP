@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS image (
     bucket_identifier CHAR(16) PRIMARY KEY,
     workspace_id BIGINT,
     file_name VARCHAR(255),
-    annotations JSONB,
+    annotations BYTEA,
     CONSTRAINT fk_image_workspace FOREIGN KEY (workspace_id) REFERENCES workspace(id)
 );
 

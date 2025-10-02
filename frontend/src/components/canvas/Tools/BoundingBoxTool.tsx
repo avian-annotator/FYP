@@ -1,8 +1,6 @@
-import { createRef } from 'react'
 import { CanvasTool, CanvasToolProps } from '../Canvas'
 import Konva from 'konva'
 import { getColor, getBackgroundColor } from '../CanvasUtils'
-import BoundingBox from '../Objects/BoundingBox'
 import { CanvasElement } from '../CanvasState'
 import { useAuth } from '@/auth'
 
