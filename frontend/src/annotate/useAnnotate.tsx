@@ -6,7 +6,7 @@ import { useRef, useEffect } from 'react'
 export interface AnnotatePayload {
   actionType: string
   userId: number
-  action: CanvasAction
+  action: string
 }
 
 // interface PresencePayload {
@@ -54,14 +54,14 @@ export const useAnnotate = ({ workspaceId, imageId, onReceiveAnnotation }: UseAn
     rxStomp.activate()
 
     const joinMessage: AnnotatePayload = {
-      action: { type: 'join' },
+      action: JSON.stringify({ type: 'join' }),
       actionType: 'join',
       userId: userDetails.id,
     }
 
     const leaveMessage: AnnotatePayload = {
       actionType: 'leave',
-      action: { type: 'leave' },
+      action: JSON.stringify({ type: 'leave' }),
       userId: userDetails.id,
     }
 
