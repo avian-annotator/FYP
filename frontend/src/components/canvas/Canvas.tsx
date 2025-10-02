@@ -1,6 +1,7 @@
 import { SyntheticEvent, useEffect, useRef, useState, useReducer } from 'react'
 import Konva from 'konva'
 import { Stage, Layer, Transformer, Rect, Circle, Line, Text, Group } from 'react-konva'
+import { Stage, Layer, Transformer, Rect, Circle, Line, Text, Group } from 'react-konva'
 import BoundingBoxTool from './Tools/BoundingBoxTool'
 import SelectMoveTool from './Tools/SelectMoveTool'
 import LabelTool from './Tools/LabelTool'
@@ -214,51 +215,46 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
         }
       },
     }
-    const shapeElement = (() => {
-      switch (el.type) {
-        case 'rectangle':
-          return (
-            <>
-              <Rect key={el.id} {...props} />
-              {el.label && (
-                <Text
-                  x={el.props.x}
-                  y={(el.props.y ?? 0) - 25} // above the shape
-                  text={el.label}
-                  fontSize={16}
-                  fill={el.props.color}
-                  key={`label.${el.id}`}
-                  id={`label.${el.id}`}
-                />
-              )}
-            </>
-          )
-        case 'circle':
-          return <Circle {...props} />
-        case 'line':
-          return <Line {...props} />
-        default:
-          return null
-      }
-    })()
-
-    // If label exists, render it in a group with the shape
-    if (el.label) {
-      return (
-        <>
-          {shapeElement}
-          <Text
-            text={el.props.label}
-            x={el.props.x}
-            y={el.props.y - 25}
-            fontSize={14}
-            fill={el.props.color}
-          />
-        </>
-      )
+    switch (el.type) {
+      case 'rectangle':
+        return (
+          <>
+            <Rect key={el.id} {...props} />
+            {el.label && (
+              <Text
+                x={el.props.x as number}
+                y={((el.props.y ?? 0) - 18)}
+                text={el.label}
+                fontSize={16}
+                fill={el.props.stroke as string}
+                key={`label.${String(el.id)}`}
+                id={`label.${String(el.id)}`}
+              />
+            )}
+          </>
+        )
+      case 'circle':
+        return (
+          <>
+            <Circle {...props} />
+            {el.label && (
+              <Text
+                x={el.props.x as number}
+                y={((el.props.y ?? 0) - 18)}
+                text={el.label}
+                fontSize={12}
+                fill="black"
+                key={`label.${String(el.id)}`}
+                id={`label.${String(el.id)}`}
+              />
+            )}
+          </>
+        )
+      case 'line':
+        return <Line {...props} />
+      default:
+        return null
     }
-
-    return shapeElement
   }
 
   return (
