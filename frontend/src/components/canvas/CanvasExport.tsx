@@ -1,7 +1,6 @@
 /* eslint-disable */
 import CanvasState from './CanvasState'
 import CocoJsonObj from './Objects/CocoJson'
-
 const VERSION = '1,0'
 const DESCRIPTION = 'Exported from Avian Annotator'
 const CONTRIBUTOR = 'Allen, Anthony, Daniel, Sacha'

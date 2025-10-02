@@ -4,10 +4,11 @@ import Konva from 'konva'
 import { getColor, getBackgroundColor } from '../CanvasUtils'
 import BoundingBox from '../Objects/BoundingBox'
 import { CanvasElement } from '../CanvasState'
-
-const userId = 0
+import { useAuth } from '@/auth'
 
 const BoundingBoxTool = (props: CanvasToolProps): CanvasTool => {
+  const userId = useAuth().userDetails?.id ?? 0
+
   const stageRef = props.stageRef
 
   const handleMouseDown = (_: Konva.KonvaEventObject<MouseEvent>) => {

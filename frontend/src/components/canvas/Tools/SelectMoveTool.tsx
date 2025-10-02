@@ -14,7 +14,7 @@ const SelectMoveTool = (props: CanvasToolProps): CanvasTool => {
       props.canvasDispatch({ type: 'clearSelected', userId })
     }
   }
-  const toolName = 'Select and Move Tool'
+  const toolName = 'SelectandMoveTool'
 
   return {
     handleMouseDown: () => {},

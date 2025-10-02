@@ -10,7 +10,6 @@ import { Button } from '@/components/ui/button'
 export function AnnotateWorkspace() {
   const { workspaceId, imageId } = useParams({ from: Route.id })
   const [active, setActive] = useState<number>(0)
-  const canvasStateRef = useRef<CanvasStateHandle>(null)
 
   const { data } = useGeneratePresignedDownloadUrlForImage(Number(workspaceId), imageId, {
     includeAnnotations: true,
@@ -23,13 +22,7 @@ export function AnnotateWorkspace() {
         <div className="flex flex-col items-center gap-4">
           <p>Currently editing: {image?.fileName}</p>
           {image?.url && (
-            <Canvas
-              ref={canvasStateRef}
-              image={image.url}
-              tool={active}
-              workspaceId={workspaceId}
-              imageId={imageId}
-            />
+            <Canvas image={image.url} tool={active} workspaceId={workspaceId} imageId={imageId} />
           )}
           <Button>Save Annotations</Button>
         </div>

@@ -34,18 +34,6 @@ const Keypoint = (props: KeypointProps) => {
           props.onMove?.(e.target.x(), e.target.y())
         }}
       />
-      {props.label && (
-        <Text
-          x={pos.x}
-          y={pos.y - 25}
-          text={props.label}
-          fontSize={25}
-          fontFamily="Arial"
-          fill={color}
-          key={`label.${String(props.id)}`}
-          id={`label.${String(props.id)}`}
-        />
-      )}
     </>
   )
 }
