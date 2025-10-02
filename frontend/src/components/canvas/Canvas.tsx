@@ -42,8 +42,7 @@ interface CanvasProps {
 
 // TODO:  function to change image
 const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
-  const initialYdoc = new Y.Doc() // sidecar load here
-  const canvasState = useRef<CanvasState>(createCanvasState(initialYdoc)).current
+  const canvasState = useRef<CanvasState>(createCanvasState()).current
   const stageRef = useRef<Konva.Stage>(null)
   const userId = useAuth().userDetails?.id ?? 0
 
@@ -58,7 +57,7 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
         message.actionType !== 'join' &&
         message.actionType !== 'leave'
       ) {
-        canvasDispatch(action)
+        yjsDispatch(canvasState, action)
       }
     },
   })
@@ -231,14 +230,26 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
           onMouseMove={activeTool.handleMouseMove}
           onMouseUp={activeTool.handleMouseUp}
           onClick={e => {
-            if (e.target instanceof Konva.Shape) {
-              const id = Number(e.target.id())
-              canvasDispatch({ type: 'setDragging', userId, isDragging: true })
-              canvasDispatch({ type: 'setSelected', id, userId })
-              e.target.draggable(true)
-            } else {
-              canvasDispatch({ type: 'setDragging', userId, isDragging: false })
-              canvasDispatch({ type: 'clearSelected', userId })
+            if (activeTool.toolName === 'SelectandMoveTool') {
+              if (e.target instanceof Konva.Shape) {
+                const id = Number(e.target.id())
+                canvasDispatch({ type: 'setDragging', userId, isDragging: true })
+                canvasDispatch({ type: 'setSelected', id, userId })
+                e.target.draggable(true)
+              } else {
+                canvasDispatch({ type: 'setDragging', userId, isDragging: false })
+                canvasDispatch({ type: 'clearSelected', userId })
+              }
+            }
+            if (activeTool.toolName === 'LabelTool') {
+              if (e.target instanceof Konva.Shape) {
+                const labelText = prompt('Enter label text:')
+                if (labelText && labelText.trim()) {
+                  const shapeId = Number(e.target.id().split('.')[1])
+                  const label = labelText.trim()
+                  canvasDispatch({ type: 'addLabel', id: shapeId, label: label })
+                }
+              }
             }
           }}
         >

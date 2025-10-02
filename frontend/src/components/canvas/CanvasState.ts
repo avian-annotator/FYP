@@ -12,7 +12,6 @@ type UserState = {
 interface CanvasElementProps {
   ref: RefObject<null | Konva.Shape>
   id: number
-  label?: string
 }
 
 type CanvasElement = {
@@ -23,6 +22,7 @@ type CanvasElement = {
   props: Record<string, any> //konva props
   startId?: number //for edges
   endId?: number
+  label?: string // labels
 }
 
 type Position = {
@@ -31,11 +31,14 @@ type Position = {
 }
 
 export interface CanvasState {
+  ydoc: Y.Doc
   userState: Y.Array<UserState>
   canvasElements: Y.Array<CanvasElement>
 }
 
-export function createCanvasState(ydoc: Y.Doc): CanvasState {
+export function createCanvasState(): CanvasState {
+  const ydoc = new Y.Doc()
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const map = ydoc.getMap<Y.Array<any>>('canvasState')
 
@@ -47,6 +50,7 @@ export function createCanvasState(ydoc: Y.Doc): CanvasState {
   }
 
   return {
+    ydoc,
     userState: map.get('userState') as Y.Array<UserState>,
     canvasElements: map.get('canvasElements') as Y.Array<CanvasElement>,
   }
@@ -63,7 +67,7 @@ type CanvasAction =
   | { type: 'clearSelected'; userId: number }
   | { type: 'addUser'; userId: number }
   | { type: 'removeUser'; userId: number } // NOT IMPLEMENTED
-  | { type: 'join' }
+  | { type: 'join'; update: string }
   | { type: 'leave' }
 
 export function yjsDispatch(canvasState: CanvasState, action: CanvasAction) {
@@ -149,88 +153,15 @@ export function yjsDispatch(canvasState: CanvasState, action: CanvasAction) {
       if (!exists) userState.push([{ userId: action.userId, isDragging: false }])
       break
     }
+
+    case 'join': {
+      //TODO: sort this out properly
+      const yUpdate = Uint8Array.from(JSON.parse(action.update) as number[])
+      Y.applyUpdate(canvasState.ydoc, yUpdate)
+      break
+    }
   }
 }
-
-/*
-function canvasReducer(p: CanvasState, action: CanvasAction) {
-  // Don't publish if this is coming from websocket (handled in Canvas.tsx)
-  switch (action.type) {
-    case 'addElement': {
-      return { ...p, canvasElements: [...p.canvasElements, action.element] }
-    }
-    case 'updateElement': {
-      return {
-        ...p,
-        canvasElements: p.canvasElements.map(el =>
-          el.id === action.id ? { ...el, props: { ...el.props, ...action.props } } : el,
-        ),
-      }
-    }
-    case 'removeElement': {
-      return { ...p, canvasElements: p.canvasElements.filter(el => el.id !== action.id) }
-    }
-    case 'addLabel': {
-      return {
-        ...p,
-        canvasElements: p.canvasElements.map(el =>
-          el.id === action.id ? { ...el, label: action.label } : el,
-        ),
-      }
-    }
-    case 'setSelected': {
-      const hasUser = p.userState.some(user => user.userId === action.userId)
-      return {
-        ...p,
-        userState: hasUser
-          ? p.userState.map(user =>
-              user.userId === action.userId ? { ...user, currentSelectionId: action.id } : user,
-            )
-          : [
-              ...p.userState,
-              { userId: action.userId, currentSelectionId: action.id, isDragging: false },
-            ],
-      }
-    }
-    case 'clearSelected': {
-      const hasUserClear = p.userState.some(user => user.userId === action.userId)
-      return {
-        ...p,
-        userState: hasUserClear
-          ? p.userState.map(user =>
-              user.userId === action.userId ? { ...user, currentSelectionId: undefined } : user,
-            )
-          : [
-              ...p.userState,
-              { userId: action.userId, currentSelectionId: undefined, isDragging: false },
-            ],
-      }
-    }
-    case 'setDragging': {
-      return {
-        ...p,
-        userState: p.userState.map(el =>
-          el.userId === action.userId ? { ...el, isDragging: action.isDragging } : el,
-        ),
-      }
-    }
-    case 'addUser': {
-      return {
-        ...p,
-        userState:
-          p.userState.find(user => user.userId) === undefined
-            ? p.userState.concat({ userId: action.userId, isDragging: false })
-            : p.userState,
-      }}
-    case 'join':
-      return p
-    case 'leave':
-      return p
-    
-      default:
-      throw new Error()
-  }
-}*/
 
 export default CanvasState
 export type { UserState, CanvasElement, Position, CanvasAction, CanvasElementProps }
