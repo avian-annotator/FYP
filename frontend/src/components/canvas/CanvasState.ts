@@ -101,6 +101,7 @@ export function yjsDispatch(canvasState: CanvasState, action: CanvasAction) {
     case 'addLabel': {
       const index = canvasElements.toArray().findIndex(el => el.id === action.id)
       if (index >= 0) {
+        console.log('label')
         const element = { ...canvasElements.get(index), label: action.label }
         canvasElements.delete(index, 1)
         canvasElements.insert(index, [element])
