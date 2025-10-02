@@ -50,7 +50,7 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
     workspaceId,
     imageId,
     onReceiveAnnotation: message => {
-      const action = message.action
+      const action = JSON.parse(message.action) as CanvasAction
       // console.log('action')
       // TODO: message.actionType is the same as action.type, so we should stick with action.type
       if (message.actionType !== 'join' && message.actionType !== 'leave') {
@@ -63,7 +63,7 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
     yjsDispatch(canvasState, action)
     publishAnnotationActions({
       userId,
-      action: action,
+      action: JSON.stringify(action),
       actionType: action.type,
     })
   }
