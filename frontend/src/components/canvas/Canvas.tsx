@@ -14,6 +14,7 @@ import CanvasState, {
 import { useAnnotate } from '@/annotate/useAnnotate'
 import { useAuth } from '@/auth/useAuth'
 import * as Y from 'yjs'
+import { Buffer } from 'buffer'
 
 interface CanvasTool {
   handleMouseMove: (e: Konva.KonvaEventObject<MouseEvent>) => void
@@ -42,7 +43,8 @@ interface CanvasProps {
 
 // TODO:  function to change image
 const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
-  const canvasState = useRef<CanvasState>(createCanvasState()).current
+  const ydocRef = useRef<Y.Doc>(new Y.Doc());
+  const canvasState = useRef<CanvasState>(createCanvasState(ydocRef.current)).current
   const stageRef = useRef<Konva.Stage>(null)
   const userId = useAuth().userDetails?.id ?? 0
 
@@ -51,13 +53,27 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
     imageId,
     onReceiveAnnotation: message => {
       const action = JSON.parse(message.action) as CanvasAction
-      // console.log('action')
+      console.log(action)
       // TODO: message.actionType is the same as action.type, so we should stick with action.type
       if (message.actionType !== 'join' && message.actionType !== 'leave') {
         yjsDispatch(canvasState, action)
+      }  
+      if (message.actionType === 'join') {
+        const yjsUpdate = Y.encodeStateAsUpdate(ydocRef.current)
+        const base64Update = Buffer.from(yjsUpdate).toString('base64')
+        const action = {
+          type: 'update',
+          update: base64Update,
+        }
+        publishAnnotationActions({
+            actionType: 'update',
+            userId,
+            action: JSON.stringify(action),
+        })
       }
     },
   })
+
 
   const canvasDispatch = (action: CanvasAction) => {
     yjsDispatch(canvasState, action)
@@ -105,9 +121,11 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
 
     setStageDim({ w: 450, h: scaledHeight })
   }
-  const elementRefs = useRef<Record<number, Konva.Node | null>>({})
+  const elementRefs = useRef<Record<string, Konva.Node | null>>({})
+
   useEffect(() => {
-    const selectionId = Number(
+    console.log(canvasState.canvasElements.toArray())
+    const selectionId = String(
       canvasState.userState.toArray().find((user: { userId: number }) => user.userId === userId)
         ?.currentSelectionId,
     )
@@ -129,7 +147,7 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
     // select and move logic moved inside the render because it wasn't working in the tool. i know this is very annoying
     const props = {
       ...el.props,
-      id: el.id.toString(),
+      id: el.id,
       onDragMove: (e: Konva.KonvaEventObject<MouseEvent>) => {
         if (el.type === 'rectangle') {
           canvasDispatch({
@@ -264,7 +282,7 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
           onClick={e => {
             if (activeTool.toolName === 'SelectandMoveTool') {
               if (e.target instanceof Konva.Shape) {
-                const id = Number(e.target.id())
+                const id =e.target.id()
                 canvasDispatch({ type: 'setDragging', userId, isDragging: true })
                 canvasDispatch({ type: 'setSelected', id, userId })
                 e.target.draggable(true)
@@ -277,7 +295,7 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
               if (e.target instanceof Konva.Shape) {
                 const labelText = prompt('Enter label text:')
                 if (labelText && labelText.trim()) {
-                  const shapeId = Number(e.target.id())
+                  const shapeId = e.target.id()
                   const label = labelText.trim()
                   canvasDispatch({ type: 'addLabel', id: shapeId, label: label })
                 }
