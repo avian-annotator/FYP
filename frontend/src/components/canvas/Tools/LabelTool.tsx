@@ -14,7 +14,7 @@ const LabelTool = (props: CanvasToolProps): CanvasTool => {
       if (e.target instanceof Konva.Shape) {
         const labelText = prompt('Enter label text:')
         if (labelText && labelText.trim()) {
-          const shapeId = String(e.target.id().split('.')[1]) //TODO: Make a function for this that the interface implements for any canvas object rect or otherwise
+          const shapeId = e.target.id().split('.')[1] //TODO: Make a function for this that the interface implements for any canvas object rect or otherwise
 
           const label = labelText.trim()
 
