@@ -1,5 +1,4 @@
 import { useAuth } from '@/auth'
-import { CanvasAction } from '@/components/canvas/CanvasState'
 import { RxStomp, RxStompConfig } from '@stomp/rx-stomp'
 import { useRef, useEffect } from 'react'
 
