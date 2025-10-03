@@ -45,7 +45,7 @@ interface CanvasProps {
 
 // TODO:  function to change image
 const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
-  const ydocRef = useRef<Y.Doc>(new Y.Doc());
+  const ydocRef = useRef<Y.Doc>(new Y.Doc())
   const canvasState = useRef<CanvasState>(createCanvasState(ydocRef.current)).current
   const stageRef = useRef<Konva.Stage>(null)
   const userId = useAuth().userDetails?.id ?? 0
@@ -55,11 +55,10 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
     imageId,
     onReceiveAnnotation: message => {
       const action = JSON.parse(message.action) as CanvasAction
-      console.log(action)
       // TODO: message.actionType is the same as action.type, so we should stick with action.type
       if (message.actionType !== 'join' && message.actionType !== 'leave') {
         yjsDispatch(canvasState, action)
-      }  
+      }
       if (message.actionType === 'join') {
         const yjsUpdate = Y.encodeStateAsUpdate(ydocRef.current)
         const base64Update = Buffer.from(yjsUpdate).toString('base64')
@@ -68,14 +67,13 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
           update: base64Update,
         }
         publishAnnotationActions({
-            actionType: 'update',
-            userId,
-            action: JSON.stringify(action),
+          actionType: 'update',
+          userId,
+          action: JSON.stringify(action),
         })
       }
     },
   })
-
 
   const canvasDispatch = (action: CanvasAction) => {
     yjsDispatch(canvasState, action)
@@ -126,11 +124,9 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
   const elementRefs = useRef<Record<string, Konva.Node | null>>({})
 
   useEffect(() => {
-    console.log(canvasState.canvasElements.toArray())
-    const selectionId = String(
-      canvasState.userState.toArray().find((user: { userId: number }) => user.userId === userId)
-        ?.currentSelectionId,
-    )
+    const selectionId = canvasState.userState
+      .toArray()
+      .find((user: { userId: number }) => user.userId === userId)?.currentSelectionId
 
     const selectedNode = selectionId ? elementRefs.current[selectionId] : null
 
@@ -224,12 +220,12 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
             {el.label && (
               <Text
                 x={el.props.x as number}
-                y={((el.props.y ?? 0) - 18)}
+                y={(el.props.y ?? 0) - 18}
                 text={el.label}
                 fontSize={16}
                 fill={el.props.stroke as string}
-                key={`label.${String(el.id)}`}
-                id={`label.${String(el.id)}`}
+                key={`label.${el.id}`}
+                id={`label.${el.id}`}
               />
             )}
           </>
@@ -241,12 +237,12 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
             {el.label && (
               <Text
                 x={el.props.x as number}
-                y={((el.props.y ?? 0) - 18)}
+                y={(el.props.y ?? 0) - 18}
                 text={el.label}
                 fontSize={12}
                 fill="black"
-                key={`label.${String(el.id)}`}
-                id={`label.${String(el.id)}`}
+                key={`label.${el.id}`}
+                id={`label.${el.id}`}
               />
             )}
           </>
@@ -279,7 +275,7 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
           onClick={e => {
             if (activeTool.toolName === 'SelectandMoveTool') {
               if (e.target instanceof Konva.Shape) {
-                const id =e.target.id()
+                const id = e.target.id()
                 canvasDispatch({ type: 'setDragging', userId, isDragging: true })
                 canvasDispatch({ type: 'setSelected', id, userId })
                 e.target.draggable(true)
@@ -306,10 +302,6 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
           </Layer>
         </Stage>
       </div>
-      <Button onClick={()=>{        
-        console.log("COCO JSON:", 
-          JSON.parse(CanvasExport(canvasState, "COCOJSON")));
-}}>Save Annotations</Button>
     </div>
   )
 }

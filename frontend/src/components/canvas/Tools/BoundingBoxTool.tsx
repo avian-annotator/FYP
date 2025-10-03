@@ -17,7 +17,7 @@ const BoundingBoxTool = (props: CanvasToolProps): CanvasTool => {
     if (!pos) return
 
     const elementId = props.canvasState.canvasElements.length + 100
-    const id = `${userId}_${elementId}`
+    const id = `${String(userId)}_${String(elementId)}`
 
     const rect: CanvasElement = {
       id,
