@@ -5,7 +5,7 @@ import { CanvasElement } from '../CanvasState'
 import { useAuth } from '@/auth'
 
 const KeypointsTool = (props: CanvasToolProps): CanvasTool => {
-    const userId = useAuth().userDetails?.id ?? 0
+  const userId = useAuth().userDetails?.id ?? 0
   const stageRef = props.stageRef
 
   const [draggingEdge, setDraggingEdge] = useState<{
@@ -48,7 +48,7 @@ const KeypointsTool = (props: CanvasToolProps): CanvasTool => {
     } else {
       //if not clicked on a line, add a new point
       const elementId = points.length + 20
-      const id = `${userId}_${elementId}`
+      const id = `${String(userId)}_${String(elementId)}`
       const keypoint: CanvasElement = {
         id,
         type: 'circle',
@@ -100,7 +100,7 @@ const KeypointsTool = (props: CanvasToolProps): CanvasTool => {
 
     if (targetPoint) {
       const elementId = props.canvasState.canvasElements.length + 1
-      const id = `${userId}_${elementId}`
+      const id = `${String(userId)}_${String(elementId)}`
       const startPoint = props.canvasState.canvasElements
         .toArray()
         .find(el => el.type === 'circle' && el.id === draggingEdge.startId)
