@@ -1,10 +1,9 @@
 import { useParams } from '@tanstack/react-router'
 import { Route } from '../routes/workspaces/$workspaceId/annotate/$imageId'
 import { ToolSelectorSidebar } from '@/components/workspace/ToolSelectorSidebar'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { useGeneratePresignedDownloadUrlForImage } from '../../generated'
 import { Canvas } from '@/components/canvas'
-import { CanvasStateHandle } from '@/components/canvas/Canvas'
 import { Button } from '@/components/ui/button'
 
 export function AnnotateWorkspace() {

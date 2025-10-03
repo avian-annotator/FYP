@@ -1,6 +1,6 @@
-import { SyntheticEvent, useEffect, useRef, useState, useReducer } from 'react'
+import { SyntheticEvent, useEffect, useRef, useState } from 'react'
 import Konva from 'konva'
-import { Stage, Layer, Transformer, Rect, Circle, Line, Text, Group } from 'react-konva'
+import { Stage, Layer, Transformer, Rect, Circle, Line, Text } from 'react-konva'
 import BoundingBoxTool from './Tools/BoundingBoxTool'
 import SelectMoveTool from './Tools/SelectMoveTool'
 import LabelTool from './Tools/LabelTool'
@@ -15,8 +15,6 @@ import { useAnnotate } from '@/annotate/useAnnotate'
 import { useAuth } from '@/auth/useAuth'
 import * as Y from 'yjs'
 import { Buffer } from 'buffer'
-import { Button } from '../ui/button'
-import CanvasExport from './CanvasExport'
 
 interface CanvasTool {
   handleMouseMove: (e: Konva.KonvaEventObject<MouseEvent>) => void
