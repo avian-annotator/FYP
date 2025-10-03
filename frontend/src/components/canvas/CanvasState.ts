@@ -38,7 +38,7 @@ export interface CanvasState {
 }
 
 export function createCanvasState(ydoc: Y.Doc): CanvasState {
-    return {
+  return {
     ydoc,
     userState: ydoc.getArray<UserState>('userState'),
     canvasElements: ydoc.getArray<CanvasElement>('canvasElements'),
@@ -151,9 +151,8 @@ export function yjsDispatch(canvasState: CanvasState, action: CanvasAction) {
     }
 
     case 'update': {
-      console.log("update")
       const yUpdate = Buffer.from(action.update, 'base64')
-      Y.applyUpdate(canvasState.ydoc, yUpdate)
+      Y.applyUpdate(canvasState.ydoc, new Uint8Array(yUpdate))
       break
     }
   }
