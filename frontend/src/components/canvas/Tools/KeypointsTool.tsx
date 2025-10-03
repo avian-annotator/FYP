@@ -2,12 +2,14 @@ import { useState } from 'react'
 import { CanvasTool, CanvasToolProps } from '../Canvas'
 import Konva from 'konva'
 import { CanvasElement } from '../CanvasState'
+import { useAuth } from '@/auth'
 
 const KeypointsTool = (props: CanvasToolProps): CanvasTool => {
+    const userId = useAuth().userDetails?.id ?? 0
   const stageRef = props.stageRef
 
   const [draggingEdge, setDraggingEdge] = useState<{
-    startId: number
+    startId: string
     x: number
     y: number
   } | null>(null)
@@ -31,10 +33,10 @@ const KeypointsTool = (props: CanvasToolProps): CanvasTool => {
         x: Number(clickedPoint.props.x),
         y: Number(clickedPoint.props.y),
       })
-      props.canvasDispatch({ type: 'removeElement', id: 998 })
+      props.canvasDispatch({ type: 'removeElement', id: '998' })
       //temp line to visualise
       const tempLine: CanvasElement = {
-        id: 998, // hard coded id for temp line
+        id: '998', // hard coded id for temp line
         type: 'line',
         props: {
           points: [clickedPoint.props.x, clickedPoint.props.y, pos.x, pos.y],
@@ -45,7 +47,8 @@ const KeypointsTool = (props: CanvasToolProps): CanvasTool => {
       props.canvasDispatch({ type: 'addElement', element: tempLine })
     } else {
       //if not clicked on a line, add a new point
-      const id = points.length + 20
+      const elementId = points.length + 20
+      const id = `${userId}_${elementId}`
       const keypoint: CanvasElement = {
         id,
         type: 'circle',
@@ -64,7 +67,7 @@ const KeypointsTool = (props: CanvasToolProps): CanvasTool => {
     if (!draggingEdge) return
     const pos = stageRef.current?.getPointerPosition()
     if (!pos) return
-    const templine = props.canvasState.canvasElements.toArray().find(e => e.id === 998)
+    const templine = props.canvasState.canvasElements.toArray().find(e => e.id === '998')
 
     setDraggingEdge(prev => (prev ? { ...prev, x: pos.x, y: pos.y } : null))
 
@@ -77,7 +80,7 @@ const KeypointsTool = (props: CanvasToolProps): CanvasTool => {
     if (templine) {
       props.canvasDispatch({
         type: 'updateElement',
-        id: 998,
+        id: '998',
         props: {
           points: [startPoint.props.x, startPoint.props.y, pos.x, pos.y],
           stroke: 'blue',
@@ -92,11 +95,12 @@ const KeypointsTool = (props: CanvasToolProps): CanvasTool => {
     const pos = stageRef.current?.getPointerPosition()
     if (!pos) return
 
-    props.canvasDispatch({ type: 'removeElement', id: 998 })
+    props.canvasDispatch({ type: 'removeElement', id: '998' })
     const targetPoint = getPointAtPos(pos.x, pos.y)
 
     if (targetPoint) {
-      const id = props.canvasState.canvasElements.length + 1
+      const elementId = props.canvasState.canvasElements.length + 1
+      const id = `${userId}_${elementId}`
       const startPoint = props.canvasState.canvasElements
         .toArray()
         .find(el => el.type === 'circle' && el.id === draggingEdge.startId)
@@ -117,7 +121,7 @@ const KeypointsTool = (props: CanvasToolProps): CanvasTool => {
         }
         props.canvasDispatch({ type: 'addElement', element: line })
         setDraggingEdge(null)
-        props.canvasDispatch({ type: 'removeElement', id: 998 })
+        props.canvasDispatch({ type: 'removeElement', id: '998' })
       }
     }
   }
