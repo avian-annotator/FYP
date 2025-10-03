@@ -16,7 +16,8 @@ const BoundingBoxTool = (props: CanvasToolProps): CanvasTool => {
     const pos = stageRef.current?.getPointerPosition()
     if (!pos) return
 
-    const id = props.canvasState.canvasElements.length + 100
+    const elementId = props.canvasState.canvasElements.length + 100
+    const id = `${userId}_${elementId}`
 
     const rect: CanvasElement = {
       id,
@@ -26,14 +27,14 @@ const BoundingBoxTool = (props: CanvasToolProps): CanvasTool => {
         y: pos.y,
         width: 0,
         height: 0,
-        stroke: getColor(id),
+        stroke: getColor(elementId),
         strokeWidth: 2,
-        fill: getBackgroundColor(id),
+        fill: getBackgroundColor(elementId),
       },
     }
     props.canvasDispatch({ type: 'setSelected', userId: userId, id: id })
     props.canvasDispatch({ type: 'addElement', element: rect })
-    props.canvasDispatch({ type: 'setDragging', userId: id, isDragging: true })
+    props.canvasDispatch({ type: 'setDragging', userId: userId, isDragging: true })
   }
 
   const handleMouseMove = (_: Konva.KonvaEventObject<MouseEvent>) => {
