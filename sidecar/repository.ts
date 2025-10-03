@@ -36,17 +36,14 @@ export const updateYjsFromDB = async ({ client, imageId, ydoc }: UpdateYjsFromDB
     const binary = res.rows[0].annotations as Buffer
     const uint8Array = new Uint8Array(binary)
     Y.applyUpdate(ydoc, uint8Array)
-    console.log('successful update')
+    console.log('Successfully fetched annotations from DB, updating local Yjs document.')
   } else {
     console.log('No valid annotations found in DB, skipping Yjs update.')
   }
-
-  return ydoc
 }
 
 export const saveYjsToDB = async ({ client, imageId, ydoc }: SaveYjsToDBProps) => {
-  console.log('saving yjs to db')
-  console.log(ydoc)
+  console.log('Saving yjs to db')
   const binary = Y.encodeStateAsUpdate(ydoc)
   await client.query('UPDATE image SET annotations = $1 WHERE bucket_identifier = $2', [
     binary,

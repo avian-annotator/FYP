@@ -2,7 +2,7 @@ import * as Y from 'yjs'
 
 type UserState = {
   userId: number
-  currentSelectionId?: number
+  currentSelectionId?: string
   cursorPosition?: Position
   isDragging: boolean
 }
@@ -13,13 +13,13 @@ interface CanvasElementProps {
 }
 
 type CanvasElement = {
-  id: number
+  id: string
   type: 'rectangle' | 'circle' | 'line'
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   props: Record<string, any> //konva props
-  startId?: number //for edges
-  endId?: number
+  startId?: string //for edges
+  endId?: string
   label?: string // labels
 }
 
@@ -34,38 +34,26 @@ export interface CanvasState {
   canvasElements: Y.Array<CanvasElement>
 }
 
-export function createCanvasState(): CanvasState {
-  const ydoc = new Y.Doc()
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const map = ydoc.getMap<Y.Array<any>>('canvasState')
-
-  if (!map.has('userState')) {
-    map.set('userState', new Y.Array<UserState>())
-  }
-  if (!map.has('canvasElements')) {
-    map.set('canvasElements', new Y.Array<CanvasElement>())
-  }
-
+export function createCanvasState(ydoc: Y.Doc): CanvasState {
   return {
     ydoc,
-    userState: map.get('userState') as Y.Array<UserState>,
-    canvasElements: map.get('canvasElements') as Y.Array<CanvasElement>,
+    userState: ydoc.getArray<UserState>('userState'),
+    canvasElements: ydoc.getArray<CanvasElement>('canvasElements'),
   }
 }
 
 type CanvasAction =
   | { type: 'addElement'; element: CanvasElement }
-  | { type: 'removeElement'; id: number }
+  | { type: 'removeElement'; id: string }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  | { type: 'updateElement'; id: number; props: Partial<Record<string, any>> }
+  | { type: 'updateElement'; id: string; props: Partial<Record<string, any>> }
   | { type: 'setDragging'; userId: number; isDragging: boolean }
-  | { type: 'addLabel'; id: number; label: string }
-  | { type: 'setSelected'; userId: number; id: number }
+  | { type: 'addLabel'; id: string; label: string }
+  | { type: 'setSelected'; userId: number; id: string }
   | { type: 'clearSelected'; userId: number }
   | { type: 'addUser'; userId: number }
   | { type: 'removeUser'; userId: number } // NOT IMPLEMENTED
-  | { type: 'join'; update: string }
+  | { type: 'join' }
   | { type: 'leave' }
   | { type: 'update'; update: string }
 
@@ -76,6 +64,7 @@ export function yjsDispatch(canvasState: CanvasState, action: CanvasAction) {
   switch (action.type) {
     case 'addElement':
       canvasElements.push([action.element])
+
       break
 
     case 'updateElement': {
@@ -83,10 +72,7 @@ export function yjsDispatch(canvasState: CanvasState, action: CanvasAction) {
       if (index >= 0) {
         const element = {
           ...canvasElements.get(index),
-          props: {
-            ...canvasElements.get(index).props,
-            ...action.props,
-          },
+          props: { ...canvasElements.get(index).props, ...action.props },
         }
         canvasElements.delete(index, 1)
         canvasElements.insert(index, [element])
@@ -103,10 +89,7 @@ export function yjsDispatch(canvasState: CanvasState, action: CanvasAction) {
     case 'addLabel': {
       const index = canvasElements.toArray().findIndex(el => el.id === action.id)
       if (index >= 0) {
-        const element = {
-          ...canvasElements.get(index),
-          label: action.label,
-        }
+        const element = { ...canvasElements.get(index), label: action.label }
         canvasElements.delete(index, 1)
         canvasElements.insert(index, [element])
       }
@@ -116,19 +99,12 @@ export function yjsDispatch(canvasState: CanvasState, action: CanvasAction) {
     case 'setSelected': {
       const index = userState.toArray().findIndex(u => u.userId === action.userId)
       if (index >= 0) {
-        const user = {
-          ...userState.get(index),
-          currentSelectionId: action.id,
-        }
+        const user = { ...userState.get(index), currentSelectionId: action.id }
         userState.delete(index, 1)
         userState.insert(index, [user])
       } else {
         userState.push([
-          {
-            userId: action.userId,
-            currentSelectionId: action.id,
-            isDragging: false,
-          },
+          { userId: action.userId, currentSelectionId: action.id, isDragging: false },
         ])
       }
       break
@@ -137,19 +113,12 @@ export function yjsDispatch(canvasState: CanvasState, action: CanvasAction) {
     case 'clearSelected': {
       const index = userState.toArray().findIndex(u => u.userId === action.userId)
       if (index >= 0) {
-        const user = {
-          ...userState.get(index),
-          currentSelectionId: undefined,
-        }
+        const user = { ...userState.get(index), currentSelectionId: undefined }
         userState.delete(index, 1)
         userState.insert(index, [user])
       } else {
         userState.push([
-          {
-            userId: action.userId,
-            currentSelectionId: undefined,
-            isDragging: false,
-          },
+          { userId: action.userId, currentSelectionId: undefined, isDragging: false },
         ])
       }
       break
@@ -158,10 +127,7 @@ export function yjsDispatch(canvasState: CanvasState, action: CanvasAction) {
     case 'setDragging': {
       const index = userState.toArray().findIndex(u => u.userId === action.userId)
       if (index >= 0) {
-        const user = {
-          ...userState.get(index),
-          isDragging: action.isDragging,
-        }
+        const user = { ...userState.get(index), isDragging: action.isDragging }
         userState.delete(index, 1)
         userState.insert(index, [user])
       } else {
@@ -182,7 +148,8 @@ export function yjsDispatch(canvasState: CanvasState, action: CanvasAction) {
     }
 
     case 'update': {
-      console.error('should never receive an update message')
+      const yUpdate = Buffer.from(action.update, 'base64')
+      Y.applyUpdate(canvasState.ydoc, new Uint8Array(yUpdate))
       break
     }
   }

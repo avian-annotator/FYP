@@ -69,9 +69,8 @@ app.post('/session/workspace/:workspaceId/image/:imageId', (req, res) => {
 
   rxStomp.configure(rxStompConfig)
   rxStomp.activate()
-
-  const canvasState = createCanvasState()
-  const ydoc = canvasState.ydoc
+  const ydoc = new Y.Doc()
+  const canvasState = createCanvasState(ydoc)
   sessionClients[key] = { ws: rxStomp, ydoc }
   rxStomp.connected$.subscribe(() => {
     updateYjsFromDB({ client, imageId, ydoc }).then(() => {
@@ -79,10 +78,12 @@ app.post('/session/workspace/:workspaceId/image/:imageId', (req, res) => {
     })
 
     rxStomp.watch(`/topic/workspace/${workspaceId}/image/${imageId}/annotate`).subscribe(msg => {
+      console.log(Y.encodeStateAsUpdate(ydoc).length)
       const message = JSON.parse(msg.body) satisfies AnnotatePayload
       if (message.actionType === 'join') {
+        console.log('Received join message, sending current Yjs state')
         const yjsUpdate = Y.encodeStateAsUpdate(ydoc)
-
+        console.log(yjsUpdate.length)
         const base64Update = Buffer.from(yjsUpdate).toString('base64')
         const action = {
           type: 'update',
@@ -114,8 +115,8 @@ app.post('/session/workspace/:workspaceId/image/:imageId', (req, res) => {
     const interval$ = interval(5000)
     interval$.subscribe(_ => {
       const ydoc = sessionClients[key]?.ydoc
-
-      if (ydoc) saveYjsToDB({ client, imageId, ydoc })
+      if (!ydoc) return
+      saveYjsToDB({ client, imageId, ydoc })
     })
 
     res.status(201).send({ message: `STOMP client started for ${key}` })
