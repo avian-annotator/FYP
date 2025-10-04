@@ -14,7 +14,6 @@ import CanvasState, {
 import { useAnnotate } from '@/annotate/useAnnotate'
 import { useAuth } from '@/auth/useAuth'
 import * as Y from 'yjs'
-import { Buffer } from 'buffer'
 
 interface CanvasTool {
   handleMouseMove: (e: Konva.KonvaEventObject<MouseEvent>) => void
@@ -56,19 +55,6 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
       // TODO: message.actionType is the same as action.type, so we should stick with action.type
       if (message.actionType !== 'join' && message.actionType !== 'leave') {
         yjsDispatch(canvasState, action)
-      }
-      if (message.actionType === 'join') {
-        const yjsUpdate = Y.encodeStateAsUpdate(ydocRef.current)
-        const base64Update = Buffer.from(yjsUpdate).toString('base64')
-        const action = {
-          type: 'update',
-          update: base64Update,
-        }
-        publishAnnotationActions({
-          actionType: 'update',
-          userId,
-          action: JSON.stringify(action),
-        })
       }
     },
   })
