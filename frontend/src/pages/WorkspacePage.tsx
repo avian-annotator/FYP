@@ -60,7 +60,7 @@ export function WorkspacePage() {
               ></ImageCard>
             ))}
           </div>
-
+          <div style={{ margin: '10px' }}></div>
           {/* Pagination */}
           <Pagination>
             <PaginationContent>
@@ -81,7 +81,7 @@ export function WorkspacePage() {
                       handlePageChange(i)
                     }}
                   >
-                    {i}
+                    {i + 1}
                   </PaginationLink>
                 </PaginationItem>
               ))}

@@ -44,6 +44,7 @@ export function WorkspacesHome() {
             <WorkspaceCard key={ws.id} workspace={ws} />
           ))}
         </div>
+        <div style={{ margin: '10px' }}></div>
         {/* Pagination */}
         <Pagination>
           <PaginationContent>
@@ -64,7 +65,7 @@ export function WorkspacesHome() {
                     handlePageChange(i)
                   }}
                 >
-                  {i}
+                  {i + 1}
                 </PaginationLink>
               </PaginationItem>
             ))}

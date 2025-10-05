@@ -84,6 +84,7 @@ export function WorkspaceUsers() {
               <p className="text-gray-500">No users found for this workspace.</p>
             )}
           </div>
+          <div style={{ margin: '10px' }}></div>
           {/* Pagination */}
           <Pagination>
             <PaginationContent>
@@ -104,7 +105,7 @@ export function WorkspaceUsers() {
                       handlePageChange(i)
                     }}
                   >
-                    {i}
+                    {i + 1}
                   </PaginationLink>
                 </PaginationItem>
               ))}
