@@ -1,6 +1,6 @@
 import { SyntheticEvent, useEffect, useRef, useState } from 'react'
 import Konva from 'konva'
-import { Stage, Layer, Transformer, Rect, Circle, Line, Text } from 'react-konva'
+import { Stage, Layer, Transformer, Rect, Circle, Line, Text, Group } from 'react-konva'
 import BoundingBoxTool from './Tools/BoundingBoxTool'
 import SelectMoveTool from './Tools/SelectMoveTool'
 import LabelTool from './Tools/LabelTool'
@@ -14,6 +14,7 @@ import CanvasState, {
 import { useAnnotate } from '@/annotate/useAnnotate'
 import { useAuth } from '@/auth/useAuth'
 import * as Y from 'yjs'
+import { getColor } from './CanvasUtils'
 
 interface CanvasTool {
   handleMouseMove: (e: Konva.KonvaEventObject<MouseEvent>) => void
@@ -46,6 +47,7 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
   const canvasState = useRef<CanvasState>(createCanvasState(ydocRef.current)).current
   const stageRef = useRef<Konva.Stage>(null)
   const userId = useAuth().userDetails?.id ?? 0
+  const userName = useAuth().userDetails?.username ?? ''
 
   const { publishAnnotationActions } = useAnnotate({
     workspaceId,
@@ -141,6 +143,13 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
               y: e.target.y(),
             },
           })
+          const pos = stageRef.current?.getPointerPosition()
+          canvasDispatch({
+            type: 'updateCursor',
+            userId,
+            cursorPosition: { x: pos?.x ?? 0, y: pos?.y ?? 0 },
+            userName,
+          })
         }
         if (el.type === 'circle') {
           const newX = e.target.x()
@@ -176,19 +185,45 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
         }
       },
       onTransform: (e: Konva.KonvaEventObject<MouseEvent>) => {
+        const node = e.target
+
+        const liveWidth = node.width() * node.scaleX()
+        const liveHeight = node.height() * node.scaleY()
+        node.width(liveWidth)
+        node.height(liveHeight)
+        node.scaleX(1)
+        node.scaleY(1)
+
+        node.getLayer()?.batchDraw()
+
+        const stage = node.getStage()
+        const pointer = stage?.getPointerPosition()
+        if (pointer) {
+          canvasDispatch({
+            type: 'updateCursor',
+            userId,
+            cursorPosition: pointer,
+            userName,
+          })
+        }
+      },
+
+      // Commit final transform
+      onTransformEnd: (e: Konva.KonvaEventObject<MouseEvent>) => {
+        const node = e.target
         canvasDispatch({
           type: 'updateElement',
           id: el.id,
           props: {
             ...el.props,
-            x: e.target.x(),
-            y: e.target.y(),
-            width: e.target.width() * e.target.scaleX(),
-            height: e.target.height() * e.target.scaleY(),
+            x: node.x(),
+            y: node.y(),
+            width: node.width(),
+            height: node.height(),
           },
         })
-        e.target.scaleX(1)
-        e.target.scaleY(1)
+        node.scaleX(1)
+        node.scaleY(1)
       },
       ref: (node: Konva.Rect | Konva.Circle | Konva.Line | null) => {
         if (node) {
@@ -254,7 +289,20 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
           width={stageWidth}
           height={stageHeight}
           onMouseDown={activeTool.handleMouseDown}
-          onMouseMove={activeTool.handleMouseMove}
+          onMouseMove={e => {
+            activeTool.handleMouseMove(e)
+            const stage = e.target.getStage()
+            if (!stage) return
+            const pointer = stage.getPointerPosition()
+            if (pointer) {
+              canvasDispatch({
+                type: 'updateCursor',
+                userId,
+                cursorPosition: pointer,
+                userName,
+              })
+            }
+          }}
           onMouseUp={activeTool.handleMouseUp}
           onClick={e => {
             if (activeTool.toolName === 'SelectandMoveTool') {
@@ -280,6 +328,28 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
             }
           }}
         >
+          <Layer>
+            {canvasState.userState.map(u => {
+              if (!u.cursorPosition) return null
+              return (
+                <Group key={`cursor-${String(u.userId)}`}>
+                  <Circle
+                    x={u.cursorPosition.x}
+                    y={u.cursorPosition.y}
+                    radius={3}
+                    fill={getColor(u.userId)}
+                  />
+                  <Text
+                    x={u.cursorPosition.x + 8}
+                    y={u.cursorPosition.y - 8}
+                    text={u.userName ?? ''}
+                    fontSize={12}
+                    fill="black"
+                  />
+                </Group>
+              )
+            })}
+          </Layer>
           <Layer>
             {canvasState.canvasElements.map(el => renderShape(el))}
             <Transformer ref={trRef} rotateEnabled={false} />

@@ -5,6 +5,7 @@ import { Buffer } from 'buffer'
 
 type UserState = {
   userId: number
+  userName?: string
   currentSelectionId?: string
   cursorPosition?: Position
   isDragging: boolean
@@ -59,6 +60,7 @@ type CanvasAction =
   | { type: 'join' }
   | { type: 'leave' }
   | { type: 'update'; update: string }
+  | { type: 'updateCursor'; userId: number; userName: string; cursorPosition: Position }
 
 export function yjsDispatch(canvasState: CanvasState, action: CanvasAction) {
   const canvasElements = canvasState.canvasElements
@@ -153,6 +155,29 @@ export function yjsDispatch(canvasState: CanvasState, action: CanvasAction) {
     case 'update': {
       const yUpdate = Buffer.from(action.update, 'base64')
       Y.applyUpdate(canvasState.ydoc, new Uint8Array(yUpdate))
+      break
+    }
+
+    case 'updateCursor': {
+      const index = userState.toArray().findIndex(u => u.userId === action.userId)
+      if (index >= 0) {
+        const user = {
+          ...userState.get(index),
+          cursorPosition: action.cursorPosition,
+          userName: action.userName,
+        }
+        userState.delete(index, 1)
+        userState.insert(index, [user])
+      } else {
+        userState.push([
+          {
+            userId: action.userId,
+            cursorPosition: action.cursorPosition,
+            isDragging: false,
+            userName: action.userName,
+          },
+        ])
+      }
       break
     }
   }
