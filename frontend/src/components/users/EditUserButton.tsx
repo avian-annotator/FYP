@@ -14,14 +14,12 @@ import {
   UserResponseDTO,
   CurrentUserResponseDTO,
 } from '../../../generated'
-import { useQueryClient } from '@tanstack/react-query'
 
 type EditUserButtonProps = {
   user: UserResponseDTO | CurrentUserResponseDTO
 }
 
 export function EditUserButton({ user }: EditUserButtonProps) {
-  const queryClient = useQueryClient()
   const [username, setUsername] = useState(user.username)
   const [password, setPassword] = useState('')
   const [open, setOpen] = useState(false)

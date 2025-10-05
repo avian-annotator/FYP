@@ -19,6 +19,7 @@ docs/EditUserRequestBodyDTO.md
 docs/EditWorkspaceRequestBodyDTO.md
 docs/GetUsersFromWorkspaceRequestParamDTO.md
 docs/ImageResponseDTO.md
+docs/MeControllerApi.md
 docs/PageWrapperAccessibleWorkspaceResponseDTO.md
 docs/PageWrapperImageResponseDTO.md
 docs/PageWrapperUserResponseDTO.md

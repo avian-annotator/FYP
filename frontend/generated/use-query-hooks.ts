@@ -4,8 +4,10 @@ import type { RawAxiosRequestConfig,  AxiosResponse } from "axios";
 import { Configuration } from "../generated/axios/configuration.ts";
 import { AdminControllerApiFactory } from "../generated/axios/api.ts";
 import { AuthenticationControllerApiFactory } from "../generated/axios/api.ts";
+import { MeControllerApiFactory } from "../generated/axios/api.ts";
 import { WorkspaceControllerApiFactory } from "../generated/axios/api.ts";
-import type { UserResponseDTO, CreateUserRequestBodyDTO, EditUserRequestBodyDTO, PageWrapperUserResponseDTO, Pageable, CurrentUserResponseDTO, AddUserToWorkspaceRequestBodyDTO, WorkspaceResponseDTO, CreateWorkspaceRequestBodyDTO, EditImageDetailsResponseDTO, EditImageRequestBodyDTO, EditWorkspaceRequestBodyDTO, ImageResponseDTO, AnnotationRequestParamDTO, PageWrapperImageResponseDTO, GetUsersFromWorkspaceRequestParamDTO, PageWrapperAccessibleWorkspaceResponseDTO } from "../generated/axios/api.ts";
+import type { UserResponseDTO, CreateUserRequestBodyDTO, EditUserRequestBodyDTO, PageWrapperUserResponseDTO, Pageable, CurrentUserResponseDTO, AddUserToWorkspaceRequestBodyDTO, WorkspaceResponseDTO, CreateWorkspaceRequestBodyDTO, EditImageDetailsResponseDTO, EditImageRequestBodyDTO, EditWorkspaceRequestBodyDTO, ImageResponseDTO, AnnotationRequestParamDTO, PageWrapperImageResponseDTO, GetUsersFromWorkspaceRequestParamDTO, PageWrapperAccessibleWorkspaceResponseDTO, File } from "../generated/axios/api.ts";
+
 // This is an auto-generated file. Do not edit manually, instead run the generate.bash
 export function useCreateNewUser(createUserRequestBodyDTO: CreateUserRequestBodyDTO, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<UserResponseDTO>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<UserResponseDTO>, Error> {
 
@@ -67,6 +69,46 @@ export function useGetCurrentUser(options?: RawAxiosRequestConfig, queryOptions?
     queryFn: async () => {
       const api = AuthenticationControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
       const res = await api.getCurrentUser({...options, withCredentials: true});
+      return res;
+    },
+    ...queryOptions
+  });
+    
+}
+
+export function useDeleteMe(options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<void>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<void>, Error> {
+
+  return useMutation<AxiosResponse<void>, Error, unknown>({
+    mutationFn: async () => {
+      const api = MeControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
+      const res = await api.deleteMe({...options, withCredentials: true});
+      return res;
+    },
+    ...mutationOptions
+  });
+    
+}
+
+export function useEditMe(editUserRequestBodyDTO: EditUserRequestBodyDTO, options?: RawAxiosRequestConfig, mutationOptions?: Omit<UseMutationOptions< AxiosResponse<UserResponseDTO>, Error, unknown>, 'mutationFn'>): UseMutationResult<AxiosResponse<UserResponseDTO>, Error> {
+
+  return useMutation<AxiosResponse<UserResponseDTO>, Error, unknown>({
+    mutationFn: async () => {
+      const api = MeControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
+      const res = await api.editMe(editUserRequestBodyDTO, {...options, withCredentials: true});
+      return res;
+    },
+    ...mutationOptions
+  });
+    
+}
+
+export function useGetMe(options?: RawAxiosRequestConfig, queryOptions?: Omit<UseQueryOptions<AxiosResponse<UserResponseDTO>, Error, AxiosResponse<UserResponseDTO>>, 'queryKey' | 'queryFn'>): UseQueryResult<AxiosResponse<UserResponseDTO>, Error> {
+
+  return useQuery<AxiosResponse<UserResponseDTO>, Error, AxiosResponse<UserResponseDTO>>({
+    queryKey: ['useGetMe'],
+    queryFn: async () => {
+      const api = MeControllerApiFactory(new Configuration({ basePath: `${import.meta.env.VITE_BACKEND_URL}` }));
+      const res = await api.getMe({...options, withCredentials: true});
       return res;
     },
     ...queryOptions
