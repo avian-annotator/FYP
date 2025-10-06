@@ -14,10 +14,12 @@ const KeypointsTool = (props: CanvasToolProps): CanvasTool => {
     y: number
   } | null>(null)
 
-  const points = props.canvasState.canvasElements.toArray().filter(e => e.type === 'circle')
+  const getPoints = () =>
+    props.canvasState.canvasElements.toArray().filter(e => e.type === 'circle')
 
   //helper to get point at position
   const getPointAtPos = (x: number, y: number) => {
+    const points = getPoints()
     return points.find(p => Math.hypot(p.props.x - x, p.props.y - y) < 10)
   }
 
@@ -47,8 +49,8 @@ const KeypointsTool = (props: CanvasToolProps): CanvasTool => {
       props.canvasDispatch({ type: 'addElement', element: tempLine })
     } else {
       //if not clicked on a line, add a new point
-      const elementId = points.length + 20
-      const id = `${String(userId)}_${String(elementId)}`
+      const elementId = crypto.randomUUID()
+      const id = `${String(userId)}_${elementId}`
       const keypoint: CanvasElement = {
         id,
         type: 'circle',
