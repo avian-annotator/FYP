@@ -16,8 +16,8 @@ const BoundingBoxTool = (props: CanvasToolProps): CanvasTool => {
     const pos = stageRef.current?.getPointerPosition()
     if (!pos) return
 
-    const elementId = props.canvasState.canvasElements.length + 100
-    const id = `${String(userId)}_${String(elementId)}`
+    const elementId = crypto.randomUUID()
+    const id = `${String(userId)}_${elementId}`
 
     const rect: CanvasElement = {
       id,
@@ -27,9 +27,9 @@ const BoundingBoxTool = (props: CanvasToolProps): CanvasTool => {
         y: pos.y,
         width: 0,
         height: 0,
-        stroke: getColor(elementId),
+        stroke: getColor(props.canvasState.canvasElements.length),
         strokeWidth: 2,
-        fill: getBackgroundColor(elementId),
+        fill: getBackgroundColor(props.canvasState.canvasElements.length),
       },
     }
     props.canvasDispatch({ type: 'setSelected', userId: userId, id: id })

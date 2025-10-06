@@ -125,6 +125,27 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
     trRef.current?.getLayer()?.batchDraw()
   }, [[userId, canvasState.userState]])
 
+  //delete annotatations
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Delete' || e.key === 'Backspace') {
+        const selectedId = canvasState.userState
+          .toArray()
+          .find(u => u.userId === userId)?.currentSelectionId
+
+        if (selectedId) {
+          canvasDispatch({ type: 'removeElement', id: selectedId })
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [canvasState, userId])
+
   const renderShape = (el: CanvasElement) => {
     // select and move logic moved inside the render because it wasn't working in the tool. i know this is very annoying
     const props = {
