@@ -14,6 +14,8 @@ import CanvasState, {
 import { useAnnotate } from '@/annotate/useAnnotate'
 import { useAuth } from '@/auth/useAuth'
 import * as Y from 'yjs'
+import { Button } from '../ui/button'
+import CanvasExport from './CanvasExport'
 
 interface CanvasTool {
   handleMouseMove: (e: Konva.KonvaEventObject<MouseEvent>) => void
@@ -28,20 +30,16 @@ interface CanvasToolProps {
   canvasState: CanvasState
   canvasDispatch: (action: CanvasAction) => void
 }
-
-export interface CanvasStateHandle {
-  getState: () => CanvasState
-}
-
 interface CanvasProps {
   image: string
   tool: number
   workspaceId: string
   imageId: string
+  imageName: string
 }
 
 // TODO:  function to change image
-const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
+const Canvas = ({ image, tool, workspaceId, imageId, imageName }: CanvasProps) => {
   const ydocRef = useRef<Y.Doc>(new Y.Doc())
   const canvasState = useRef<CanvasState>(createCanvasState(ydocRef.current)).current
   const stageRef = useRef<Konva.Stage>(null)
@@ -66,6 +64,19 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
       action: JSON.stringify(action),
       actionType: action.type,
     })
+  }
+
+  const handleDownload = () => {
+    const json = CanvasExport(canvasState, 'COCOJSON')
+    const blob = new Blob([json], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `${imageName.replace(/\.[^/.]+$/, '') || 'annotations'}.json`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
   }
 
   // transformer for selectmovetool
@@ -239,53 +250,56 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
   }
 
   return (
-    <div className=" bg-[#f0f0f0] select-none border-gray-700 border-[0.2rem] flex items-center justify-center">
-      <div className="relative">
-        <img
-          className="absolute"
-          src={image}
-          width={stageWidth}
-          ref={imgRef}
-          onLoad={handleImgLoad}
-        />
+    <div>
+      <div className=" bg-[#f0f0f0] select-none border-gray-700 border-[0.2rem] flex items-center justify-center">
+        <div className="relative">
+          <img
+            className="absolute"
+            src={image}
+            width={stageWidth}
+            ref={imgRef}
+            onLoad={handleImgLoad}
+          />
 
-        <Stage
-          ref={stageRef}
-          width={stageWidth}
-          height={stageHeight}
-          onMouseDown={activeTool.handleMouseDown}
-          onMouseMove={activeTool.handleMouseMove}
-          onMouseUp={activeTool.handleMouseUp}
-          onClick={e => {
-            if (activeTool.toolName === 'SelectandMoveTool') {
-              if (e.target instanceof Konva.Shape) {
-                const id = e.target.id()
-                canvasDispatch({ type: 'setDragging', userId, isDragging: true })
-                canvasDispatch({ type: 'setSelected', id, userId })
-                e.target.draggable(true)
-              } else {
-                canvasDispatch({ type: 'setDragging', userId, isDragging: false })
-                canvasDispatch({ type: 'clearSelected', userId })
-              }
-            }
-            if (activeTool.toolName === 'LabelTool') {
-              if (e.target instanceof Konva.Shape) {
-                const labelText = prompt('Enter label text:')
-                if (labelText && labelText.trim()) {
-                  const shapeId = e.target.id()
-                  const label = labelText.trim()
-                  canvasDispatch({ type: 'addLabel', id: shapeId, label: label })
+          <Stage
+            ref={stageRef}
+            width={stageWidth}
+            height={stageHeight}
+            onMouseDown={activeTool.handleMouseDown}
+            onMouseMove={activeTool.handleMouseMove}
+            onMouseUp={activeTool.handleMouseUp}
+            onClick={e => {
+              if (activeTool.toolName === 'SelectandMoveTool') {
+                if (e.target instanceof Konva.Shape) {
+                  const id = e.target.id()
+                  canvasDispatch({ type: 'setDragging', userId, isDragging: true })
+                  canvasDispatch({ type: 'setSelected', id, userId })
+                  e.target.draggable(true)
+                } else {
+                  canvasDispatch({ type: 'setDragging', userId, isDragging: false })
+                  canvasDispatch({ type: 'clearSelected', userId })
                 }
               }
-            }
-          }}
-        >
-          <Layer>
-            {canvasState.canvasElements.map(el => renderShape(el))}
-            <Transformer ref={trRef} rotateEnabled={false} />
-          </Layer>
-        </Stage>
+              if (activeTool.toolName === 'LabelTool') {
+                if (e.target instanceof Konva.Shape) {
+                  const labelText = prompt('Enter label text:')
+                  if (labelText && labelText.trim()) {
+                    const shapeId = e.target.id()
+                    const label = labelText.trim()
+                    canvasDispatch({ type: 'addLabel', id: shapeId, label: label })
+                  }
+                }
+              }
+            }}
+          >
+            <Layer>
+              {canvasState.canvasElements.map(el => renderShape(el))}
+              <Transformer ref={trRef} rotateEnabled={false} />
+            </Layer>
+          </Stage>
+        </div>
       </div>
+      <Button onClick={handleDownload}>Export Annotations</Button>
     </div>
   )
 }
