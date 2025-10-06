@@ -85,7 +85,30 @@ export function yjsDispatch(canvasState: CanvasState, action: CanvasAction) {
 
     case 'removeElement': {
       const index = canvasElements.toArray().findIndex(el => el.id === action.id)
-      if (index >= 0) canvasElements.delete(index, 1)
+      if (index === -1) return
+
+      const element = canvasElements.get(index)
+      // Remove any lines attached to this element (keypoints)
+      if (element.type === 'circle') {
+        const indexesToDelete: number[] = []
+
+        for (let i = 0; i < canvasElements.length; i++) {
+          const e = canvasElements.get(i)
+          if (
+            e.type === 'line' &&
+            (e.startId === element.id || e.endId === element.id) &&
+            e.id !== '998'
+          ) {
+            indexesToDelete.push(i)
+          }
+        }
+        indexesToDelete
+          .sort((a, b) => b - a)
+          .forEach(i => {
+            canvasElements.delete(i, 1)
+          })
+      }
+      canvasElements.delete(index, 1)
       break
     }
 
