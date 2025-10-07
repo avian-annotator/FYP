@@ -15,7 +15,6 @@ import { useAnnotate } from '@/annotate/useAnnotate'
 import { useAuth } from '@/auth/useAuth'
 import * as Y from 'yjs'
 import { Button } from '../ui/button'
-import CanvasExport from './CanvasExport'
 
 interface CanvasTool {
   handleMouseMove: (e: Konva.KonvaEventObject<MouseEvent>) => void
@@ -39,7 +38,7 @@ interface CanvasProps {
 }
 
 // TODO:  function to change image
-const Canvas = ({ image, tool, workspaceId, imageId, imageName }: CanvasProps) => {
+const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
   const ydocRef = useRef<Y.Doc>(new Y.Doc())
   const canvasState = useRef<CanvasState>(createCanvasState(ydocRef.current)).current
   const stageRef = useRef<Konva.Stage>(null)
@@ -67,7 +66,7 @@ const Canvas = ({ image, tool, workspaceId, imageId, imageName }: CanvasProps) =
   }
 
   const handleDownload = () => {
-    const json = CanvasExport(canvasState, 'COCOJSON')
+    /* const json = CanvasExport(canvasState, 'COCOJSON')
     const blob = new Blob([json], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
@@ -76,7 +75,7 @@ const Canvas = ({ image, tool, workspaceId, imageId, imageName }: CanvasProps) =
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
-    URL.revokeObjectURL(url)
+    URL.revokeObjectURL(url)*/
   }
 
   // transformer for selectmovetool
