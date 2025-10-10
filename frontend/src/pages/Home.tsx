@@ -1,6 +1,5 @@
-import { Navigate, Link } from '@tanstack/react-router'
+import { Navigate } from '@tanstack/react-router'
 import { useAuth } from '@/auth'
-import { Button } from '@/components/ui/button'
 import demoImage from '@/assets/demo-image.png'
 
 export function Home() {
