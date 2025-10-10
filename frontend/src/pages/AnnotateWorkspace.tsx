@@ -4,7 +4,6 @@ import { ToolSelectorSidebar } from '@/components/workspace/ToolSelectorSidebar'
 import { useState } from 'react'
 import { useGeneratePresignedDownloadUrlForImage } from '../../generated'
 import { Canvas } from '@/components/canvas'
-import { Button } from '@/components/ui/button'
 
 export function AnnotateWorkspace() {
   const { workspaceId, imageId } = useParams({ from: Route.id })
@@ -21,9 +20,14 @@ export function AnnotateWorkspace() {
         <div className="flex flex-col items-center gap-4">
           <p>Currently editing: {image?.fileName}</p>
           {image?.url && (
-            <Canvas image={image.url} tool={active} workspaceId={workspaceId} imageId={imageId} />
+            <Canvas
+              image={image.url}
+              tool={active}
+              workspaceId={workspaceId}
+              imageId={imageId}
+              imageName={image.fileName}
+            />
           )}
-          <Button>Save Annotations</Button>
         </div>
         <div className="absolute left-full top-10 ml-2 flex flex-col justify-center">
           <ToolSelectorSidebar active={active} onSelect={setActive} />
