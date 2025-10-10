@@ -5,7 +5,7 @@ import CocoJsonObj from './Objects/CocoJson'
 
 const VERSION = '1,0'
 const DESCRIPTION = 'Exported from Avian Annotator'
-const CONTRIBUTOR = 'Allen, Anthony, Daniel, Sacha'
+const CONTRIBUTOR = ''
 const URL = 'https://github.com/avian-annotator/FYP'
 const SUPERCATEGORY = 'birds'
 
@@ -46,84 +46,77 @@ function getKeypointAnnotation(state: CanvasState) {
   }
 }
 
-function stateToAnnotations(state: CanvasState, imageId: number, annotationStartId: number) {
+function getOrCreateCategoryId(label: string, categoryMap: Map<string, number>): number {
+  if (!categoryMap.has(label)) {
+    categoryMap.set(label, categoryMap.size + 1)
+  }
+  return categoryMap.get(label)!
+}
+
+function stateToAnnotations(
+  state: CanvasState,
+  imageId: number,
+  annotationStartId: number,
+  categoryMap: Map<string, number>,
+) {
   const { keypoints, lines, keypointLabels } = getKeypointAnnotation(state)
 
   const bboxAnnotations = state.canvasElements
     .toArray()
     .filter(el => el.type === 'rectangle')
-    .map(el => ({
-      id: annotationStartId++,
-      image_id: imageId,
-      category_id: 1,
-      bbox: [el.props.x ?? 0, el.props.y ?? 0, el.props.width ?? 0, el.props.height ?? 0] as [
-        number,
-        number,
-        number,
-        number,
-      ],
-      area: (el.props.width ?? 0) * (el.props.height ?? 0),
-      iscrowd: 0 as const,
-    }))
+    .map(el => {
+      const label = el.label ?? 'bird'
+      const categoryId = getOrCreateCategoryId(label, categoryMap)
+      return {
+        id: annotationStartId++,
+        image_id: imageId,
+        category_id: categoryId,
+        bbox: [el.props.x ?? 0, el.props.y ?? 0, el.props.width ?? 0, el.props.height ?? 0] as [
+          number,
+          number,
+          number,
+          number,
+        ],
+        area: (el.props.width ?? 0) * (el.props.height ?? 0),
+        iscrowd: 0 as const,
+      }
+    })
 
-  const keypointAnnotation = {
-    id: annotationStartId++,
-    image_id: imageId,
-    category_id: 1,
-    bbox: [
-      Math.min(...keypoints.filter((_, i) => i % 3 === 0)),
-      Math.min(...keypoints.filter((_, i) => i % 3 === 1)),
-      Math.max(...keypoints.filter((_, i) => i % 3 === 0)) -
-        Math.min(...keypoints.filter((_, i) => i % 3 === 0)),
-      Math.max(...keypoints.filter((_, i) => i % 3 === 1)) -
-        Math.min(...keypoints.filter((_, i) => i % 3 === 1)),
-    ] as [number, number, number, number],
-    area:
-      (Math.max(...keypoints.filter((_, i) => i % 3 === 0)) -
-        Math.min(...keypoints.filter((_, i) => i % 3 === 0))) *
-      (Math.max(...keypoints.filter((_, i) => i % 3 === 1)) -
-        Math.min(...keypoints.filter((_, i) => i % 3 === 1))),
-    keypoints: keypoints,
-    num_keypoints: keypointLabels.length,
-    iscrowd: 0 as const,
+  let keypointAnnotation = null
+
+  if (keypoints.length > 0) {
+    const xs = keypoints.filter((_, i) => i % 3 === 0)
+    const ys = keypoints.filter((_, i) => i % 3 === 1)
+
+    // guard against NaN
+    const minX = Math.min(...xs)
+    const minY = Math.min(...ys)
+    const maxX = Math.max(...xs)
+    const maxY = Math.max(...ys)
+
+    if (isFinite(minX) && isFinite(minY) && isFinite(maxX) && isFinite(maxY)) {
+      const bbox: [number, number, number, number] = [minX, minY, maxX - minX, maxY - minY]
+
+      keypointAnnotation = {
+        id: annotationStartId++,
+        image_id: imageId,
+        category_id: getOrCreateCategoryId('bird', categoryMap),
+        bbox,
+        area: bbox[2] * bbox[3],
+        keypoints,
+        num_keypoints: keypointLabels.length,
+        iscrowd: 0 as const,
+        keypoint_labels: keypointLabels, //COCOjson modification
+        skeleton: lines,
+      }
+    }
   }
 
   return {
-    annotations: [...bboxAnnotations, keypointAnnotation],
+    annotations: keypointAnnotation ? [...bboxAnnotations, keypointAnnotation] : bboxAnnotations,
     keypointLabels,
     skeleton: lines,
   }
-}
-
-function mergeKeypointsAndSkeletons(
-  allKeypointLabels: string[][],
-  allSkeletons: [number, number][][],
-) {
-  const labelToId = new Map<string, number>()
-  const keypointLabels: string[] = []
-  const mergedSkeleton: [number, number][] = []
-
-  // Merge keypoint labels uniquely and assign new IDs
-  allKeypointLabels.forEach(labels => {
-    labels.forEach(label => {
-      if (!labelToId.has(label)) {
-        labelToId.set(label, keypointLabels.length + 1) // COCO IDs start at 1
-        keypointLabels.push(label)
-      }
-    })
-  })
-
-  // Remap skeleton connections to new IDs
-  allSkeletons.forEach((skeleton, idx) => {
-    const labels = allKeypointLabels[idx]
-    skeleton.forEach(([startId, endId]) => {
-      const startLabel = labels[startId - 1]
-      const endLabel = labels[endId - 1]
-      mergedSkeleton.push([labelToId.get(startLabel)!, labelToId.get(endLabel)!])
-    })
-  })
-
-  return { keypointLabels, skeleton: mergedSkeleton }
 }
 
 function CanvasExport(
@@ -143,13 +136,18 @@ function CanvasExport(
   let annotationId = 1
   const allKeypointLabels: string[][] = []
   const allSkeletons: [number, number][][] = []
+  const categoryMap = new Map<string, number>()
 
   for (const { imageId, update, fileName } of imageAnnotations) {
     const doc = new Y.Doc()
-    Y.applyUpdate(doc, update)
-
+    try {
+      Y.applyUpdate(doc, update)
+    } catch (e) {
+      console.warn(`Skipping image ${imageId} — failed to apply Yjs update`, e)
+      continue
+    }
     const state = createCanvasState(doc)
-    const result = stateToAnnotations(state, imageId, annotationId)
+    const result = stateToAnnotations(state, imageId, annotationId, categoryMap)
 
     annotationId += result.annotations.length
     annotations.push(...result.annotations)
@@ -164,7 +162,11 @@ function CanvasExport(
     })
   }
 
-  const { keypointLabels, skeleton } = mergeKeypointsAndSkeletons(allKeypointLabels, allSkeletons)
+  const categories = Array.from(categoryMap.entries()).map(([name, id]) => ({
+    id,
+    name,
+    supercategory: SUPERCATEGORY,
+  }))
 
   const cocoJson = new CocoJsonObj(
     {
@@ -176,15 +178,7 @@ function CanvasExport(
       date_created: new Date().toISOString(),
     },
     undefined,
-    [
-      {
-        id: 1,
-        name: 'bird',
-        supercategory: SUPERCATEGORY,
-        keypoints: keypointLabels,
-        skeleton,
-      },
-    ],
+    categories,
     images,
     annotations,
   )

@@ -65,19 +65,6 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
     })
   }
 
-  const handleDownload = () => {
-    /* const json = CanvasExport(canvasState, 'COCOJSON')
-    const blob = new Blob([json], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `${imageName.replace(/\.[^/.]+$/, '') || 'annotations'}.json`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    URL.revokeObjectURL(url)*/
-  }
-
   // transformer for selectmovetool
   const trRef = useRef<Konva.Transformer>(null)
 
@@ -298,7 +285,6 @@ const Canvas = ({ image, tool, workspaceId, imageId }: CanvasProps) => {
           </Stage>
         </div>
       </div>
-      <Button onClick={handleDownload}>Export Annotations</Button>
     </div>
   )
 }
