@@ -14,7 +14,6 @@ import CanvasState, {
 import { useAnnotate } from '@/annotate/useAnnotate'
 import { useAuth } from '@/auth/useAuth'
 import * as Y from 'yjs'
-import { Button } from '../ui/button'
 
 interface CanvasTool {
   handleMouseMove: (e: Konva.KonvaEventObject<MouseEvent>) => void
