@@ -22,9 +22,10 @@ import { EditUserButton } from './EditUserButton'
 type UserCardProps = {
   user: UserResponseDTO | CurrentUserResponseDTO
   workspaceId?: number
+  showEdit?: boolean
 }
 
-export default function UserCard({ user, workspaceId }: UserCardProps) {
+export default function UserCard({ user, workspaceId, showEdit = false }: UserCardProps) {
   /** Idea here is this can be reused for the admin page */
   const { userDetails } = useAuth()
 
@@ -50,10 +51,9 @@ export default function UserCard({ user, workspaceId }: UserCardProps) {
 
   const { mutate } = workspaceId == -1 ? deleteUser : removeUser
   const isDeleting = workspaceId == -1
-  const isEditing = isDeleting && userDetails
 
-  const isCurrAdmin = userDetails?.id === user.id
-  const isDeleteCurrAdmin = isDeleting && isCurrAdmin
+  const isCurrUser = userDetails?.id === user.id
+  const isDeleteCurrAdmin = isDeleting && isCurrUser
 
   return (
     <div className="flex justify-between items-center bg-gray-100 p-3 rounded-md shadow-sm dark:bg-slate-900">
@@ -66,8 +66,8 @@ export default function UserCard({ user, workspaceId }: UserCardProps) {
       </div>
 
       <div className="flex space-x-2">
-        <EditUserButton user={user} />
-        {!isEditing && (
+        {showEdit && <EditUserButton user={user} />}
+        {!showEdit && (
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="destructive">{isDeleting ? 'delete' : 'remove'}</Button>

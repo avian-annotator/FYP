@@ -12,7 +12,7 @@ export function Me() {
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">My Profile</h1>
       <div className="max-w-2xl">
-        <UserCard user={data.data} workspaceId={-1} />
+        <UserCard user={data.data} workspaceId={-1} showEdit={true} />
       </div>
     </div>
   )
